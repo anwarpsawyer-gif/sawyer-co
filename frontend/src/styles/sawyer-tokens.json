@@ -1,0 +1,41 @@
+{
+    "$schema": "sawyer-tokens.v1",
+    "name": "Sawyer & Co. Sovereign Institutional Token Set",
+    "version": "0.1.0",
+    "description": "Canonical institutional design tokens. Intended for future ZephyrTrustAI alignment — import gradually, do not overwrite.",
+    "color": {
+        "ivory": "#F5F0E8",
+        "harborNavy": "#0D1B2A",
+        "charcoal": "#1C1C1C",
+        "atlanticSand": "#C9B99A",
+        "brushedSilver": "#7A8B94",
+        "deepAtlanticBlue": "#2A3F52"
+    },
+    "typography": {
+        "display": "Cormorant Garamond, Chronicle Display, Georgia, serif",
+        "body": "Inter, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+    },
+    "motion": {
+        "ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "durationSlow": "1.2s",
+        "durationDeliberate": "0.8s"
+    },
+    "spacing": {
+        "edgePad": "clamp(1.5rem, 5vw, 5rem)",
+        "sectionPad": "clamp(4rem, 10vw, 9rem)"
+    },
+    "components": {
+        "button": {
+            "shape": "rectangle",
+            "borderRadius": "0px",
+            "textTransform": "uppercase",
+            "letterSpacing": "0.2em"
+        },
+        "input": {
+            "border": "1px bottom only",
+            "borderColor": "#C9B99A",
+            "background": "transparent"
+        }
+    }
+}

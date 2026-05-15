@@ -1,0 +1,42 @@
+/* =====================================================================
+   Sawyer & Co. — Sovereign Institutional Design Tokens
+   Shared token surface intended for future ZephyrTrustAI alignment.
+   Do not consume these directly in shadcn components — they exist as
+   the canonical institutional palette + type scale.
+   ===================================================================== */
+
+:root {
+    /* Color — Sovereign Atlantic */
+    --sawyer-ivory: #f5f0e8;
+    --sawyer-harbor-navy: #0d1b2a;
+    --sawyer-charcoal: #1c1c1c;
+    --sawyer-sand: #c9b99a;
+    --sawyer-silver: #7a8b94;
+    --sawyer-deep-blue: #2a3f52;
+
+    /* Surfaces */
+    --sawyer-surface-light: var(--sawyer-ivory);
+    --sawyer-surface-dark: var(--sawyer-harbor-navy);
+    --sawyer-surface-void: var(--sawyer-charcoal);
+
+    /* Text */
+    --sawyer-text-on-dark: var(--sawyer-ivory);
+    --sawyer-text-on-light: var(--sawyer-harbor-navy);
+    --sawyer-text-muted: var(--sawyer-silver);
+    --sawyer-text-accent: var(--sawyer-sand);
+
+    /* Type */
+    --sawyer-font-display: "Cormorant Garamond", "Chronicle Display",
+        "Cormorant", Georgia, serif;
+    --sawyer-font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --sawyer-font-mono: "JetBrains Mono", "Menlo", "Consolas", monospace;
+
+    /* Motion */
+    --sawyer-ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    --sawyer-duration-slow: 1.2s;
+    --sawyer-duration-deliberate: 0.8s;
+
+    /* Layout */
+    --sawyer-edge-pad: clamp(1.5rem, 5vw, 5rem);
+    --sawyer-section-pad: clamp(4rem, 10vw, 9rem);
+}

@@ -1,0 +1,131 @@
+{
+  "project_name": "Sawyer & Co. Institutional Website",
+  "domain": "Institutional Finance / Wealth Management",
+  "theme": "Dark",
+  "archetype": "Archetype 5: Jewel & Luxury (with Archetype 4 Swiss & High-Contrast elements)",
+  "atmosphere": "Sovereign, restrained, architectural, Atlantic institutional. Cinematic pacing. No SaaS UI, no dashboards, no crypto visuals.",
+  "typography": {
+    "headlines": {
+      "family": "'Chronicle Display', 'Cormorant Garamond', serif",
+      "google_font_fallback": "Cormorant Garamond",
+      "usage": "H1, H2, large editorial pull quotes. Use tracking-tight or tracking-tighter. Use font-light or regular.",
+      "sizes": "text-4xl sm:text-5xl lg:text-6xl max"
+    },
+    "body": {
+      "family": "'Inter', sans-serif",
+      "google_font": "Inter",
+      "usage": "Paragraphs, navigation, secondary text. Use leading-relaxed. Highly legible.",
+      "sizes": "text-sm, text-base"
+    },
+    "data_overlays": {
+      "family": "'JetBrains Mono', monospace",
+      "google_font": "JetBrains Mono",
+      "usage": "Intelligence overlays, metric counters, node labels, technical metadata.",
+      "sizes": "text-xs, text-sm uppercase tracking-widest"
+    }
+  },
+  "colors": {
+    "ivory": "#F5F0E8",
+    "harbor_navy": "#0D1B2A",
+    "charcoal": "#1C1C1C",
+    "atlantic_sand": "#C9B99A",
+    "brushed_silver": "#7A8B94",
+    "deep_atlantic_blue": "#2A3F52",
+    "background_primary": "#0D1B2A",
+    "background_secondary": "#1C1C1C",
+    "text_primary": "#F5F0E8",
+    "text_muted": "#7A8B94",
+    "accent": "#C9B99A"
+  },
+  "layout_strategy": {
+    "spacing": "Generous spacing. Use p-12, p-16, p-24, p-32. The layout should feel architectural and vast.",
+    "structure": "7 connected spatial environments. Use GSAP ScrollTrigger to pin sections and crossfade them, creating the illusion of moving through rooms rather than scrolling down a page.",
+    "alignment": "Editorial. Avoid 'center-everything'. Use split layouts (text on left, image/3D on right or vice versa).",
+    "navigation": "Fixed institutional nav. Transitions from transparent to frosted glass (backdrop-blur-xl bg-harbor_navy/60) on scroll. Includes 'ACCESS PORTAL' button."
+  },
+  "motion_guidelines": {
+    "scroll_engine": "Lenis for smooth scrolling. Cinematic slow scroll (0.6 - 0.8x equivalent).",
+    "animations": "GSAP ScrollTrigger for pinning and section transitions. Framer Motion for text reveals and micro-interactions.",
+    "style": "Opacity fades, atmospheric dissolves, slow y-axis translates. NO bounces, NO springs. Motion must feel controlled, calm, expensive, confident.",
+    "rooster_animation": "A 3D hand-drawn animated silhouette of a rooster. Single solid color with visible lines. Walks across the lower foreground during section transitions. Use Framer Motion or GSAP to translate it horizontally based on scroll progress."
+  },
+  "environments": [
+    {
+      "id": "ENV_01_Main_Hall",
+      "description": "Full-viewport hero, cinematic Ken Burns zoom on architectural background, large editorial headline, elegant CTA.",
+      "visuals": "limestone_atrium"
+    },
+    {
+      "id": "ENV_02_Advisory_Chamber",
+      "description": "Editorial split layout. 3 sequential pillar reveals driven by scroll. Intelligence overlays in JetBrains Mono.",
+      "visuals": "limestone_atrium_chairs"
+    },
+    {
+      "id": "ENV_03_Nexus_Reveal",
+      "description": "Full-dark environment. Three.js particle system (Nexus ENV 03) with 3 ambient nodes.",
+      "visuals": "threejs_canvas"
+    },
+    {
+      "id": "ENV_04_Capital_Suite",
+      "description": "ZephyrTrustAI gateway. Animated metrics counters, institutional copy. Link to external platform.",
+      "visuals": "typography_and_data"
+    },
+    {
+      "id": "ENV_05_Digital_Core",
+      "description": "Metallic dark palette (#1C1C1C + #7A8B94). 3 infrastructure node reveals, JetBrains Mono labels.",
+      "visuals": "typography_and_data"
+    },
+    {
+      "id": "ENV_06_Founder_Chamber",
+      "description": "Editorial portrait. Chronicle Display pull quote. Pedigree stats.",
+      "visuals": "editorial_portrait"
+    },
+    {
+      "id": "ENV_07_Exit_Horizon",
+      "description": "Minimal dark atlantic horizon. 'INQUIRE PRIVATELY' CTA, highly customized raw HTML/Tailwind contact form.",
+      "visuals": "dark_atlantic_ocean"
+    }
+  ],
+  "media": {
+    "limestone_atrium": {
+      "url": "https://images.unsplash.com/photo-1622396481322-3b83d186701b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwxfHxsaW1lc3RvbmUlMjBhcmNoaXRlY3R1cmUlMjBhdHJpdW0lMjBtaW5pbWFsfGVufDB8fHx8MTc3ODg1MjAxNnww&ixlib=rb-4.1.0&q=85",
+      "description": "White concrete building atrium, used for ENV 01 Main Hall hero background with a slow Ken Burns effect."
+    },
+    "limestone_atrium_chairs": {
+      "url": "https://images.unsplash.com/photo-1716467278688-5b7fc38e3ca7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1NzZ8MHwxfHNlYXJjaHwyfHxsaW1lc3RvbmUlMjBhcmNoaXRlY3R1cmUlMjBhdHJpdW0lMjBtaW5pbWFsfGVufDB8fHx8MTc3ODg1MjAxNnww&ixlib=rb-4.1.0&q=85",
+      "description": "Minimal architectural space, used for ENV 02 Advisory Chamber."
+    },
+    "editorial_portrait": {
+      "url": "https://images.unsplash.com/photo-1772529375232-0257bffd472d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwxfHxlZGl0b3JpYWwlMjBwb3J0cmFpdCUyMG1hbiUyMHN1aXQlMjBzdHVkaW8lMjBkYXJrfGVufDB8fHx8MTc3ODg1MjAxNnww&ixlib=rb-4.1.0&q=85",
+      "description": "Man in dark suit, used for ENV 06 Founder Chamber portrait."
+    },
+    "dark_atlantic_ocean": {
+      "url": "https://images.unsplash.com/photo-1579289115094-b88d8493a71f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwxfHxkYXJrJTIwYXRsYW50aWMlMjBvY2VhbiUyMGhvcml6b258ZW58MHx8fHwxNzc4ODUyMDE2fDA&ixlib=rb-4.1.0&q=85",
+      "description": "Dark ocean horizon, used for ENV 07 Exit Horizon background."
+    },
+    "rooster_silhouette": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/67f08dd5-c1dc-45e7-ac19-425f154da117/images/2393e6f0ae6d9e4cf6a92cc7986113bbd5f000d9e06e80ece599eae3774f9bc5.png",
+      "description": "Hand-drawn wireframe rooster silhouette. To be animated across the lower foreground during transitions using Framer Motion."
+    }
+  },
+  "component_rules": {
+    "forms": "Do not use generic Shadcn form UI. Build custom raw Tailwind inputs with minimal borders (border-b only) in Atlantic Sand/Brass color. Focus states should be subtle opacity shifts, no thick rings.",
+    "buttons": "Custom rectangular buttons. Avoid standard rounded-md. Use tracking-widest for button text.",
+    "overlays": "Use JetBrains Mono. Position absolute with brackets like [ LATITUDE : 24.5 ] to give a technical institutional feel.",
+    "testing": "All interactive elements MUST include data-testid attribute."
+  },
+  "tech_stack_instructions": {
+    "three_js": "Use @react-three/fiber and @react-three/drei for ENV 03 Nexus Reveal. Create a slow-moving, elegant particle network in Ivory and Atlantic Sand.",
+    "gsap": "Install gsap. Use ScrollTrigger to pin sections and scrub opacity/y-transforms.",
+    "framer_motion": "Use framer-motion for simple presence/entry animations and the rooster walk cycle.",
+    "lenis": "Install @studio-freight/lenis or lenis for smooth scrolling. This is MANDATORY for the cinematic feel.",
+    "lucide": "Use lucide-react for minimal iconography. Use thin stroke widths (1px or 1.5px)."
+  },
+  "instructions_to_main_agent": [
+    "You are building a cinematic, single-page scroll experience. Do not build standard routing pages. All environments live on one route, stacked and pinned via GSAP.",
+    "Install the required libraries: gsap, framer-motion, @react-three/fiber, @react-three/drei, lenis.",
+    "Ensure global CSS exports the design tokens as sawyer-theme.css / sawyer-tokens.json as variables.",
+    "Enforce 'prefers-reduced-motion' checks where possible, but default to the smooth cinematic experience.",
+    "For the Rooster, absolute position the image at the bottom of the viewport with fixed positioning during scroll, translating its X position based on ScrollTrigger progress."
+  ]
+}

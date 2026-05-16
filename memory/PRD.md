@@ -41,6 +41,7 @@ A cinematic, architecturally-structured institutional web experience functioning
 ## Resolved Issues
 - React 19 / @react-three/fiber incompatibility → replaced with lightweight Canvas2D particle field (more appropriate for "restrained institutional" brief)
 - Hero image too bright → strengthened gradient overlay and reduced image brightness
+- Rooster silhouette upgraded to client-supplied Grok video (2026-02-15): MP4 primary + WebM fallback, visible only during Main Hall → Advisory and Capital Suite transitions, soft radial mask + screen blend filter chain dissolves the white video background into the navy atmosphere, paints the rooster in silvery-sand institutional tones, paused under prefers-reduced-motion.
 
 ## Backlog (P1)
 - Replace Anwar / Sarah Sawyer portraits with client-supplied imagery (currently placeholder Unsplash editorial portraits)

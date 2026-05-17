@@ -13,7 +13,7 @@ const FOUNDERS = [
         portrait: ANWAR_PORTRAIT,
         bio: "A former Financial Regulatory Analyst at the Securities Commission of The Bahamas and Deloitte alumnus, Anwar Sawyer brings over a decade of financial crime, regulatory strategy, and M&A due diligence experience across European and Caribbean markets. Trained at the Frankfurt School of Finance & Management, he has designed AML/CFT frameworks for European Tier 1 banks under MiFID II, built KRI-based risk models at exxeta AG, and led regulatory transformation engagements at Deloitte GmbH Frankfurt. He is the only DORA-certified practitioner based in Nassau.",
         stats: [
-            { k: "EXPERIENCE", v: "10+ YRS" },
+            { k: "EXPERIENCE", v: "18+ YRS" },
             { k: "JURISDICTIONS", v: "BS · EU · CARIBBEAN" },
             { k: "FORMATION", v: "DELOITTE · SECURITIES COMMISSION OF THE BAHAMAS" },
         ],
@@ -25,7 +25,7 @@ const FOUNDERS = [
         portrait: SARAH_PORTRAIT,
         bio: "Sarah Sawyer spent a decade at Deutsche Bank, ultimately as Assistant Vice President managing a €500B+ institutional platform across 198 funds and 42 asset managers. She led AI-supported automation for investment fund reporting, delivered a €20M contract across 8 global hubs, and built an AI-driven Identity and Access Governance platform commended by Deutsche Bank's Head of AI. As CEO of TreasureCorp, she architected multi-chain treasury infrastructure managing over $1.2M in digital assets. CESGA® certified. Trilingual: English, Arabic, German.",
         stats: [
-            { k: "EXPERIENCE", v: "15 YRS" },
+            { k: "EXPERIENCE", v: "15+ YRS" },
             { k: "PLATFORM MANAGED", v: "€500B+" },
             { k: "FORMATION", v: "DEUTSCHE BANK · TREASURECORP" },
         ],

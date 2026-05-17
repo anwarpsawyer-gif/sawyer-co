@@ -59,11 +59,10 @@ export default function MainHall({ onEnter }) {
                         transition={{ duration: 1.4, delay: 0.85 }}
                         className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] text-ivory tracking-tight"
                     >
-                        The Caribbean&rsquo;s most pressing financial problems require{" "}
+                        Regulatory advisory, capital deployment and digital infrastructure.{" "}
                         <span className="italic text-sand">
-                            sovereign expertise,
-                        </span>{" "}
-                        not generalist solutions.
+                            Caribbean institutional specialists.
+                        </span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 12 }}

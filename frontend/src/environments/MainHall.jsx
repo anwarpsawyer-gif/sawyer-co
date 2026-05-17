@@ -59,11 +59,11 @@ export default function MainHall({ onEnter }) {
                         transition={{ duration: 1.4, delay: 0.85 }}
                         className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] text-ivory tracking-tight"
                     >
-                        The future institution requires both{" "}
+                        The Caribbean&rsquo;s most pressing financial problems require{" "}
                         <span className="italic text-sand">
-                            sovereign intelligence
+                            sovereign expertise,
                         </span>{" "}
-                        and adaptive infrastructure.
+                        not generalist solutions.
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 12 }}
@@ -71,8 +71,7 @@ export default function MainHall({ onEnter }) {
                         transition={{ duration: 1.2, delay: 1.1 }}
                         className="mt-10 max-w-xl text-silver font-body text-base md:text-lg leading-relaxed"
                     >
-                        Sawyer &amp; Co. builds adaptive infrastructure for
-                        capital, intelligence, and institutional evolution.
+                        Sawyer &amp; Co. brings European regulatory precision and Caribbean market knowledge to bear on the compliance, capital, and digital infrastructure challenges facing the region&rsquo;s financial institutions.
                     </motion.p>
 
                     <motion.div
@@ -101,7 +100,7 @@ export default function MainHall({ onEnter }) {
 
             {/* Bottom metadata strip */}
             <div className="absolute bottom-8 left-[var(--sawyer-edge-pad)] right-[var(--sawyer-edge-pad)] flex items-end justify-between">
-                <div className="inst-label">[ EST. SAWYER &amp; CO. ]</div>
+                <div className="inst-label">[ EST. SAWYER &amp; CO. · NASSAU · MMXXIV ]</div>
                 <div className="inst-label hidden md:block">
                     SEVEN ENVIRONMENTS · ONE INSTITUTION
                 </div>

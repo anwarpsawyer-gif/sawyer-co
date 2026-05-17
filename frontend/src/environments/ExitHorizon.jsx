@@ -46,6 +46,7 @@ export default function ExitHorizon() {
                 >
                     [ CLOSING ]
                 </motion.p>
+
                 <motion.h2
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -53,8 +54,12 @@ export default function ExitHorizon() {
                     transition={{ duration: 1.6, delay: 0.3 }}
                     className="mt-6 font-display italic text-3xl md:text-5xl lg:text-6xl leading-[1.1] text-ivory tracking-tight text-center max-w-4xl"
                 >
-                    <span className="not-italic text-sand">What you have traversed is</span> the surface of the institution.
+                    <span className="not-italic text-sand">
+                        What you have traversed is
+                    </span>{" "}
+                    the surface of the institution.
                 </motion.h2>
+
                 <motion.p
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
@@ -62,8 +67,22 @@ export default function ExitHorizon() {
                     transition={{ duration: 1.2, delay: 0.6 }}
                     className="mt-8 text-silver font-body text-base md:text-lg leading-relaxed text-center max-w-xl"
                 >
-                    The chambers beyond are entered by invitation. Every engagement begins with thirty minutes — a regulatory health check, no obligation. Binary outcome: you either have a problem, or you don&rsquo;t.
-                    <br />\n                    <br />\n                    Director-led engagements only. Limited to two new mandates per quarter. We do not delegate client work to junior staff.\n                </motion.p>
+                    The chambers beyond are entered by invitation. Every
+                    engagement begins with thirty minutes — a regulatory health
+                    check, no obligation. Binary outcome: you either have a
+                    problem, or you don&rsquo;t.
+                </motion.p>
+
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.2, delay: 0.75 }}
+                    className="mt-4 text-silver font-body text-base md:text-lg leading-relaxed text-center max-w-xl"
+                >
+                    Director-led engagements only. Limited to two new mandates
+                    per quarter. We do not delegate client work to junior staff.
+                </motion.p>
 
                 <div className="hairline my-20 w-full max-w-md" />
 

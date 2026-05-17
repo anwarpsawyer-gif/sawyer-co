@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 
 const ANWAR_PORTRAIT =
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=srgb&fm=jpg&q=85&w=1400";
+    "https://placehold.co/560x700/0D1B2A/C9B99A?text=A.S.";
 const SARAH_PORTRAIT =
-    "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?crop=entropy&cs=srgb&fm=jpg&q=85&w=1400";
+    "https://placehold.co/560x700/0D1B2A/C9B99A?text=S.S.";
 
 const FOUNDERS = [
     {
@@ -15,7 +15,7 @@ const FOUNDERS = [
         stats: [
             { k: "EXPERIENCE", v: "10+ YRS" },
             { k: "JURISDICTIONS", v: "BS · EU · CARIBBEAN" },
-            { k: "FORMATION", v: "DELOITTE · SCB" },
+            { k: "FORMATION", v: "DELOITTE · SECURITIES COMMISSION OF THE BAHAMAS" },
         ],
     },
     {

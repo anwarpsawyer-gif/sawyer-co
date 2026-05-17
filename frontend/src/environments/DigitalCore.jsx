@@ -2,28 +2,28 @@ import { motion } from "framer-motion";
 
 const NODES = [
     {
-        id: "treasury",
+        id: "regtech",
         idx: "I",
-        title: "Treasury Systems",
-        sub: "sovereign liquidity",
-        body: "Liquidity reserves engineered to absorb cycle dislocations without compromising mandate integrity. Architecture remains invisible to the institution it sustains.",
-        label: "TREASURY :: ACTIVE",
+        title: "Regulatory Technology",
+        sub: "active compliance",
+        body: "AI-native compliance tooling built in-house — not purchased off the shelf. RegWatch delivers AI-curated regulatory monitoring across SCB, FATF, FinCEN, DARE, and DORA, converted into plain-English impact summaries for Caribbean compliance officers. Compliance-as-a-Subscription provides a director-led compliance function at subscription cost for institutions too small to carry a full-time officer.",
+        label: "REGTECH :: ACTIVE",
     },
     {
-        id: "liquidity",
+        id: "treasury",
         idx: "II",
-        title: "Liquidity Architecture",
-        sub: "adaptive allocation",
-        body: "Allocation logic shaped by Atlantic cross-border flow rather than benchmark imitation. The institution adapts to capital — never the inverse.",
-        label: "ARCHITECTURE :: NOMINAL",
+        title: "Treasury Analytics",
+        sub: "institutional-grade treasury",
+        body: "TreasureCorp, built by Sarah Sawyer, is institutional-grade treasury analytics for digital asset operations — multi-chain, real-time, governance-ready. The same discipline applied to €500B in Deutsche Bank assets is applied here to digital treasury infrastructure. Tracking, simulation, and stakeholder reporting for organisations operating in the new financial environment.",
+        label: "TREASURECORP :: NOMINAL",
     },
     {
-        id: "infrastructure",
+        id: "dare",
         idx: "III",
-        title: "Digital Infrastructure",
-        sub: "invisible by design",
-        body: "The digital substrate of the institution. Quiet, encrypted, sovereign. It does not announce itself — it merely holds the architecture together.",
-        label: "INFRA :: SEALED",
+        title: "Digital Asset Compliance",
+        sub: "dare & micar compliance",
+        body: "The DARE Act and MiCAR are reshaping what it means to operate in digital assets across the Caribbean and Europe. We design compliance programmes that satisfy SCB's evolving enforcement posture while anticipating EU obligations — covering both dimensions in one engagement. Digital asset exposure governed to the global standard.",
+        label: "DARE :: SEALED",
     },
 ];
 
@@ -60,9 +60,9 @@ export default function DigitalCore() {
                     transition={{ duration: 1.2 }}
                     className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-ivory tracking-tight max-w-4xl"
                 >
-                    Infrastructure is invisible.{" "}
+                    The Caribbean is modernising.{" "}
                     <span className="italic text-sand">
-                        That is its purpose.
+                        The infrastructure must follow.
                     </span>
                 </motion.h2>
                 <motion.p
@@ -72,8 +72,7 @@ export default function DigitalCore() {
                     transition={{ duration: 1.2, delay: 0.2 }}
                     className="mt-8 text-silver font-body text-base md:text-lg leading-relaxed max-w-2xl"
                 >
-                    Three quiet subsystems sustain the architecture of Sawyer
-                    &amp; Co. — none of them speak.
+                    Three quiet subsystems form the digital architecture of Sawyer &amp; Co. None of them announce themselves. They merely hold the institution together.
                 </motion.p>
 
                 <div className="hairline my-20 max-w-3xl" />

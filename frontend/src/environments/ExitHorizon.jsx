@@ -53,10 +53,7 @@ export default function ExitHorizon() {
                     transition={{ duration: 1.6, delay: 0.3 }}
                     className="mt-6 font-display italic text-3xl md:text-5xl lg:text-6xl leading-[1.1] text-ivory tracking-tight text-center max-w-4xl"
                 >
-                    What you have traversed is{" "}
-                    <span className="not-italic text-sand">
-                        the surface of the institution.
-                    </span>
+                    <span className="not-italic text-sand">What you have traversed is</span> the surface of the institution.
                 </motion.h2>
                 <motion.p
                     initial={{ opacity: 0 }}
@@ -65,8 +62,8 @@ export default function ExitHorizon() {
                     transition={{ duration: 1.2, delay: 0.6 }}
                     className="mt-8 text-silver font-body text-base md:text-lg leading-relaxed text-center max-w-xl"
                 >
-                    The chambers beyond are entered by invitation.
-                </motion.p>
+                    The chambers beyond are entered by invitation. Every engagement begins with thirty minutes — a regulatory health check, no obligation. Binary outcome: you either have a problem, or you don&rsquo;t.
+                    <br />\n                    <br />\n                    Director-led engagements only. Limited to two new mandates per quarter. We do not delegate client work to junior staff.\n                </motion.p>
 
                 <div className="hairline my-20 w-full max-w-md" />
 

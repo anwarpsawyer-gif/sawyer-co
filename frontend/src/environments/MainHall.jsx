@@ -64,13 +64,13 @@ export default function MainHall({ onEnter }) {
                             Caribbean institutional specialists.
                         </span>
                     </motion.h1>
-                    <motion.p
+                   <motion.p
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, delay: 1.1 }}
                         className="mt-10 max-w-xl text-silver font-body text-base md:text-lg leading-relaxed"
                     >
-                        Sawyer &amp; Co. brings European regulatory precision and Caribbean market knowledge to bear on the compliance, capital, and digital infrastructure challenges facing the region&rsquo;s financial institutions.
+                        Bahamian market knowledge. European institutional discipline. One firm.
                     </motion.p>
 
                     <motion.div

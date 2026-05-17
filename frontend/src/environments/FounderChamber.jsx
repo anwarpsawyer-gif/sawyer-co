@@ -9,25 +9,25 @@ const FOUNDERS = [
     {
         id: "anwar",
         name: "Anwar Sawyer",
-        role: "Founding Principal · Architecture of Capital",
+        role: "Founding Principal · Regulatory Architecture",
         portrait: ANWAR_PORTRAIT,
-        bio: "Anwar Sawyer founded the institution on the conviction that capital should be stewarded with the same discipline as architecture. Four decades across sovereign mandates, cross-border advisory, and private equity have shaped a practice defined less by performance cycles and more by structural permanence.",
+        bio: "A former Financial Regulatory Analyst at the Securities Commission of The Bahamas and Deloitte alumnus, Anwar Sawyer brings over a decade of financial crime, regulatory strategy, and M&A due diligence experience across European and Caribbean markets. Trained at the Frankfurt School of Finance & Management, he has designed AML/CFT frameworks for European Tier 1 banks under MiFID II, built KRI-based risk models at exxeta AG, and led regulatory transformation engagements at Deloitte GmbH Frankfurt. He is the only DORA-certified practitioner based in Nassau.",
         stats: [
-            { k: "TENURE", v: "XX YRS" },
-            { k: "MANDATES", v: "XXX+" },
-            { k: "JURISDICTIONS", v: "XX" },
+            { k: "EXPERIENCE", v: "10+ YRS" },
+            { k: "JURISDICTIONS", v: "BS · EU · CARIBBEAN" },
+            { k: "FORMATION", v: "DELOITTE · SCB" },
         ],
     },
     {
         id: "sarah",
         name: "Sarah Sawyer",
-        role: "Founding Principal · Institutional Strategy",
+        role: "Founding Principal · Institutional Strategy & Technology",
         portrait: SARAH_PORTRAIT,
-        bio: "Sarah Sawyer leads institutional strategy and the intelligence layer that quietly underwrites every chamber of the firm. Her work bridges sovereign advisory, family-office stewardship, and the operational discipline that sustains long-horizon capital across generations.",
+        bio: "Sarah Sawyer spent a decade at Deutsche Bank, ultimately as Assistant Vice President managing a €500B+ institutional platform across 198 funds and 42 asset managers. She led AI-supported automation for investment fund reporting, delivered a €20M contract across 8 global hubs, and built an AI-driven Identity and Access Governance platform commended by Deutsche Bank's Head of AI. As CEO of TreasureCorp, she architected multi-chain treasury infrastructure managing over $1.2M in digital assets. CESGA® certified. Trilingual: English, Arabic, German.",
         stats: [
-            { k: "TENURE", v: "XX YRS" },
-            { k: "STRATEGY DESKS", v: "XX" },
-            { k: "FAMILIES", v: "XX+" },
+            { k: "EXPERIENCE", v: "15 YRS" },
+            { k: "PLATFORM MANAGED", v: "€500B+" },
+            { k: "FORMATION", v: "DEUTSCHE BANK · TREASURECORP" },
         ],
     },
 ];
@@ -56,9 +56,9 @@ export default function FounderChamber() {
                     transition={{ duration: 1.4 }}
                     className="font-display italic text-3xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-navy max-w-5xl"
                 >
-                    &ldquo;Institutionalism is not merely a method.{" "}
+                    &ldquo;The institutions that will lead the next decade are being built now,{" "}
                     <span className="not-italic text-navy/60">
-                        It is a philosophy of permanence.
+                        by people who understand both sides of the table.
                     </span>
                     &rdquo;
                 </motion.blockquote>

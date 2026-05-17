@@ -5,10 +5,10 @@ const VILLA =
     "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?crop=entropy&cs=srgb&fm=jpg&q=85&w=2200";
 
 const METRICS = [
-    { label: "ASSETS UNDER MANAGEMENT", value: "$XX.X B+" },
-    { label: "ACTIVE FUNDS", value: "XX" },
+    { label: "LOMBARD LOAN TURNAROUND", value: "48 HRS" },
+    { label: "LOAN RANGE", value: "$250K – $2M" },
     { label: "INVESTOR TIER", value: "INSTITUTIONAL" },
-    { label: "ADVISORY MANDATES", value: "XXX+" },
+    { label: "PLATFORM LAUNCH", value: "2026" },
 ];
 
 export default function CapitalSuite() {
@@ -41,7 +41,7 @@ export default function CapitalSuite() {
                         [ ENV :: 04 ] — CAPITAL SUITE
                     </div>
                     <div className="inst-label hidden md:block">
-                        SUBSYSTEM :: ZEPHYRTRUSTAI
+                        SUBSYSTEM :: ZEPHYRWEALTH.AI
                     </div>
                 </div>
 
@@ -54,9 +54,9 @@ export default function CapitalSuite() {
                             transition={{ duration: 1.2 }}
                             className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-ivory tracking-tight"
                         >
-                            Capital deployed with{" "}
+                            Capital deployed without{" "}
                             <span className="italic text-sand">
-                                architectural intention.
+                                liquidating what you built.
                             </span>
                         </motion.h2>
                         <motion.p
@@ -66,16 +66,28 @@ export default function CapitalSuite() {
                             transition={{ duration: 1.2, delay: 0.2 }}
                             className="mt-8 text-silver font-body text-base md:text-lg leading-relaxed max-w-lg"
                         >
-                            Capital Operations is the embedded subsystem of the
-                            institution. Mandates are structured, monitored,
-                            and stewarded inside{" "}
-                            <span className="text-ivory">ZephyrTrustAI</span> —
-                            our sovereign capital operations platform.
+                            <span className="text-ivory">ZephyrWealth.ai</span> is
+                            our AI-underwritten Lombard lending platform — structured
+                            credit against Caribbean securities portfolios in 48 hours,
+                            in local currency, without a four-week bank process. The
+                            region has the assets. It has lacked the infrastructure.
+                            That changes now.
+                        </motion.p>
+                        <motion.p
+                            initial={{ opacity: 0, y: 12 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 1.2, delay: 0.35 }}
+                            className="mt-6 text-silver font-body text-base md:text-lg leading-relaxed max-w-lg"
+                        >
+                            Beyond credit, Sawyer Capital provides acquisition due
+                            diligence on Caribbean targets to institutional standard —
+                            regulatory risk known before close.
                         </motion.p>
 
                         <motion.a
                             data-testid="capital-gateway-btn"
-                            href="https://zephyrtrustai.com"
+                            href="https://zephyrwealth.ai"
                             target="_blank"
                             rel="noopener noreferrer"
                             initial={{ opacity: 0 }}
@@ -101,7 +113,7 @@ export default function CapitalSuite() {
                         className="lg:pl-12 lg:border-l border-sand/30"
                     >
                         <p className="inst-label mb-10">
-                            [ INSTITUTIONAL METRICS · STATIC ]
+                            [ ZEPHYRWEALTH.AI · PLATFORM METRICS ]
                         </p>
                         <div className="grid grid-cols-2 gap-x-10 gap-y-12">
                             {METRICS.map((m, i) => (
@@ -126,8 +138,8 @@ export default function CapitalSuite() {
                             ))}
                         </div>
                         <p className="inst-label text-silver mt-12 italic font-mono normal-case tracking-normal">
-                            // figures illustrative · live AUM surfaces via the
-                            ZephyrTrustAI subsystem
+                            // director-led mandates only · limited to two new
+                            engagements per quarter
                         </p>
                     </motion.div>
                 </div>

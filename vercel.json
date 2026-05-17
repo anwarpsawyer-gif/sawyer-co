@@ -1,4 +1,4 @@
 {
-  "buildCommand": "cd frontend && npm run build",
-  "installCommand": "cd frontend && npm install --legacy-peer-deps"
+  "rootDirectory": "frontend",
+  "installCommand": "npm install --legacy-peer-deps"
 }

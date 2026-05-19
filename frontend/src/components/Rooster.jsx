@@ -87,7 +87,7 @@ export default function Rooster() {
                 className="w-full h-full object-contain"
                 style={{ background: "transparent" }}
             >
-                <source src="/rooster-new.mp4" type="video/mp4" />
+                <source src="/grok-video-a5bcbd74-a464-4632-bcd1-d9a0cf2017fe (1) (2).mp4" type="video/mp4" />
             </video>
         </motion.div>
     );

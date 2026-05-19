@@ -3,6 +3,56 @@ import { motion } from "framer-motion";
 const ATRIUM =
     "https://images.unsplash.com/photo-1622396481322-3b83d186701b?crop=entropy&cs=srgb&fm=jpg&q=85&w=2400";
 
+// ─── Atlantic arc geometry ───────────────────────────────────────────────────
+// Globe origin sits off the right edge of the 1000-wide viewBox.
+// Arcs sweep left, representing latitude lines centred on 25.5°N 76.6°W.
+const OX = 1020;
+const OY = 400;
+
+const ARCS = [
+    { r: 300,  delay: "0.0s", dur: "13s", op: 0.07 },
+    { r: 420,  delay: "0.5s", dur: "15s", op: 0.06 },
+    { r: 540,  delay: "1.0s", dur: "12s", op: 0.055 },
+    { r: 660,  delay: "1.5s", dur: "16s", op: 0.048 },
+    { r: 780,  delay: "2.0s", dur: "14s", op: 0.038 },
+    { r: 900,  delay: "2.5s", dur: "17s", op: 0.028 },
+    { r: 1020, delay: "3.0s", dur: "15s", op: 0.018 },
+];
+
+const MERIDIANS = [
+    { angle: -50, op: 0.035, delay: "0.0s" },
+    { angle: -32, op: 0.028, delay: "0.3s" },
+    { angle: -14, op: 0.032, delay: "0.6s" },
+    { angle:   4, op: 0.024, delay: "0.9s" },
+    { angle:  22, op: 0.028, delay: "1.2s" },
+];
+
+// Nassau coordinate dot — 3rd arc, lat 25.5°N
+const DOT_R     = 540;
+const DOT_ANGLE = Math.PI * 0.96;
+const DOT_X     = OX + DOT_R * Math.cos(DOT_ANGLE);
+const DOT_Y     = OY + DOT_R * Math.sin(DOT_ANGLE);
+
+function arcD(r) {
+    const a1 = Math.PI * 0.44;
+    const a2 = Math.PI * 1.56;
+    const x1 = OX + r * Math.cos(a1);
+    const y1 = OY + r * Math.sin(a1);
+    const x2 = OX + r * Math.cos(a2);
+    const y2 = OY + r * Math.sin(a2);
+    return `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 0 0 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
+}
+
+function meridianD(deg, rMin, rMax) {
+    const rad = (deg * Math.PI) / 180 + Math.PI;
+    const x1 = OX + rMin * Math.cos(rad);
+    const y1 = OY + rMin * Math.sin(rad);
+    const x2 = OX + rMax * Math.cos(rad);
+    const y2 = OY + rMax * Math.sin(rad);
+    return `M ${x1.toFixed(2)} ${y1.toFixed(2)} L ${x2.toFixed(2)} ${y2.toFixed(2)}`;
+}
+// ────────────────────────────────────────────────────────────────────────────
+
 export default function MainHall({ onEnter }) {
     return (
         <section
@@ -10,7 +60,7 @@ export default function MainHall({ onEnter }) {
             data-testid="env-main-hall"
             className="relative w-full h-[100vh] overflow-hidden bg-navy"
         >
-            {/* Background atrium with Ken Burns */}
+            {/* ── Background atrium with Ken Burns ── */}
             <div className="absolute inset-0">
                 <img
                     src={ATRIUM}
@@ -27,12 +77,126 @@ export default function MainHall({ onEnter }) {
                 />
             </div>
 
-            {/* Top institutional plate */}
+            {/* ── Atlantic latitude arc system ─────────────────────────────
+                SVG sits above the background, below all text (z-index 2).
+                No mask — the left-side gradient overlay handles the fade.
+                All animation via CSS @keyframes so it works everywhere.
+            ─────────────────────────────────────────────────────────────── */}
+            <svg
+                viewBox="0 0 1000 800"
+                preserveAspectRatio="xMaxYMid slice"
+                aria-hidden="true"
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                style={{ zIndex: 2 }}
+            >
+                {/* Latitude arcs */}
+                {ARCS.map((arc, i) => (
+                    <path
+                        key={`arc-${i}`}
+                        d={arcD(arc.r)}
+                        fill="none"
+                        stroke={`rgba(210,190,150,${arc.op})`}
+                        strokeWidth="1"
+                        style={{
+                            animation: `sawyerBreathe ${arc.dur} ${arc.delay} ease-in-out infinite alternate`,
+                        }}
+                    />
+                ))}
+
+                {/* Meridian cross-lines */}
+                {MERIDIANS.map((m, i) => (
+                    <path
+                        key={`mer-${i}`}
+                        d={meridianD(m.angle, ARCS[0].r, ARCS[6].r)}
+                        fill="none"
+                        stroke={`rgba(210,190,150,${m.op})`}
+                        strokeWidth="0.6"
+                        style={{
+                            animation: `sawyerBreathe 20s ${m.delay} ease-in-out infinite alternate`,
+                        }}
+                    />
+                ))}
+
+                {/* Nassau coordinate dot ── three concentric sonar rings + core */}
+                {/* Ring 1 — slowest, most transparent */}
+                <circle
+                    cx={DOT_X}
+                    cy={DOT_Y}
+                    r="12"
+                    fill="none"
+                    stroke="rgba(200,169,110,0.3)"
+                    strokeWidth="0.7"
+                    style={{
+                        transformOrigin: `${DOT_X.toFixed(2)}px ${DOT_Y.toFixed(2)}px`,
+                        animation: "sawyerSonar 3.6s 0.0s ease-out infinite",
+                    }}
+                />
+                {/* Ring 2 — offset timing */}
+                <circle
+                    cx={DOT_X}
+                    cy={DOT_Y}
+                    r="12"
+                    fill="none"
+                    stroke="rgba(200,169,110,0.45)"
+                    strokeWidth="0.8"
+                    style={{
+                        transformOrigin: `${DOT_X.toFixed(2)}px ${DOT_Y.toFixed(2)}px`,
+                        animation: "sawyerSonar 3.6s 1.2s ease-out infinite",
+                    }}
+                />
+                {/* Ring 3 */}
+                <circle
+                    cx={DOT_X}
+                    cy={DOT_Y}
+                    r="12"
+                    fill="none"
+                    stroke="rgba(200,169,110,0.35)"
+                    strokeWidth="0.6"
+                    style={{
+                        transformOrigin: `${DOT_X.toFixed(2)}px ${DOT_Y.toFixed(2)}px`,
+                        animation: "sawyerSonar 3.6s 2.4s ease-out infinite",
+                    }}
+                />
+                {/* Core dot — always solid */}
+                <circle
+                    cx={DOT_X}
+                    cy={DOT_Y}
+                    r="2.8"
+                    fill="#c8a96e"
+                    opacity="1"
+                    style={{ animation: "sawyerDotCore 3s ease-in-out infinite" }}
+                />
+                {/* Coordinate label */}
+                <text
+                    x={DOT_X + 16}
+                    y={DOT_Y - 6}
+                    fill="rgba(200,169,110,0.55)"
+                    fontSize="8.5"
+                    fontFamily="'Courier New', monospace"
+                    letterSpacing="0.12em"
+                >
+                    NASSAU · 25.5°N
+                </text>
+            </svg>
+
+            {/* ── Left-side gradient — keeps arcs off the headline copy ── */}
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                    zIndex: 3,
+                    background:
+                        "linear-gradient(90deg, rgba(13,27,42,1) 25%, rgba(13,27,42,0.75) 48%, rgba(13,27,42,0.1) 72%, transparent 100%)",
+                }}
+            />
+
+            {/* ── Top institutional plate ── */}
             <motion.div
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.4 }}
                 className="absolute top-[110px] left-[var(--sawyer-edge-pad)] right-[var(--sawyer-edge-pad)] flex items-start justify-between"
+                style={{ zIndex: 10 }}
             >
                 <div className="inst-label">
                     [ ENV :: 01 ] — MAIN HALL · ATRIUM
@@ -42,7 +206,7 @@ export default function MainHall({ onEnter }) {
                 </div>
             </motion.div>
 
-            {/* Hero copy */}
+            {/* ── Hero copy ── */}
             <div className="relative z-10 h-full flex items-center px-[var(--sawyer-edge-pad)]">
                 <div className="max-w-4xl">
                     <motion.p
@@ -90,21 +254,38 @@ export default function MainHall({ onEnter }) {
                         </button>
                         <div className="hidden md:flex items-center gap-3">
                             <span className="block w-8 h-px bg-sand opacity-60" />
-                            <span className="inst-label">
-                                SCROLL TO TRAVERSE
-                            </span>
+                            <span className="inst-label">SCROLL TO TRAVERSE</span>
                         </div>
                     </motion.div>
                 </div>
             </div>
 
-            {/* Bottom metadata strip */}
-            <div className="absolute bottom-8 left-[var(--sawyer-edge-pad)] right-[var(--sawyer-edge-pad)] flex items-end justify-between">
+            {/* ── Bottom metadata strip ── */}
+            <div
+                className="absolute bottom-8 left-[var(--sawyer-edge-pad)] right-[var(--sawyer-edge-pad)] flex items-end justify-between"
+                style={{ zIndex: 10 }}
+            >
                 <div className="inst-label">[ EST. SAWYER &amp; CO. · NASSAU · MMXXIV ]</div>
                 <div className="inst-label hidden md:block">
                     SEVEN ENVIRONMENTS · ONE INSTITUTION
                 </div>
             </div>
+
+            {/* ── Keyframes ── */}
+            <style>{`
+                @keyframes sawyerBreathe {
+                    0%   { opacity: 0.35; }
+                    100% { opacity: 1; }
+                }
+                @keyframes sawyerSonar {
+                    0%   { transform: scale(0.6); opacity: 0.9; }
+                    100% { transform: scale(2.8); opacity: 0; }
+                }
+                @keyframes sawyerDotCore {
+                    0%, 100% { opacity: 0.75; }
+                    50%      { opacity: 1; }
+                }
+            `}</style>
         </section>
     );
 }

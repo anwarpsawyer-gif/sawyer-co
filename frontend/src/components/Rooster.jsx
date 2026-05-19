@@ -64,7 +64,7 @@ export default function Rooster() {
                 mixBlendMode: "screen",
                 // Lift the faint rooster: brightness pulls it out of the dark,
                 // contrast sharpens the silhouette, saturate keeps original colour
-                filter: "brightness(1.8) contrast(1.6) saturate(1.2)",
+                filter: "brightness(1.6) contrast(1.6) saturate(1.2)",
             }}
         >
             <video

@@ -7,20 +7,14 @@ import { motion, useScroll, useTransform } from "framer-motion";
  *   • Main Hall → Advisory  (≈ scrollYProgress 0.06 – 0.20)
  *   • Capital Suite arrival (≈ scrollYProgress 0.42 – 0.58)
  *
- * Renders video at original colour with no background bleed.
- *
- * Background removal strategy:
- *   - If your video has a BLACK background  → use mixBlendMode: "screen"
- *   - If your video has a WHITE background  → use mixBlendMode: "multiply"
- *   Both modes knock out the background colour without distorting
- *   the rooster's original colours or requiring any filter chain.
+ * Video has a dark navy background → mixBlendMode "screen" drops it out.
+ * Brightness + contrast boost lifts the faint rooster silhouette.
  */
 export default function Rooster() {
     const { scrollYProgress } = useScroll();
     const [reduced, setReduced] = useState(false);
     const videoRef = useRef(null);
 
-    // Respect prefers-reduced-motion
     useEffect(() => {
         const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
         const apply = () => setReduced(mq.matches);
@@ -29,15 +23,12 @@ export default function Rooster() {
         return () => mq.removeEventListener?.("change", apply);
     }, []);
 
-    // Pause / play in sync with reduced-motion preference
     useEffect(() => {
         const v = videoRef.current;
         if (!v) return;
         reduced ? v.pause() : v.play().catch(() => {});
     }, [reduced]);
 
-    // Drift slowly across the lower foreground; horizontal travel
-    // keyed to scroll so the rooster feels rooted to place.
     const x = useTransform(
         scrollYProgress,
         [0, 0.13, 0.5, 1],
@@ -50,7 +41,6 @@ export default function Rooster() {
         [0, -6, 0, -4, 0],
     );
 
-    // Opacity gated to two specific transition windows only.
     const opacity = useTransform(
         scrollYProgress,
         [0, 0.06, 0.13, 0.2, 0.42, 0.5, 0.58, 1],
@@ -70,10 +60,11 @@ export default function Rooster() {
                 opacity,
                 width: "180px",
                 height: "180px",
-                // "multiply" drops white/light backgrounds while preserving
-                // the rooster's original dark colours.
-                // Swap to "screen" if the video background is black.
-                mixBlendMode: "multiply",
+                // "screen" dissolves the dark navy background into transparency
+                mixBlendMode: "screen",
+                // Lift the faint rooster: brightness pulls it out of the dark,
+                // contrast sharpens the silhouette, saturate keeps original colour
+                filter: "brightness(2.5) contrast(1.6) saturate(1.2)",
             }}
         >
             <video

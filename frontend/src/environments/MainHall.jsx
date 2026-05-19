@@ -59,18 +59,19 @@ export default function MainHall({ onEnter }) {
                         transition={{ duration: 1.4, delay: 0.85 }}
                         className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] text-ivory tracking-tight"
                     >
-                        Regulatory advisory, capital deployment and digital infrastructure.{" "}
+                        Sovereign Risk Advisory and Institutional Capital.{" "}
                         <span className="italic text-sand">
-                            Caribbean institutional specialists.
-                        </span>
+                            Defending and Scaling Enterprises
+                        </span>{" "}
+                        Across The Bahamas, Cayman, Bermuda, Barbados, and Belize.
                     </motion.h1>
-                   <motion.p
+                    <motion.p
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, delay: 1.1 }}
                         className="mt-10 max-w-xl text-silver font-body text-base md:text-lg leading-relaxed"
                     >
-                        Bahamian market knowledge. European institutional discipline. One firm.
+                        The Architecture of Integrity. Built to International Standard. Enforced Locally.
                     </motion.p>
 
                     <motion.div

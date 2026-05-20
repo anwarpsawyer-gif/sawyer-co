@@ -161,33 +161,23 @@ export default function MainHall({ onEnter }) {
                 ))}
                 <circle cx={DOT_X} cy={DOT_Y} r="2.5" fill="#c8a96e"
                     style={{ animation: "sawyerDotCore 3s ease-in-out infinite" }} />
-                <text x={DOT_X - 10} y={DOT_Y - 14}
-                    fill="rgba(200,169,110,0.6)" fontSize="9"
-                    fontFamily="'Courier New', monospace" letterSpacing="0.12em">
+                {/* Label sits cleanly above the dot — line passes below it */}
+                <text x={DOT_X} y={DOT_Y - 28}
+                    textAnchor="middle"
+                    fill="rgba(200,169,110,0.65)" fontSize="9"
+                    fontFamily="'Courier New', monospace" letterSpacing="0.14em">
                     HARBOUR ISLAND
                 </text>
-                <text x={DOT_X - 10} y={DOT_Y - 3}
+                <text x={DOT_X} y={DOT_Y - 16}
+                    textAnchor="middle"
                     fill="rgba(200,169,110,0.45)" fontSize="8"
-                    fontFamily="'Courier New', monospace" letterSpacing="0.1em">
-                    25.5°N
+                    fontFamily="'Courier New', monospace" letterSpacing="0.12em">
+                    N 25.5°
                 </text>
 
                 {/* ════ COMPASS SYSTEM ════ */}
 
-                {/* Top origin dot */}
-                <circle cx={CX} cy={55} r="2.5" fill="#c8a96e" opacity="0.75" />
-
-                {/* Line 1 — vertical, draws down */}
-                <line x1={CX} y1={55} x2={CX} y2={CY}
-                    stroke="rgba(200,169,110,0.45)" strokeWidth="0.9" strokeLinecap="round"
-                    style={{
-                        strokeDasharray: VERT_LEN,
-                        strokeDashoffset: VERT_LEN,
-                        animation: "compassDraw 2.2s ease-in-out forwards",
-                    }}
-                />
-
-                {/* Line 2 — diagonal from Harbour Island */}
+                {/* Line — diagonal from Harbour Island dot to compass centre */}
                 <line x1={DOT_X} y1={DOT_Y} x2={CX} y2={CY}
                     stroke="rgba(200,169,110,0.45)" strokeWidth="0.9" strokeLinecap="round"
                     style={{

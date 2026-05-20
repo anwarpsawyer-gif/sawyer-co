@@ -178,58 +178,108 @@ export default function MainHall({ onEnter }) {
                     ELEUTHERA · 25.5°N
                 </text>
 
-                {/* Problem-axis overlay: Regulation / Liquidity / Digitization */}
-                    <g aria-hidden="true">
-                        {/* Geometry points */}
-                        {(() => {
-                            const TOP_X = DOT_X + 95;
-                            const TOP_Y = DOT_Y - 165;
-                            const INT_X = DOT_X + 95;
-                            const INT_Y = DOT_Y + 18;
-                    
-                            return (
-                                <>
-                                    {/* Top reference dot */}
-                                    <circle cx={TOP_X} cy={TOP_Y} r="2.4" fill="#c8a96e" opacity="0.65" />
-                    
-                                    {/* Vertical line */}
-                                    <line
-                                        x1={TOP_X}
-                                        y1={TOP_Y + 8}
-                                        x2={INT_X}
-                                        y2={INT_Y}
-                                        stroke="rgba(200,169,110,0.38)"
+               {/* Problem-axis / North Star overlay */}
+                <g aria-hidden="true" className="problem-axis">
+                    {(() => {
+                        const TOP_X = DOT_X + 300;
+                        const TOP_Y = DOT_Y - 210;
+                
+                        const INT_X = DOT_X + 300;
+                        const INT_Y = DOT_Y + 140;
+                
+                        const COMPASS_R = 82;
+                
+                        return (
+                            <>
+                                {/* top dot */}
+                                <circle cx={TOP_X} cy={TOP_Y} r="3" fill="#c8a96e" opacity="0.75" />
+                
+                                {/* vertical hand-drawn line */}
+                                <line
+                                    x1={TOP_X}
+                                    y1={TOP_Y}
+                                    x2={INT_X}
+                                    y2={INT_Y}
+                                    stroke="rgba(200,169,110,0.65)"
+                                    strokeWidth="1.1"
+                                    strokeLinecap="round"
+                                    strokeDasharray="6 5"
+                                    className="draw-line draw-line-vertical"
+                                />
+                
+                                {/* diagonal hand-drawn line from Nassau */}
+                                <line
+                                    x1={DOT_X}
+                                    y1={DOT_Y}
+                                    x2={INT_X}
+                                    y2={INT_Y}
+                                    stroke="rgba(200,169,110,0.72)"
+                                    strokeWidth="1.1"
+                                    strokeLinecap="round"
+                                    strokeDasharray="6 5"
+                                    className="draw-line draw-line-diagonal"
+                                />
+                
+                                {/* intersection dot */}
+                                <circle cx={INT_X} cy={INT_Y} r="3" fill="#c8a96e" opacity="0.85" />
+                
+                                {/* North Star fades in at intersection */}
+                                <g
+                                    className="north-star"
+                                    transform={`translate(${INT_X} ${INT_Y})`}
+                                >
+                                    <circle r="42" fill="none" stroke="rgba(200,169,110,0.22)" strokeWidth="0.8" />
+                                    <circle r="64" fill="none" stroke="rgba(200,169,110,0.16)" strokeWidth="0.7" />
+                
+                                    <path
+                                        d="M0,-54 L8,-9 L54,0 L8,9 L0,54 L-8,9 L-54,0 L-8,-9 Z"
+                                        fill="rgba(200,169,110,0.75)"
+                                    />
+                                    <path
+                                        d="M0,-30 L5,-5 L30,0 L5,5 L0,30 L-5,5 L-30,0 L-5,-5 Z"
+                                        fill="rgba(232,225,210,0.55)"
+                                    />
+                                </g>
+                
+                                {/* rotating compass circle */}
+                                <g className="compass-orbit" transform={`translate(${INT_X} ${INT_Y})`}>
+                                    <circle
+                                        r={COMPASS_R}
+                                        fill="none"
+                                        stroke="rgba(200,169,110,0.42)"
                                         strokeWidth="0.8"
-                                        strokeDasharray="4 6"
+                                        strokeDasharray="5 7"
                                     />
-                    
-                                    {/* Diagonal line from Nassau dot */}
-                                    <line
-                                        x1={DOT_X + 5}
-                                        y1={DOT_Y}
-                                        x2={INT_X}
-                                        y2={INT_Y}
-                                        stroke="rgba(200,169,110,0.45)"
-                                        strokeWidth="0.9"
-                                    />
-                    
-                                    {/* Intersection dot */}
-                                    <circle cx={INT_X} cy={INT_Y} r="3" fill="#c8a96e" opacity="0.9" />
-                    
-                                    {/* Vertical labels */}
-                                    <text x={INT_X + 16} y={INT_Y - 18} fill="rgba(232,225,210,0.72)" fontSize="10" fontFamily="'Courier New', monospace" letterSpacing="0.16em">
+                                </g>
+                
+                                {/* labels appear one by one around compass */}
+                                <g className="axis-label label-regulation">
+                                    <circle cx={INT_X - 18} cy={INT_Y - 92} r="15" fill="none" stroke="rgba(200,169,110,0.72)" />
+                                    <text x={INT_X - 23} y={INT_Y - 88} fill="#c8a96e" fontSize="10" fontFamily="'JetBrains Mono', monospace">1</text>
+                                    <text x={INT_X + 8} y={INT_Y - 88} fill="rgba(232,225,210,0.78)" fontSize="10" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.16em">
                                         REGULATION
                                     </text>
-                                    <text x={INT_X + 16} y={INT_Y} fill="rgba(200,169,110,0.78)" fontSize="10" fontFamily="'Courier New', monospace" letterSpacing="0.16em">
+                                </g>
+                
+                                <g className="axis-label label-liquidity">
+                                    <circle cx={INT_X + 98} cy={INT_Y} r="15" fill="none" stroke="rgba(200,169,110,0.72)" />
+                                    <text x={INT_X + 93} y={INT_Y + 4} fill="#c8a96e" fontSize="10" fontFamily="'JetBrains Mono', monospace">2</text>
+                                    <text x={INT_X + 124} y={INT_Y + 4} fill="rgba(232,225,210,0.78)" fontSize="10" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.16em">
                                         LIQUIDITY
                                     </text>
-                                    <text x={INT_X + 16} y={INT_Y + 18} fill="rgba(232,225,210,0.72)" fontSize="10" fontFamily="'Courier New', monospace" letterSpacing="0.16em">
+                                </g>
+                
+                                <g className="axis-label label-digitization">
+                                    <circle cx={INT_X - 18} cy={INT_Y + 92} r="15" fill="none" stroke="rgba(200,169,110,0.72)" />
+                                    <text x={INT_X - 23} y={INT_Y + 96} fill="#c8a96e" fontSize="10" fontFamily="'JetBrains Mono', monospace">3</text>
+                                    <text x={INT_X + 8} y={INT_Y + 96} fill="rgba(232,225,210,0.78)" fontSize="10" fontFamily="'JetBrains Mono', monospace" letterSpacing="0.16em">
                                         DIGITIZATION
                                     </text>
-                                </>
-                            );
-                        })()}
-                    </g>
+                                </g>
+                            </>
+                        );
+                    })()}
+                </g>
             </svg>
 
             {/* ── Left-side gradient — keeps arcs off the headline copy ── */}
@@ -325,20 +375,117 @@ export default function MainHall({ onEnter }) {
             </div>
 
             {/* ── Keyframes ── */}
-            <style>{`
-                @keyframes sawyerBreathe {
-                    0%   { opacity: 0.35; }
-                    100% { opacity: 1; }
+               <style>{`
+            @keyframes sawyerBreathe {
+                0%   { opacity: 0.35; }
+                100% { opacity: 1; }
+            }
+        
+            @keyframes sawyerSonar {
+                0%   { transform: scale(0.6); opacity: 0.9; }
+                100% { transform: scale(2.8); opacity: 0; }
+            }
+        
+            @keyframes sawyerDotCore {
+                0%, 100% { opacity: 0.75; }
+                50%      { opacity: 1; }
+            }
+        
+            /* ───────────────────────────── */
+            /* NORTH STAR / PROBLEM AXIS */
+            /* ───────────────────────────── */
+        
+            .problem-axis {
+                filter: drop-shadow(0 0 6px rgba(200,169,110,0.18));
+            }
+        
+            .draw-line {
+                stroke-dasharray: 420;
+                stroke-dashoffset: 420;
+                animation: drawTowardCenter 2.2s ease-in-out forwards;
+            }
+        
+            .draw-line-diagonal {
+                animation-delay: 0.15s;
+            }
+        
+            @keyframes drawTowardCenter {
+                to {
+                    stroke-dashoffset: 0;
                 }
-                @keyframes sawyerSonar {
-                    0%   { transform: scale(0.6); opacity: 0.9; }
-                    100% { transform: scale(2.8); opacity: 0; }
+            }
+        
+            .north-star {
+                opacity: 0;
+                transform-box: fill-box;
+                transform-origin: center;
+                animation:
+                    starFadeIn 1.2s ease forwards 2.25s,
+                    starPulse 4.8s ease-in-out infinite 3.4s;
+            }
+        
+            @keyframes starFadeIn {
+                to {
+                    opacity: 1;
                 }
-                @keyframes sawyerDotCore {
-                    0%, 100% { opacity: 0.75; }
-                    50%      { opacity: 1; }
+            }
+        
+            @keyframes starPulse {
+                0%, 100% {
+                    opacity: 0.72;
+                    filter: drop-shadow(0 0 4px rgba(200,169,110,0.18));
                 }
-            `}</style>
+                50% {
+                    opacity: 0.95;
+                    filter: drop-shadow(0 0 12px rgba(200,169,110,0.32));
+                }
+            }
+        
+            .compass-orbit {
+                opacity: 0;
+                transform-box: fill-box;
+                transform-origin: center;
+                animation:
+                    orbitFadeIn 0.9s ease forwards 2.8s,
+                    orbitRotate 18s linear infinite 3.7s;
+            }
+        
+            @keyframes orbitFadeIn {
+                to {
+                    opacity: 1;
+                }
+            }
+        
+            @keyframes orbitRotate {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+        
+            .axis-label {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+        
+            .label-regulation {
+                animation: labelReveal 0.9s ease forwards 3.1s;
+            }
+        
+            .label-liquidity {
+                animation: labelReveal 0.9s ease forwards 3.75s;
+            }
+        
+            .label-digitization {
+                animation: labelReveal 0.9s ease forwards 4.4s;
+            }
+        
+            @keyframes labelReveal {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `}</style>
         </section>
     );
 }

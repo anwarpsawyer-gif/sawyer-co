@@ -159,19 +159,26 @@ export default function MainHall({ onEnter }) {
                         }}
                     />
                 ))}
-                <circle cx={DOT_X} cy={DOT_Y} r="2.5" fill="#c8a96e"
+                <circle cx={DOT_X} cy={DOT_Y} r="3" fill="#c8a96e"
                     style={{ animation: "sawyerDotCore 3s ease-in-out infinite" }} />
-                {/* Label sits cleanly above the dot — line passes below it */}
+                {/* Semi-transparent backing rect so text reads over the gradient */}
+                <rect
+                    x={DOT_X - 58} y={DOT_Y - 42}
+                    width="116" height="28"
+                    fill="rgba(10,20,35,0.45)"
+                    rx="2"
+                />
                 <text x={DOT_X} y={DOT_Y - 28}
                     textAnchor="middle"
-                    fill="rgba(200,169,110,0.65)" fontSize="9"
-                    fontFamily="'Courier New', monospace" letterSpacing="0.14em">
+                    fill="rgba(210,185,135,0.95)" fontSize="9.5"
+                    fontFamily="'Courier New', monospace" letterSpacing="0.16em"
+                    style={{ fontWeight: 500 }}>
                     HARBOUR ISLAND
                 </text>
-                <text x={DOT_X} y={DOT_Y - 16}
+                <text x={DOT_X} y={DOT_Y - 17}
                     textAnchor="middle"
-                    fill="rgba(200,169,110,0.45)" fontSize="8"
-                    fontFamily="'Courier New', monospace" letterSpacing="0.12em">
+                    fill="rgba(200,169,110,0.75)" fontSize="8.5"
+                    fontFamily="'Courier New', monospace" letterSpacing="0.14em">
                     N 25.5°
                 </text>
 
@@ -413,7 +420,7 @@ export default function MainHall({ onEnter }) {
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none"
                 style={{
                     zIndex: 3,
-                    background: "linear-gradient(90deg, rgba(13,27,42,1) 25%, rgba(13,27,42,0.75) 48%, rgba(13,27,42,0.1) 68%, transparent 100%)",
+                    background: "linear-gradient(90deg, rgba(13,27,42,1) 18%, rgba(13,27,42,0.72) 36%, rgba(13,27,42,0.08) 56%, transparent 100%)",
                 }} />
 
             {/* Top plate */}

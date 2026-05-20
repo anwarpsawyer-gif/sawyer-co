@@ -27,7 +27,7 @@ const MERIDIANS = [
     { angle:  22, op: 0.028, delay: "1.2s" },
 ];
 
-// Eleuthera coordinate dot — 3rd arc, lat 25.5°N
+// Harbour Island coordinate dot — 3rd arc, lat 25.5°N
 const DOT_R     = 540;
 const DOT_ANGLE = Math.PI * 0.96;
 const DOT_X     = OX + DOT_R * Math.cos(DOT_ANGLE);
@@ -117,7 +117,7 @@ export default function MainHall({ onEnter }) {
                     />
                 ))}
 
-                {/* Eleuthera coordinate dot ── three concentric sonar rings + core */}
+                {/* Harbour Island coordinate dot ── three concentric sonar rings + core */}
                 {/* Ring 1 — slowest, most transparent */}
                 <circle
                     cx={DOT_X}
@@ -175,7 +175,7 @@ export default function MainHall({ onEnter }) {
                     fontFamily="'Courier New', monospace"
                     letterSpacing="0.12em"
                 >
-                    ELEUTHERA · 25.5°N
+                    HARBOUR ISLAND · 25.5°N
                 </text>
 
                {/* Problem-axis / North Star overlay */}
@@ -368,7 +368,7 @@ export default function MainHall({ onEnter }) {
                 className="absolute bottom-8 left-[var(--sawyer-edge-pad)] right-[var(--sawyer-edge-pad)] flex items-end justify-between"
                 style={{ zIndex: 10 }}
             >
-                <div className="inst-label">[ EST. SAWYER &amp; CO. · ELEUTHERA · MMXXIV ]</div>
+                <div className="inst-label">[ EST. SAWYER &amp; CO. · HARBOUR ISLAND · MMXXIV ]</div>
                 <div className="inst-label hidden md:block">
                     SEVEN ENVIRONMENTS · ONE INSTITUTION
                 </div>

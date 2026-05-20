@@ -461,6 +461,14 @@ export default function MainHall({ onEnter }) {
                         Across The Bahamas, Cayman, Bermuda, Barbados, and Belize.
                     </motion.h1>
                     <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1.15, delay: 1.02 }}
+                        className="mt-8 max-w-2xl text-sand/90 font-body text-sm md:text-base leading-relaxed tracking-wide"
+                    >
+                        Institutions are under pressure to modernize without compromising stability.
+                    </motion.p>
+                    <motion.p
                         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, delay: 1.1 }}
                         className="mt-10 max-w-xl text-silver font-body text-base md:text-lg leading-relaxed"

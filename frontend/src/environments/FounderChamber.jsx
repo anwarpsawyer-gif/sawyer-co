@@ -11,7 +11,7 @@ const FOUNDERS = [
         name: "Anwar Sawyer, LL.M.",
         role: "Founding Principal · Regulatory Architecture",
         portrait: ANWAR_PORTRAIT,
-        bio: "A former Financial Regulatory Analyst at the Securities Commission of The Bahamas and Deloitte alumnus, Anwar Sawyer brings over a decade of financial crime, regulatory strategy, and M&A due diligence experience across European and Caribbean markets. He holds a Master of Law in Mergers and Acquisitions from Frankfurt School of Finance and Management. Trained at the Frankfurt School of Finance & Management, he has designed AML/CFT frameworks for European Tier 1 banks under MiFID II, built KRI-based risk models at exxeta AG, and led regulatory transformation engagements at Deloitte GmbH Frankfurt. He is the only DORA-certified practitioner based in Nassau.",
+        bio: "A former Financial Regulatory Expert at the Securities Commission of The Bahamas and Deloitte alumnus, Anwar Sawyer brings over a decade of financial crime, regulatory strategy, and M&A due diligence experience across European and Caribbean markets. He holds a Master of Law in Mergers and Acquisitions from Frankfurt School of Finance and Management. Anwar has designed AML/CFT frameworks for European Tier 1 banks under the German \"Geldwäschegesetz\" and the 5th Anti Money Laundering Directive (AMLD5), led M&A compliance and transaction due diligence engagements in Frankfurt. He is the only DORA-certified practitioner based in Nassau.",
         stats: [
             { k: "EXPERIENCE", v: "18+ YRS" },
             { k: "JURISDICTIONS", v: "BS · EU · CARIBBEAN" },

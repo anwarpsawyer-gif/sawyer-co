@@ -54,10 +54,10 @@ function meridianD(deg, rMin, rMax) {
 const CX = 760;  // compass centre x — shifted left so E label fits
 const CY = 420;  // compass centre y — vertically centred
 
-const R1  = 100;  // outer degree ring
-const R2  = 86;   // inner ring 1
-const R3  = 74;   // inner ring 2 (innermost circle)
-const ARM = 115;  // crosshair arm — shorter so labels fit beyond outer ring
+const R1  = 76;   // outer degree ring
+const R2  = 65;   // inner ring 1
+const R3  = 56;   // inner ring 2 (innermost circle)
+const ARM = 90;   // crosshair arm length beyond outer ring
 
 const VERT_LEN = 365;  // pre-calculated: CY(420) - TOP_Y(55)
 const DIAG_LEN = 280;  // pre-calculated for CX=760, CY=420   // harbour island to centre
@@ -106,8 +106,8 @@ const LABELS = [
 ];
 
 // Diamond dimensions
-const DH = 52;  // half-height
-const DW = 32;  // half-width
+const DH = 40;  // half-height
+const DW = 24;  // half-width
 
 export default function MainHall({ onEnter }) {
     return (
@@ -149,19 +149,27 @@ export default function MainHall({ onEnter }) {
                     />
                 ))}
 
+                {/* ════ COMPASS SYSTEM ════
+                    Entire right-side system is delayed until after hero text
+                    has finished animating (hero last element at 1.35s + 1s = ~2.4s)
+                    so the reading flow is always left → right.
+                ════════════════════════════════════════════════════════════ */}
+                <g style={{ opacity: 0, animation: "harbourReveal 0.8s ease forwards 2.0s" }}>
+
                 {/* Harbour Island sonar dot */}
                 {[0, 1.2, 2.4].map((delay, i) => (
                     <circle key={`sonar-${i}`} cx={DOT_X} cy={DOT_Y} r="10"
                         fill="none" stroke="rgba(200,169,110,0.4)" strokeWidth="0.7"
                         style={{
                             transformOrigin: `${DOT_X.toFixed(1)}px ${DOT_Y.toFixed(1)}px`,
-                            animation: `sawyerSonar 3.6s ${delay}s ease-out infinite`,
+                            // offset sonar delays relative to reveal
+                            animation: `sawyerSonar 3.6s ${delay + 2.0}s ease-out infinite`,
                         }}
                     />
                 ))}
                 <circle cx={DOT_X} cy={DOT_Y} r="3" fill="#c8a96e"
-                    style={{ animation: "sawyerDotCore 3s ease-in-out infinite" }} />
-                {/* Semi-transparent backing rect so text reads over the gradient */}
+                    style={{ animation: "sawyerDotCore 3s 2.0s ease-in-out infinite" }} />
+                {/* Backing rect + label */}
                 <rect
                     x={DOT_X - 58} y={DOT_Y - 42}
                     width="116" height="28"
@@ -181,8 +189,6 @@ export default function MainHall({ onEnter }) {
                     fontFamily="'Courier New', monospace" letterSpacing="0.14em">
                     N 25.5°
                 </text>
-
-                {/* ════ COMPASS SYSTEM ════ */}
 
                 {/* Line — diagonal from Harbour Island dot to compass centre */}
                 <line x1={DOT_X} y1={DOT_Y} x2={CX} y2={CY}
@@ -414,6 +420,9 @@ export default function MainHall({ onEnter }) {
                         stroke="rgba(200,169,110,0.4)" strokeWidth="0.7"/>
                 </g>
 
+                {/* Close harbourReveal wrapper */}
+                </g>
+
             </svg>
 
             {/* Left gradient */}
@@ -498,6 +507,10 @@ export default function MainHall({ onEnter }) {
                     to { stroke-dashoffset: 0; }
                 }
                 @keyframes compassRoseFadeIn {
+                    0%   { opacity: 0; }
+                    100% { opacity: 1; }
+                }
+                @keyframes harbourReveal {
                     0%   { opacity: 0; }
                     100% { opacity: 1; }
                 }

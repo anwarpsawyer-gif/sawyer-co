@@ -56,7 +56,7 @@ export default function FounderChamber() {
                     transition={{ duration: 1.4 }}
                     className="font-display italic text-3xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-navy max-w-5xl"
                 >
-                    &ldquo;The institutions that will lead the next decade are being built now,{" "}
+                    &ldquo;Built for institutions navigating regulation, liquidity, and digitization without compromising stability.,{" "}
                     <span className="not-italic text-navy/60">
                         by people who understand both sides of the table.
                     </span>

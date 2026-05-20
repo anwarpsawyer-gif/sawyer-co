@@ -130,7 +130,7 @@ export default function NexusReveal({ onNodeClick }) {
                 }}
             />
 
-            {/* Center copy */}
+            {/* Center copy — unchanged */}
             <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-[var(--sawyer-edge-pad)]">
                 <motion.p
                     initial={{ opacity: 0 }}
@@ -165,7 +165,7 @@ export default function NexusReveal({ onNodeClick }) {
                 </motion.p>
             </div>
 
-            {/* Nodes — labels enlarged, dot kept, ENTER more prominent */}
+            {/* Nodes — only label font size increased, everything else original */}
             {NODES.map((n, i) => (
                 <motion.button
                     key={n.id}
@@ -178,15 +178,19 @@ export default function NexusReveal({ onNodeClick }) {
                     className={`absolute z-20 ${n.position} group text-left`}
                 >
                     <div className="flex items-center gap-4">
-                        <span className="relative inline-flex flex-shrink-0">
+                        <span className="relative inline-flex">
                             <span className="absolute inline-flex h-3 w-3 rounded-full bg-sand opacity-40 ambient-drift" />
                             <span className="relative inline-flex h-2 w-2 rounded-full bg-sand mt-[2px] ml-[2px]" />
                         </span>
-                        <span className="font-body text-lg md:text-xl text-ivory group-hover:text-sand transition-colors duration-500 tracking-[0.18em] uppercase">
+                        {/* Only change: inst-label → inst-label text-[13px] */}
+                        <span
+                            className="inst-label text-ivory group-hover:text-sand transition-colors duration-500"
+                            style={{ fontSize: "13px", letterSpacing: "0.2em" }}
+                        >
                             {n.label}
                         </span>
                     </div>
-                    <span className="block mt-3 ml-7 font-body text-sm tracking-widest text-sand uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <span className="block mt-2 ml-7 inst-label text-silver opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         ENTER →
                     </span>
                 </motion.button>

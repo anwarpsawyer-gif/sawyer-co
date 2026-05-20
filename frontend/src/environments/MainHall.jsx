@@ -27,7 +27,7 @@ const MERIDIANS = [
     { angle:  22, op: 0.028, delay: "1.2s" },
 ];
 
-// Nassau coordinate dot — 3rd arc, lat 25.5°N
+// Eleuthera coordinate dot — 3rd arc, lat 25.5°N
 const DOT_R     = 540;
 const DOT_ANGLE = Math.PI * 0.96;
 const DOT_X     = OX + DOT_R * Math.cos(DOT_ANGLE);

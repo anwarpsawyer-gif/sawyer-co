@@ -7,23 +7,23 @@ const PILLARS = [
     {
         idx: "01",
         title: "Regulatory & Compliance",
-        sub: "Examination Readiness",
-        body: "Built by a former Securities Commission of The Bahamas regulatory analyst, our AML/CFT programmes are designed to survive the examination. From risk assessment frameworks to KYC/CDD procedures and MLRO governance, we deliver end-to-end. Anwar Sawyer is the only DORA-certified practitioner based in the Bahamas.",
-        tag: "MANDATE :: EXAMINATION READINESS",
+        sub: "Examination Readiness · AML/CFT · MLRO Governance",
+        body: "Sawyer Advisory delivers full AML/CFT compliance programmes designed to satisfy the requirements of the Securities Commission of The Bahamas, the Cayman Islands Monetary Authority, the Bermuda Monetary Authority, the Financial Services Commission of Barbados, the Financial Intelligence Unit of Belize, FATF, and DORA simultaneously. Covering risk assessment frameworks, KYC/CDD procedures, MLRO governance, and examination preparation across every jurisdiction we operate in. Clients receive a compliance infrastructure that survives regulatory scrutiny, not one that merely documents it. Director-led across every engagement. The only DORA-certified practice domiciled in Nassau.",
+        tag: "MANDATE :: REGULATION",
     },
     {
         idx: "02",
         title: "Capital & Structured Lending",
-        sub: "Lombard · Private Equity · Due Diligence",
-        body: "Caribbean family offices and HNWIs hold significant securities and real assets and routinely lack access to structured credit against them. Through ZephyrWealth.ai, we provide Lombard lending against local portfolios and acquisition due diligence on Caribbean assets to institutional standard. Capital deployed without liquidating what was built to last.",
-        tag: "MANDATE :: CAPITAL DEPLOYMENT",
+        sub: "Private Equity · Lombard · Due Diligence",
+        body: "Sawyer Capital operates as a Caribbean private equity firm, deploying institutional capital into regional assets across financial services, real estate, and infrastructure. For qualifying portfolio positions, we provide structured Lombard lending against Caribbean securities holdings as an ancillary facility, enabling clients to access liquidity without dismantling the positions they spent years building. Acquisition due diligence on Caribbean targets covers regulatory exposure, corporate structure and valuation to the standard required before institutional close.",
+        tag: "MANDATE :: LIQUIDITY",
     },
     {
         idx: "03",
-        title: "Digital Infrastructure",
+        title: "Digital Infrastructure & Transformation",
         sub: "Treasury · RegTech · Digital Asset Compliance",
-        body: "Sarah Sawyer built treasury analytics for organisations managing over $1.2M in digital assets at TreasureCorp, and led AI automation programmes at Deutsche Bank across a €500B+ platform. We bring that operational discipline to digital asset compliance, treasury governance, and institutional digital transformation across the Caribbean.",
-        tag: "MANDATE :: INSTITUTIONAL TRANSFORMATION",
+        body: "Sawyer Digital brings operational excellence to digital asset compliance, treasury governance, and institutional digital transformation across the Caribbean and beyond. Three AI-powered platforms built in-house form the foundation: ZephyrWealth.ai manages the full private equity fund lifecycle from deal pipeline through LP portal access, and facilitates the Lombard lending process for qualifying positions. TreasureCorp delivers real-time multi-chain treasury analytics and governance reporting. RegWatch monitors SCB, FATF, FinCEN, DARE, and DORA continuously, converting regulatory change into actionable intelligence before it becomes a compliance event.",
+        tag: "MANDATE :: DIGITIZATION",
     },
 ];
 
@@ -101,7 +101,7 @@ export default function AdvisoryChamber() {
                                     <p className="inst-label">{p.tag}</p>
                                     <h3 className="mt-3 font-display text-2xl md:text-3xl text-ivory tracking-tight">
                                         {p.title}
-                                        <span className="block text-silver text-base md:text-lg font-body italic mt-1">
+                                        <span className="block text-sand text-sm md:text-base font-body not-italic mt-2 tracking-widest uppercase">
                                             {p.sub}
                                         </span>
                                     </h3>

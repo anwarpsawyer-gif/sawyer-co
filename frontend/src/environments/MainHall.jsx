@@ -51,16 +51,16 @@ function meridianD(deg, rMin, rMax) {
 }
 
 // ─── Compass geometry ─────────────────────────────────────────────────────────
-const CX = 820;   // compass centre x
-const CY = 415;   // compass centre y — vertically centred
+const CX = 760;  // compass centre x — shifted left so E label fits
+const CY = 420;  // compass centre y — vertically centred
 
 const R1  = 100;  // outer degree ring
 const R2  = 86;   // inner ring 1
 const R3  = 74;   // inner ring 2 (innermost circle)
-const ARM = 140;  // crosshair arm length beyond outer ring
+const ARM = 115;  // crosshair arm — shorter so labels fit beyond outer ring
 
-const VERT_LEN = Math.round(Math.sqrt((CX - CX)**2 + (CY - 55)**2));         // top dot to centre
-const DIAG_LEN = Math.round(Math.sqrt((CX - DOT_X)**2 + (CY - DOT_Y)**2));   // harbour island to centre
+const VERT_LEN = 365;  // pre-calculated: CY(420) - TOP_Y(55)
+const DIAG_LEN = 280;  // pre-calculated for CX=760, CY=420   // harbour island to centre
 
 const toRad = (deg) => (deg - 90) * (Math.PI / 180);
 
@@ -181,8 +181,8 @@ export default function MainHall({ onEnter }) {
                 <line x1={CX} y1={55} x2={CX} y2={CY}
                     stroke="rgba(200,169,110,0.45)" strokeWidth="0.9" strokeLinecap="round"
                     style={{
-                        strokeDasharray: CY - 55,
-                        strokeDashoffset: CY - 55,
+                        strokeDasharray: VERT_LEN,
+                        strokeDashoffset: VERT_LEN,
                         animation: "compassDraw 2.2s ease-in-out forwards",
                     }}
                 />

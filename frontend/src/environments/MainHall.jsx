@@ -1,4 +1,4 @@
-import { motion, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
 
 const ATRIUM =
     "https://images.unsplash.com/photo-1622396481322-3b83d186701b?crop=entropy&cs=srgb&fm=jpg&q=85&w=2400";
@@ -110,8 +110,6 @@ const DH = 40;  // half-height
 const DW = 24;  // half-width
 
 export default function MainHall({ onEnter }) {
-    // scrollYProgress drives compass opacity via ref callback below
-    const { scrollYProgress } = useScroll();
     return (
         <section
             id="main-hall"
@@ -152,20 +150,11 @@ export default function MainHall({ onEnter }) {
                 ))}
 
                 {/* ════ COMPASS SYSTEM ════
-                    Opacity controlled via CSS custom property updated by framer-motion
-                    on the parent section. motion.g is not valid SVG — using a regular
-                    g with ref-based opacity instead.
+                    Entire right-side system is delayed until after hero text
+                    has finished animating (hero last element at 1.35s + 1s = ~2.4s)
+                    so the reading flow is always left → right.
                 ════════════════════════════════════════════════════════════ */}
-                <g ref={(el) => {
-                    if (el) {
-                        // Subscribe to scrollYProgress and update opacity directly
-                        const unsub = scrollYProgress.on("change", (v) => {
-                            const op = Math.min(1, Math.max(0, (v - 0.02) / (0.12 - 0.02)));
-                            el.style.opacity = op;
-                        });
-                        el._unsub = unsub;
-                    }
-                }} style={{ opacity: 0 }}>
+                <g style={{ opacity: 0, animation: "harbourReveal 0.8s ease forwards 2.0s" }}>
 
                 {/* Harbour Island sonar dot */}
                 {[0, 1.2, 2.4].map((delay, i) => (
@@ -174,12 +163,12 @@ export default function MainHall({ onEnter }) {
                         style={{
                             transformOrigin: `${DOT_X.toFixed(1)}px ${DOT_Y.toFixed(1)}px`,
                             // offset sonar delays relative to reveal
-                            animation: `sawyerSonar 3.6s ${delay}s ease-out infinite`,
+                            animation: `sawyerSonar 3.6s ${delay + 2.0}s ease-out infinite`,
                         }}
                     />
                 ))}
                 <circle cx={DOT_X} cy={DOT_Y} r="3" fill="#c8a96e"
-                    style={{ animation: "sawyerDotCore 3s ease-in-out infinite" }} />
+                    style={{ animation: "sawyerDotCore 3s 2.0s ease-in-out infinite" }} />
                 {/* Backing rect + label */}
                 <rect
                     x={DOT_X - 58} y={DOT_Y - 42}
@@ -207,12 +196,12 @@ export default function MainHall({ onEnter }) {
                     style={{
                         strokeDasharray: DIAG_LEN,
                         strokeDashoffset: DIAG_LEN,
-                        animation: "compassDraw 3s ease-in-out forwards",
+                        animation: "compassDraw 2.2s ease-in-out forwards",
                     }}
                 />
 
                 {/* ── Full compass rose — fades in after lines arrive ── */}
-                <g style={{ opacity: 0, animation: "compassRoseFadeIn 2.4s ease forwards 0.8s" }}>
+                <g style={{ opacity: 0, animation: "compassRoseFadeIn 1.8s ease forwards 2.2s" }}>
 
                     {/* Outer degree ring */}
                     <circle cx={CX} cy={CY} r={R1}
@@ -373,7 +362,7 @@ export default function MainHall({ onEnter }) {
 
                 {/* ── Mandate labels — sequential reveal after compass appears ── */}
                 {/* REGULATION — above, at 0° */}
-                <g style={{ opacity: 0, animation: "labelReveal 1.2s ease forwards 3.2s" }}>
+                <g style={{ opacity: 0, animation: "labelReveal 0.9s ease forwards 3.1s" }}>
                     <text x={CX} y={CY - ARM - 18}
                         textAnchor="middle"
                         fill="rgba(200,169,110,0.55)"
@@ -391,7 +380,7 @@ export default function MainHall({ onEnter }) {
                 </g>
 
                 {/* LIQUIDITY — right, at 120° (East side) */}
-                <g style={{ opacity: 0, animation: "labelReveal 1.2s ease forwards 4.1s" }}>
+                <g style={{ opacity: 0, animation: "labelReveal 0.9s ease forwards 3.75s" }}>
                     {/* Extended arm dot */}
                     <circle cx={CX + ARM + 18} cy={CY}
                         r="5" fill="none" stroke="rgba(200,169,110,0.5)" strokeWidth="0.8"/>
@@ -414,7 +403,7 @@ export default function MainHall({ onEnter }) {
                 </g>
 
                 {/* DIGITIZATION — below, at 240° (South side) */}
-                <g style={{ opacity: 0, animation: "labelReveal 1.2s ease forwards 5.0s" }}>
+                <g style={{ opacity: 0, animation: "labelReveal 0.9s ease forwards 4.4s" }}>
                     <text x={CX} y={CY + ARM + 14}
                         textAnchor="middle"
                         fill="rgba(200,169,110,0.55)"
@@ -431,7 +420,7 @@ export default function MainHall({ onEnter }) {
                         stroke="rgba(200,169,110,0.4)" strokeWidth="0.7"/>
                 </g>
 
-                {/* ── Close compass system wrapper ── */}
+                {/* Close harbourReveal wrapper */}
                 </g>
 
             </svg>
@@ -518,6 +507,10 @@ export default function MainHall({ onEnter }) {
                     to { stroke-dashoffset: 0; }
                 }
                 @keyframes compassRoseFadeIn {
+                    0%   { opacity: 0; }
+                    100% { opacity: 1; }
+                }
+                @keyframes harbourReveal {
                     0%   { opacity: 0; }
                     100% { opacity: 1; }
                 }

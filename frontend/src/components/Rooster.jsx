@@ -8,13 +8,23 @@ import { motion, useScroll, useTransform } from "framer-motion";
  *   • Capital Suite arrival (≈ scrollYProgress 0.42 – 0.58)
  *
  * Video has a dark navy background → mixBlendMode "screen" drops it out.
- * Brightness + contrast boost lifts the faint rooster silhouette.
+ * On mobile, we add a brightness boost since screens vary more.
  */
 export default function Rooster() {
     const { scrollYProgress } = useScroll();
     const [reduced, setReduced] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const videoRef = useRef(null);
 
+    // Detect mobile
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 768);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
+    }, []);
+
+    // Respect prefers-reduced-motion
     useEffect(() => {
         const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
         const apply = () => setReduced(mq.matches);
@@ -23,6 +33,7 @@ export default function Rooster() {
         return () => mq.removeEventListener?.("change", apply);
     }, []);
 
+    // Pause / play
     useEffect(() => {
         const v = videoRef.current;
         if (!v) return;
@@ -58,13 +69,15 @@ export default function Rooster() {
                 x,
                 y,
                 opacity,
-                width: "180px",
-                height: "180px",
-                // "screen" dissolves the dark navy background into transparency
+                width: isMobile ? "120px" : "180px",
+                height: isMobile ? "120px" : "180px",
+                // "screen" blend drops out dark/black backgrounds on all devices
                 mixBlendMode: "screen",
-                // Lift the faint rooster: brightness pulls it out of the dark,
-                // contrast sharpens the silhouette, saturate keeps original colour
-                filter: "brightness(1.6) contrast(1.6) saturate(1.2)",
+                // Brightness lifts the faint rooster out of the dark background
+                // Slightly higher on mobile where screens render darker
+                filter: isMobile
+                    ? "brightness(2.2) contrast(1.5) saturate(1.1)"
+                    : "brightness(1.6) contrast(1.6) saturate(1.2)",
             }}
         >
             <video

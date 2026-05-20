@@ -117,7 +117,7 @@ export default function MainHall({ onEnter }) {
                     />
                 ))}
 
-                {/* Nassau coordinate dot ── three concentric sonar rings + core */}
+                {/* Eleuthera coordinate dot ── three concentric sonar rings + core */}
                 {/* Ring 1 — slowest, most transparent */}
                 <circle
                     cx={DOT_X}
@@ -175,8 +175,61 @@ export default function MainHall({ onEnter }) {
                     fontFamily="'Courier New', monospace"
                     letterSpacing="0.12em"
                 >
-                    NASSAU · 25.5°N
+                    ELEUTHERA · 25.5°N
                 </text>
+
+                {/* Problem-axis overlay: Regulation / Liquidity / Digitization */}
+                    <g aria-hidden="true">
+                        {/* Geometry points */}
+                        {(() => {
+                            const TOP_X = DOT_X + 95;
+                            const TOP_Y = DOT_Y - 165;
+                            const INT_X = DOT_X + 95;
+                            const INT_Y = DOT_Y + 18;
+                    
+                            return (
+                                <>
+                                    {/* Top reference dot */}
+                                    <circle cx={TOP_X} cy={TOP_Y} r="2.4" fill="#c8a96e" opacity="0.65" />
+                    
+                                    {/* Vertical line */}
+                                    <line
+                                        x1={TOP_X}
+                                        y1={TOP_Y + 8}
+                                        x2={INT_X}
+                                        y2={INT_Y}
+                                        stroke="rgba(200,169,110,0.38)"
+                                        strokeWidth="0.8"
+                                        strokeDasharray="4 6"
+                                    />
+                    
+                                    {/* Diagonal line from Nassau dot */}
+                                    <line
+                                        x1={DOT_X + 5}
+                                        y1={DOT_Y}
+                                        x2={INT_X}
+                                        y2={INT_Y}
+                                        stroke="rgba(200,169,110,0.45)"
+                                        strokeWidth="0.9"
+                                    />
+                    
+                                    {/* Intersection dot */}
+                                    <circle cx={INT_X} cy={INT_Y} r="3" fill="#c8a96e" opacity="0.9" />
+                    
+                                    {/* Vertical labels */}
+                                    <text x={INT_X + 16} y={INT_Y - 18} fill="rgba(232,225,210,0.72)" fontSize="10" fontFamily="'Courier New', monospace" letterSpacing="0.16em">
+                                        REGULATION
+                                    </text>
+                                    <text x={INT_X + 16} y={INT_Y} fill="rgba(200,169,110,0.78)" fontSize="10" fontFamily="'Courier New', monospace" letterSpacing="0.16em">
+                                        LIQUIDITY
+                                    </text>
+                                    <text x={INT_X + 16} y={INT_Y + 18} fill="rgba(232,225,210,0.72)" fontSize="10" fontFamily="'Courier New', monospace" letterSpacing="0.16em">
+                                        DIGITIZATION
+                                    </text>
+                                </>
+                            );
+                        })()}
+                    </g>
             </svg>
 
             {/* ── Left-side gradient — keeps arcs off the headline copy ── */}
@@ -265,7 +318,7 @@ export default function MainHall({ onEnter }) {
                 className="absolute bottom-8 left-[var(--sawyer-edge-pad)] right-[var(--sawyer-edge-pad)] flex items-end justify-between"
                 style={{ zIndex: 10 }}
             >
-                <div className="inst-label">[ EST. SAWYER &amp; CO. · NASSAU · MMXXIV ]</div>
+                <div className="inst-label">[ EST. SAWYER &amp; CO. · ELEUTHERA · MMXXIV ]</div>
                 <div className="inst-label hidden md:block">
                     SEVEN ENVIRONMENTS · ONE INSTITUTION
                 </div>

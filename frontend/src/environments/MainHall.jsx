@@ -52,16 +52,16 @@ function meridianD(deg, rMin, rMax) {
 
 // ─── Compass / North Star geometry ───────────────────────────────────────────
 // TOP dot  — origin of vertical line (top-right of viewport)
-const TOP_X = DOT_X + 300; // 784.26
-const TOP_Y = DOT_Y - 210; // 257.68
+const TOP_X = 820; // top of vertical line
+const TOP_Y = 60;  // near top of viewbox
 
 // Intersection — where both lines meet, diamond lives here
-const INT_X = DOT_X + 300; // 784.26
-const INT_Y = DOT_Y + 140; // 607.68
+const INT_X = 820; // intersection x
+const INT_Y = 390; // intersection y — vertically centred
 
 // Exact line lengths (pre-calculated)
-const VERT_LEN = 350;   // vertical line
-const DIAG_LEN = 331;   // diagonal from Harbour Island dot
+const VERT_LEN = 330;   // vertical line
+const DIAG_LEN = 345;   // diagonal from Harbour Island dot
 
 // Orbit ring radius
 const ORBIT_R = 82;

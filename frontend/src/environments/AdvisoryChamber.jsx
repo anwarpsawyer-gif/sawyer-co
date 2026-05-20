@@ -8,14 +8,14 @@ const PILLARS = [
         idx: "01",
         title: "Regulatory & Compliance",
         sub: "Examination Readiness",
-        body: "Built by a former Securities Commission of The Bahamas regulatory analyst, our AML/CFT programmes are designed to survive the examination — not just satisfy a checklist. From risk assessment frameworks to KYC/CDD procedures and MLRO governance, we deliver end-to-end. Anwar Sawyer is the only DORA-certified practitioner based in Nassau.",
+        body: "Built by a former Securities Commission of The Bahamas regulatory analyst, our AML/CFT programmes are designed to survive the examination. From risk assessment frameworks to KYC/CDD procedures and MLRO governance, we deliver end-to-end. Anwar Sawyer is the only DORA-certified practitioner based in the Bahamas.",
         tag: "MANDATE :: EXAMINATION READINESS",
     },
     {
         idx: "02",
         title: "Capital & Structured Lending",
         sub: "Lombard · Private Equity · Due Diligence",
-        body: "Caribbean family offices and HNWIs hold significant securities and real assets — and routinely lack access to structured credit against them. Through ZephyrWealth.ai, we provide Lombard lending against local portfolios and acquisition due diligence on Caribbean assets to institutional standard. Capital deployed without liquidating what was built to last.",
+        body: "Caribbean family offices and HNWIs hold significant securities and real assets and routinely lack access to structured credit against them. Through ZephyrWealth.ai, we provide Lombard lending against local portfolios and acquisition due diligence on Caribbean assets to institutional standard. Capital deployed without liquidating what was built to last.",
         tag: "MANDATE :: CAPITAL DEPLOYMENT",
     },
     {

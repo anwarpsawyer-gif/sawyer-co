@@ -28,8 +28,8 @@ const MERIDIANS = [
 // Harbour Island coordinate dot
 const DOT_R     = 540;
 const DOT_ANGLE = Math.PI * 0.96;
-const DOT_X     = OX + DOT_R * Math.cos(DOT_ANGLE); // 484.3
-const DOT_Y     = OY + DOT_R * Math.sin(DOT_ANGLE); // 467.7
+const DOT_X     = OX + DOT_R * Math.cos(DOT_ANGLE);
+const DOT_Y     = OY + DOT_R * Math.sin(DOT_ANGLE);
 
 function arcD(r) {
     const a1 = Math.PI * 0.44;
@@ -51,38 +51,63 @@ function meridianD(deg, rMin, rMax) {
 }
 
 // ─── Compass geometry ─────────────────────────────────────────────────────────
-const TOP_X    = 820;   // vertical line origin — near top of viewport
-const TOP_Y    = 80;    // below nav, clears REGULATION label
-const INT_X    = 820;   // intersection — diamond lives here
-const INT_Y    = 420;   // vertically centred in viewport
-const VERT_LEN = 340;   // exact vertical line length
-const DIAG_LEN = 339;   // exact diagonal line length
-const ORBIT_R  = 55;    // orbit ring radius
-const DIAMOND  = 34;    // diamond half-height (larger than before)
-const ORBIT_C  = Math.round(2 * Math.PI * ORBIT_R);
+const CX = 820;   // compass centre x
+const CY = 415;   // compass centre y — vertically centred
 
-const toRad    = (deg) => (deg - 90) * (Math.PI / 180);
-const labelR   = ORBIT_R + 24;
+const R1  = 100;  // outer degree ring
+const R2  = 86;   // inner ring 1
+const R3  = 74;   // inner ring 2 (innermost circle)
+const ARM = 140;  // crosshair arm length beyond outer ring
 
-const LABELS = [
-    { deg: "000°", word: "REGULATION",   angle: 0,   anchor: "middle", delay: "3.1s"  },
-    { deg: "120°", word: "LIQUIDITY",    angle: 120, anchor: "start",  delay: "3.75s" },
-    { deg: "240°", word: "DIGITIZATION", angle: 240, anchor: "end",    delay: "4.4s"  },
-];
+const VERT_LEN = Math.round(Math.sqrt((CX - CX)**2 + (CY - 55)**2));         // top dot to centre
+const DIAG_LEN = Math.round(Math.sqrt((CX - DOT_X)**2 + (CY - DOT_Y)**2));   // harbour island to centre
 
-function orbitArcD(startDeg, endDeg, r) {
-    const s = toRad(startDeg);
-    const e = toRad(endDeg);
-    const x1 = INT_X + r * Math.cos(s);
-    const y1 = INT_Y + r * Math.sin(s);
-    const x2 = INT_X + r * Math.cos(e);
-    const y2 = INT_Y + r * Math.sin(e);
-    return `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
+const toRad = (deg) => (deg - 90) * (Math.PI / 180);
+
+// Degree tick marks — every 10°, major every 30°
+function buildTicks() {
+    const ticks = [];
+    for (let deg = 0; deg < 360; deg += 10) {
+        const isMajor = deg % 30 === 0;
+        const isCardinal = deg % 90 === 0;
+        const inner = isCardinal ? R2 - 4 : isMajor ? R1 - 10 : R1 - 5;
+        const outer = R1;
+        const rad = toRad(deg);
+        ticks.push({
+            x1: CX + inner * Math.cos(rad),
+            y1: CY + inner * Math.sin(rad),
+            x2: CX + outer * Math.cos(rad),
+            y2: CY + outer * Math.sin(rad),
+            width: isCardinal ? 1.2 : isMajor ? 0.8 : 0.5,
+            opacity: isCardinal ? 0.8 : isMajor ? 0.55 : 0.3,
+            deg,
+            isMajor,
+            isCardinal,
+        });
+    }
+    return ticks;
 }
 
-// Diamond point coords relative to INT
-const D = DIAMOND;
-const DW = Math.round(D * 0.58); // width = 58% of height for elegant proportion
+const TICKS = buildTicks();
+
+// Non-cardinal degree labels (every 30° except cardinals)
+const DEG_LABELS = [30,60,120,150,210,240,300,330].map(deg => ({
+    deg,
+    label: String(deg),
+    x: CX + (R1 + 14) * Math.cos(toRad(deg)),
+    y: CY + (R1 + 14) * Math.sin(toRad(deg)),
+}));
+
+// The three mandate labels
+const LABELS = [
+    { deg: "0°",   word: "REGULATION",   angle: 0,   anchor: "middle", delay: "3.1s",  yOff: -28 },
+    { deg: "120°", word: "LIQUIDITY",    angle: 90,  anchor: "start",  delay: "3.75s", yOff: 0   },
+    { deg: "240°", word: "DIGITIZATION", angle: 180, anchor: "middle", delay: "4.4s",  yOff: 28  },
+];
+
+// Diamond dimensions
+const DH = 52;  // half-height
+const DW = 32;  // half-width
 
 export default function MainHall({ onEnter }) {
     return (
@@ -91,10 +116,9 @@ export default function MainHall({ onEnter }) {
             data-testid="env-main-hall"
             className="relative w-full h-[100vh] overflow-hidden bg-navy"
         >
-            {/* ── Background ── */}
+            {/* Background */}
             <div className="absolute inset-0">
-                <img
-                    src={ATRIUM} alt=""
+                <img src={ATRIUM} alt=""
                     className="w-full h-full object-cover ken-burns"
                     style={{ filter: "brightness(0.38) contrast(1.1) saturate(0.95)" }}
                 />
@@ -103,7 +127,7 @@ export default function MainHall({ onEnter }) {
                 }} />
             </div>
 
-            {/* ── SVG layer ── */}
+            {/* SVG layer */}
             <svg
                 viewBox="0 0 1000 800"
                 preserveAspectRatio="xMaxYMid slice"
@@ -118,8 +142,6 @@ export default function MainHall({ onEnter }) {
                         style={{ animation: `sawyerBreathe ${arc.dur} ${arc.delay} ease-in-out infinite alternate` }}
                     />
                 ))}
-
-                {/* Meridians */}
                 {MERIDIANS.map((m, i) => (
                     <path key={`mer-${i}`} d={meridianD(m.angle, ARCS[0].r, ARCS[6].r)} fill="none"
                         stroke={`rgba(210,190,150,${m.op})`} strokeWidth="0.6"
@@ -127,7 +149,7 @@ export default function MainHall({ onEnter }) {
                     />
                 ))}
 
-                {/* Harbour Island sonar */}
+                {/* Harbour Island sonar dot */}
                 {[0, 1.2, 2.4].map((delay, i) => (
                     <circle key={`sonar-${i}`} cx={DOT_X} cy={DOT_Y} r="10"
                         fill="none" stroke="rgba(200,169,110,0.4)" strokeWidth="0.7"
@@ -139,30 +161,35 @@ export default function MainHall({ onEnter }) {
                 ))}
                 <circle cx={DOT_X} cy={DOT_Y} r="2.5" fill="#c8a96e"
                     style={{ animation: "sawyerDotCore 3s ease-in-out infinite" }} />
-                <text x={DOT_X + 14} y={DOT_Y - 7}
-                    fill="rgba(200,169,110,0.55)" fontSize="8.5"
+                <text x={DOT_X - 10} y={DOT_Y - 14}
+                    fill="rgba(200,169,110,0.6)" fontSize="9"
                     fontFamily="'Courier New', monospace" letterSpacing="0.12em">
-                    HARBOUR ISLAND · 25.5°N
+                    HARBOUR ISLAND
+                </text>
+                <text x={DOT_X - 10} y={DOT_Y - 3}
+                    fill="rgba(200,169,110,0.45)" fontSize="8"
+                    fontFamily="'Courier New', monospace" letterSpacing="0.1em">
+                    25.5°N
                 </text>
 
                 {/* ════ COMPASS SYSTEM ════ */}
 
                 {/* Top origin dot */}
-                <circle cx={TOP_X} cy={TOP_Y} r="2.5" fill="#c8a96e" opacity="0.75" />
+                <circle cx={CX} cy={55} r="2.5" fill="#c8a96e" opacity="0.75" />
 
-                {/* Line 1 — vertical, draws down to intersection */}
-                <line x1={TOP_X} y1={TOP_Y} x2={INT_X} y2={INT_Y}
-                    stroke="rgba(200,169,110,0.5)" strokeWidth="0.9" strokeLinecap="round"
+                {/* Line 1 — vertical, draws down */}
+                <line x1={CX} y1={55} x2={CX} y2={CY}
+                    stroke="rgba(200,169,110,0.45)" strokeWidth="0.9" strokeLinecap="round"
                     style={{
-                        strokeDasharray: VERT_LEN,
-                        strokeDashoffset: VERT_LEN,
+                        strokeDasharray: CY - 55,
+                        strokeDashoffset: CY - 55,
                         animation: "compassDraw 2.2s ease-in-out forwards",
                     }}
                 />
 
-                {/* Line 2 — diagonal from Harbour Island dot to intersection */}
-                <line x1={DOT_X} y1={DOT_Y} x2={INT_X} y2={INT_Y}
-                    stroke="rgba(200,169,110,0.5)" strokeWidth="0.9" strokeLinecap="round"
+                {/* Line 2 — diagonal from Harbour Island */}
+                <line x1={DOT_X} y1={DOT_Y} x2={CX} y2={CY}
+                    stroke="rgba(200,169,110,0.45)" strokeWidth="0.9" strokeLinecap="round"
                     style={{
                         strokeDasharray: DIAG_LEN,
                         strokeDashoffset: DIAG_LEN,
@@ -170,155 +197,236 @@ export default function MainHall({ onEnter }) {
                     }}
                 />
 
-                {/* Intersection dot */}
-                <circle cx={INT_X} cy={INT_Y} r="2" fill="#c8a96e"
-                    style={{ opacity: 0, animation: "dotAppear 0.4s ease forwards 2.1s" }} />
+                {/* ── Full compass rose — fades in after lines arrive ── */}
+                <g style={{ opacity: 0, animation: "compassRoseFadeIn 1.8s ease forwards 2.2s" }}>
 
-                {/* ── Faceted Diamond ──────────────────────────────────────
-                    All coords absolute. Scale via CSS on this group.
-                    transform-origin must match INT_X/INT_Y exactly.
-                ────────────────────────────────────────────────────── */}
-                <g style={{
-                    opacity: 0,
-                    transformOrigin: `${INT_X}px ${INT_Y}px`,
-                    animation: "diamondIn 1.4s cubic-bezier(0.34,1.56,0.64,1) forwards 2.2s",
-                }}>
-                    {/* Ambient glow */}
-                    <circle cx={INT_X} cy={INT_Y} r="24" fill="rgba(200,169,110,0.06)" />
+                    {/* Outer degree ring */}
+                    <circle cx={CX} cy={CY} r={R1}
+                        fill="none" stroke="rgba(200,169,110,0.35)" strokeWidth="0.8" />
 
-                    {/* Left dark face */}
-                    <polygon
-                        points={`${INT_X},${INT_Y-D} ${INT_X-DW},${INT_Y} ${INT_X},${INT_Y+D}`}
-                        fill="rgba(130,100,45,0.45)"
-                    />
-                    {/* Right bright face */}
-                    <polygon
-                        points={`${INT_X},${INT_Y-D} ${INT_X+DW},${INT_Y} ${INT_X},${INT_Y+D}`}
-                        fill="rgba(210,175,105,0.55)"
-                    />
-                    {/* Upper-left mid face */}
-                    <polygon
-                        points={`${INT_X},${INT_Y-D} ${INT_X-DW},${INT_Y} ${INT_X-DW*0.4},${INT_Y-D*0.35}`}
-                        fill="rgba(185,150,80,0.4)"
-                    />
-                    {/* Upper-right bright face */}
-                    <polygon
-                        points={`${INT_X},${INT_Y-D} ${INT_X+DW},${INT_Y} ${INT_X+DW*0.4},${INT_Y-D*0.35}`}
-                        fill="rgba(240,215,155,0.45)"
-                    />
-                    {/* Lower-left face */}
-                    <polygon
-                        points={`${INT_X},${INT_Y+D} ${INT_X-DW},${INT_Y} ${INT_X-DW*0.3},${INT_Y+D*0.4}`}
-                        fill="rgba(110,85,35,0.35)"
-                    />
-                    {/* Lower-right face */}
-                    <polygon
-                        points={`${INT_X},${INT_Y+D} ${INT_X+DW},${INT_Y} ${INT_X+DW*0.3},${INT_Y+D*0.4}`}
-                        fill="rgba(170,135,70,0.4)"
-                    />
-                    {/* Outline */}
-                    <polygon
-                        points={`${INT_X},${INT_Y-D} ${INT_X+DW},${INT_Y} ${INT_X},${INT_Y+D} ${INT_X-DW},${INT_Y}`}
+                    {/* Inner ring 1 */}
+                    <circle cx={CX} cy={CY} r={R2}
+                        fill="none" stroke="rgba(200,169,110,0.2)" strokeWidth="0.6" />
+
+                    {/* Inner ring 2 */}
+                    <circle cx={CX} cy={CY} r={R3}
+                        fill="none" stroke="rgba(200,169,110,0.15)" strokeWidth="0.5" />
+
+                    {/* Degree tick marks */}
+                    {TICKS.map((t, i) => (
+                        <line key={`tick-${i}`}
+                            x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2}
+                            stroke={`rgba(200,169,110,${t.opacity})`}
+                            strokeWidth={t.width}
+                        />
+                    ))}
+
+                    {/* Degree number labels (non-cardinal) */}
+                    {DEG_LABELS.map((dl) => (
+                        <text key={`dl-${dl.deg}`}
+                            x={dl.x} y={dl.y + 3.5}
+                            textAnchor="middle"
+                            fill="rgba(200,169,110,0.4)"
+                            fontSize="7"
+                            fontFamily="'Courier New', monospace"
+                        >
+                            {dl.label}
+                        </text>
+                    ))}
+
+                    {/* Cardinal letters N S E W */}
+                    {[
+                        { letter: "N", deg: 0   },
+                        { letter: "E", deg: 90  },
+                        { letter: "S", deg: 180 },
+                        { letter: "W", deg: 270 },
+                    ].map(({ letter, deg }) => (
+                        <text key={letter}
+                            x={CX + (R2 - 14) * Math.cos(toRad(deg))}
+                            y={CY + (R2 - 14) * Math.sin(toRad(deg)) + 4}
+                            textAnchor="middle"
+                            fill="rgba(200,169,110,0.75)"
+                            fontSize="13"
+                            fontFamily="'Courier New', monospace"
+                            fontWeight="600"
+                            letterSpacing="0.05em"
+                        >
+                            {letter}
+                        </text>
+                    ))}
+
+                    {/* Crosshair arms — extend beyond outer ring */}
+                    {[0, 90, 180, 270].map((deg) => {
+                        const rad = toRad(deg);
+                        const x1 = CX + R3 * Math.cos(rad);
+                        const y1 = CY + R3 * Math.sin(rad);
+                        const x2 = CX + ARM * Math.cos(rad);
+                        const y2 = CY + ARM * Math.sin(rad);
+                        return (
+                            <line key={`arm-${deg}`}
+                                x1={x1} y1={y1} x2={x2} y2={y2}
+                                stroke="rgba(200,169,110,0.5)"
+                                strokeWidth="0.8"
+                            />
+                        );
+                    })}
+
+                    {/* ── Faceted diamond ── */}
+                    <g style={{
+                        transformOrigin: `${CX}px ${CY}px`,
+                        animation: "diamondIn 1.4s cubic-bezier(0.34,1.56,0.64,1) forwards",
+                    }}>
+                        {/* Ambient glow */}
+                        <circle cx={CX} cy={CY} r="30" fill="rgba(200,169,110,0.07)" />
+
+                        {/* Left dark face */}
+                        <polygon
+                            points={`${CX},${CY-DH} ${CX-DW},${CY} ${CX},${CY+DH}`}
+                            fill="rgba(120,90,35,0.6)"
+                        />
+                        {/* Right bright face */}
+                        <polygon
+                            points={`${CX},${CY-DH} ${CX+DW},${CY} ${CX},${CY+DH}`}
+                            fill="rgba(215,178,100,0.75)"
+                        />
+                        {/* Upper-left face */}
+                        <polygon
+                            points={`${CX},${CY-DH} ${CX-DW},${CY} ${CX-DW*0.35},${CY-DH*0.3}`}
+                            fill="rgba(175,140,72,0.55)"
+                        />
+                        {/* Upper-right brightest */}
+                        <polygon
+                            points={`${CX},${CY-DH} ${CX+DW},${CY} ${CX+DW*0.35},${CY-DH*0.3}`}
+                            fill="rgba(245,215,148,0.65)"
+                        />
+                        {/* Lower-left */}
+                        <polygon
+                            points={`${CX},${CY+DH} ${CX-DW},${CY} ${CX-DW*0.3},${CY+DH*0.35}`}
+                            fill="rgba(100,78,30,0.5)"
+                        />
+                        {/* Lower-right */}
+                        <polygon
+                            points={`${CX},${CY+DH} ${CX+DW},${CY} ${CX+DW*0.3},${CY+DH*0.35}`}
+                            fill="rgba(165,132,65,0.55)"
+                        />
+                        {/* Outline */}
+                        <polygon
+                            points={`${CX},${CY-DH} ${CX+DW},${CY} ${CX},${CY+DH} ${CX-DW},${CY}`}
+                            fill="none"
+                            stroke="rgba(218,185,115,0.85)"
+                            strokeWidth="0.9"
+                        />
+                        {/* Inner facet lines */}
+                        <line x1={CX} y1={CY-DH} x2={CX} y2={CY+DH}
+                            stroke="rgba(200,169,110,0.22)" strokeWidth="0.5"/>
+                        <line x1={CX-DW} y1={CY} x2={CX+DW} y2={CY}
+                            stroke="rgba(200,169,110,0.18)" strokeWidth="0.4"/>
+                        {/* Primary specular highlight */}
+                        <polygon
+                            points={`${CX},${CY-DH} ${CX+DW*0.55},${CY-DH*0.3} ${CX+DW*0.18},${CY-DH*0.52}`}
+                            fill="rgba(255,252,235,0.72)"
+                        />
+                        {/* Secondary highlight */}
+                        <polygon
+                            points={`${CX+2},${CY-DH} ${CX+DW*0.2},${CY-DH*0.62} ${CX+DW*0.06},${CY-DH*0.72}`}
+                            fill="rgba(255,255,248,0.5)"
+                        />
+                        {/* Centre jewel */}
+                        <circle cx={CX} cy={CY} r="2.2" fill="rgba(255,250,225,0.95)" />
+
+                        {/* Continuous pulse ring */}
+                        <polygon
+                            points={`${CX},${CY-DH} ${CX+DW},${CY} ${CX},${CY+DH} ${CX-DW},${CY}`}
+                            fill="none"
+                            stroke="rgba(200,169,110,0.4)"
+                            strokeWidth="0.7"
+                            style={{ animation: "diamondPulse 5s ease-in-out infinite 1.5s" }}
+                        />
+                    </g>
+
+                    {/* ── Rotating outer dashed ring — appears after labels complete ── */}
+                    <circle cx={CX} cy={CY} r={R1 + 8}
                         fill="none"
-                        stroke="rgba(210,178,110,0.75)"
-                        strokeWidth="0.8"
-                    />
-                    {/* Inner facet lines */}
-                    <line x1={INT_X} y1={INT_Y-D} x2={INT_X} y2={INT_Y+D}
-                        stroke="rgba(200,169,110,0.2)" strokeWidth="0.5"/>
-                    <line x1={INT_X-DW} y1={INT_Y} x2={INT_X+DW} y2={INT_Y}
-                        stroke="rgba(200,169,110,0.15)" strokeWidth="0.4"/>
-                    {/* Specular highlight */}
-                    <polygon
-                        points={`${INT_X},${INT_Y-D} ${INT_X+DW*0.5},${INT_Y-D*0.35} ${INT_X+DW*0.15},${INT_Y-D*0.5}`}
-                        fill="rgba(255,252,235,0.65)"
-                    />
-                    {/* Secondary highlight */}
-                    <polygon
-                        points={`${INT_X},${INT_Y-D} ${INT_X+DW*0.2},${INT_Y-D*0.6} ${INT_X+DW*0.05},${INT_Y-D*0.7}`}
-                        fill="rgba(255,255,245,0.45)"
-                    />
-                    {/* Centre jewel */}
-                    <circle cx={INT_X} cy={INT_Y} r="2" fill="rgba(255,250,225,0.95)" />
-
-                    {/* Pulse ring — animates independently after entry */}
-                    <polygon
-                        points={`${INT_X},${INT_Y-D} ${INT_X+DW},${INT_Y} ${INT_X},${INT_Y+D} ${INT_X-DW},${INT_Y}`}
-                        fill="none"
-                        stroke="rgba(200,169,110,0.35)"
+                        stroke="rgba(200,169,110,0.18)"
                         strokeWidth="0.6"
-                        style={{ animation: "diamondPulse 5s ease-in-out infinite 3.6s" }}
+                        strokeDasharray="2 9"
+                        style={{
+                            transformOrigin: `${CX}px ${CY}px`,
+                            animation: "orbitSpin 30s linear infinite 5.5s",
+                        }}
                     />
                 </g>
 
-                {/* ── Orbit arcs — draw as labels appear ── */}
-                {[
-                    { start: 0,   end: 120, delay: "3.1s"  },
-                    { start: 120, end: 240, delay: "3.75s" },
-                    { start: 240, end: 360, delay: "4.4s"  },
-                ].map((arc, i) => (
-                    <path key={`orbarc-${i}`}
-                        d={orbitArcD(arc.start, arc.end, ORBIT_R)}
-                        fill="none"
-                        stroke="rgba(200,169,110,0.3)"
-                        strokeWidth="0.7"
-                        strokeLinecap="round"
-                        style={{
-                            strokeDasharray: Math.round(ORBIT_C / 3),
-                            strokeDashoffset: Math.round(ORBIT_C / 3),
-                            animation: `orbitArcDraw 1.1s ease-in-out forwards ${arc.delay}`,
-                        }}
-                    />
-                ))}
+                {/* ── Mandate labels — sequential reveal after compass appears ── */}
+                {/* REGULATION — above, at 0° */}
+                <g style={{ opacity: 0, animation: "labelReveal 0.9s ease forwards 3.1s" }}>
+                    <text x={CX} y={CY - ARM - 18}
+                        textAnchor="middle"
+                        fill="rgba(200,169,110,0.55)"
+                        fontSize="8" fontFamily="'Courier New', monospace" letterSpacing="0.12em">
+                        0°
+                    </text>
+                    <text x={CX} y={CY - ARM - 6}
+                        textAnchor="middle"
+                        fill="rgba(225,215,190,0.88)"
+                        fontSize="10.5" fontFamily="'Courier New', monospace" letterSpacing="0.22em">
+                        REGULATION
+                    </text>
+                    <line x1={CX} y1={CY - ARM - 2} x2={CX} y2={CY - ARM + 6}
+                        stroke="rgba(200,169,110,0.4)" strokeWidth="0.7"/>
+                </g>
 
-                {/* Full dashed orbit ring — fades in then rotates */}
-                <circle
-                    cx={INT_X} cy={INT_Y} r={ORBIT_R}
-                    fill="none"
-                    stroke="rgba(200,169,110,0.24)"
-                    strokeWidth="0.7"
-                    strokeDasharray="3 7"
-                    style={{
-                        transformOrigin: `${INT_X}px ${INT_Y}px`,
-                        opacity: 0,
-                        animation: "orbitFadeIn 0.8s ease forwards 5.6s, orbitSpin 34s linear infinite 6.4s",                    }}
-                />
+                {/* LIQUIDITY — right, at 120° (East side) */}
+                <g style={{ opacity: 0, animation: "labelReveal 0.9s ease forwards 3.75s" }}>
+                    {/* Extended arm dot */}
+                    <circle cx={CX + ARM + 18} cy={CY}
+                        r="5" fill="none" stroke="rgba(200,169,110,0.5)" strokeWidth="0.8"/>
+                    <circle cx={CX + ARM + 18} cy={CY}
+                        r="2.5" fill="rgba(200,169,110,0.7)"/>
+                    <text x={CX + ARM + 30} y={CY - 6}
+                        textAnchor="start"
+                        fill="rgba(200,169,110,0.55)"
+                        fontSize="8" fontFamily="'Courier New', monospace" letterSpacing="0.12em">
+                        120°
+                    </text>
+                    <text x={CX + ARM + 30} y={CY + 7}
+                        textAnchor="start"
+                        fill="rgba(225,215,190,0.88)"
+                        fontSize="10.5" fontFamily="'Courier New', monospace" letterSpacing="0.22em">
+                        LIQUIDITY
+                    </text>
+                    <line x1={CX + ARM} y1={CY} x2={CX + ARM + 12} y2={CY}
+                        stroke="rgba(200,169,110,0.4)" strokeWidth="0.7"/>
+                </g>
 
-                {/* ── Degree labels ── */}
-                {LABELS.map((lb) => {
-                    const lx = INT_X + labelR * Math.cos(toRad(lb.angle));
-                    const ly = INT_Y + labelR * Math.sin(toRad(lb.angle));
-                    const tx1 = INT_X + (ORBIT_R - 5) * Math.cos(toRad(lb.angle));
-                    const ty1 = INT_Y + (ORBIT_R - 5) * Math.sin(toRad(lb.angle));
-                    const tx2 = INT_X + (ORBIT_R + 6) * Math.cos(toRad(lb.angle));
-                    const ty2 = INT_Y + (ORBIT_R + 6) * Math.sin(toRad(lb.angle));
-                    return (
-                        <g key={lb.deg} style={{ opacity: 0, animation: `labelReveal 0.9s ease forwards ${lb.delay}` }}>
-                            <line x1={tx1} y1={ty1} x2={tx2} y2={ty2}
-                                stroke="rgba(200,169,110,0.7)" strokeWidth="0.9" />
-                            <text x={lx} y={ly - 3} textAnchor={lb.anchor}
-                                fill="rgba(200,169,110,0.52)" fontSize="7.5"
-                                fontFamily="'Courier New', monospace" letterSpacing="0.1em">
-                                {lb.deg}
-                            </text>
-                            <text x={lx} y={ly + 10} textAnchor={lb.anchor}
-                                fill="rgba(225,215,190,0.72)" fontSize="9.5"
-                                fontFamily="'Courier New', monospace" letterSpacing="0.18em">
-                                {lb.word}
-                            </text>
-                        </g>
-                    );
-                })}
+                {/* DIGITIZATION — below, at 240° (South side) */}
+                <g style={{ opacity: 0, animation: "labelReveal 0.9s ease forwards 4.4s" }}>
+                    <text x={CX} y={CY + ARM + 14}
+                        textAnchor="middle"
+                        fill="rgba(200,169,110,0.55)"
+                        fontSize="8" fontFamily="'Courier New', monospace" letterSpacing="0.12em">
+                        240°
+                    </text>
+                    <text x={CX} y={CY + ARM + 26}
+                        textAnchor="middle"
+                        fill="rgba(225,215,190,0.88)"
+                        fontSize="10.5" fontFamily="'Courier New', monospace" letterSpacing="0.22em">
+                        DIGITIZATION
+                    </text>
+                    <line x1={CX} y1={CY + ARM - 2} x2={CX} y2={CY + ARM + 8}
+                        stroke="rgba(200,169,110,0.4)" strokeWidth="0.7"/>
+                </g>
+
             </svg>
 
-            {/* ── Left gradient ── */}
+            {/* Left gradient */}
             <div aria-hidden="true" className="absolute inset-0 pointer-events-none"
                 style={{
                     zIndex: 3,
-                    background: "linear-gradient(90deg, rgba(13,27,42,1) 25%, rgba(13,27,42,0.75) 48%, rgba(13,27,42,0.1) 72%, transparent 100%)",
+                    background: "linear-gradient(90deg, rgba(13,27,42,1) 25%, rgba(13,27,42,0.75) 48%, rgba(13,27,42,0.1) 68%, transparent 100%)",
                 }} />
 
-            {/* ── Top plate ── */}
+            {/* Top plate */}
             <motion.div
                 initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.4 }}
@@ -329,16 +437,14 @@ export default function MainHall({ onEnter }) {
                 <div className="inst-label hidden md:block">LAT 25.5° N · LON 76.6° W</div>
             </motion.div>
 
-            {/* ── Hero copy ── */}
+            {/* Hero copy */}
             <div className="relative z-10 h-full flex items-center px-[var(--sawyer-edge-pad)]">
                 <div className="max-w-4xl">
                     <motion.p
                         initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, delay: 0.6 }}
                         className="inst-label text-sand mb-8"
-                    >
-                        [ SOVEREIGN INSTITUTIONAL INFRASTRUCTURE ]
-                    </motion.p>
+                    >[ SOVEREIGN INSTITUTIONAL INFRASTRUCTURE ]</motion.p>
                     <motion.h1
                         initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.4, delay: 0.85 }}
@@ -348,14 +454,6 @@ export default function MainHall({ onEnter }) {
                         <span className="italic text-sand">Defending and Scaling Enterprises</span>{" "}
                         Across The Bahamas, Cayman, Bermuda, Barbados, and Belize.
                     </motion.h1>
-                    <motion.p
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1.15, delay: 1.02 }}
-                    className="mt-8 max-w-2xl text-sand/90 font-body text-sm md:text-base leading-relaxed tracking-wide"
-                    >
-                    Institutions are under pressure to modernize without compromising stability.
-                    </motion.p>
                     <motion.p
                         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, delay: 1.1 }}
@@ -379,14 +477,13 @@ export default function MainHall({ onEnter }) {
                 </div>
             </div>
 
-            {/* ── Bottom strip ── */}
+            {/* Bottom strip */}
             <div className="absolute bottom-8 left-[var(--sawyer-edge-pad)] right-[var(--sawyer-edge-pad)] flex items-end justify-between"
                 style={{ zIndex: 10 }}>
-                <div className="inst-label">[ EST. SAWYER &amp; CO. · HARBOUR ISLAND · MMXXVI ]</div>
+                <div className="inst-label">[ EST. SAWYER &amp; CO. · HARBOUR ISLAND · MMXXIV ]</div>
                 <div className="inst-label hidden md:block">SEVEN ENVIRONMENTS · ONE INSTITUTION</div>
             </div>
 
-            {/* ── Keyframes ── */}
             <style>{`
                 @keyframes sawyerBreathe {
                     0%   { opacity: 0.55; }
@@ -403,32 +500,25 @@ export default function MainHall({ onEnter }) {
                 @keyframes compassDraw {
                     to { stroke-dashoffset: 0; }
                 }
-                @keyframes dotAppear {
-                    to { opacity: 0.85; }
+                @keyframes compassRoseFadeIn {
+                    0%   { opacity: 0; }
+                    100% { opacity: 1; }
                 }
                 @keyframes diamondIn {
-                    0%   { opacity: 0; transform: scale(0.4); }
-                    65%  { opacity: 1; transform: scale(1.12); }
-                    100% { opacity: 1; transform: scale(1); }
+                    0%   { transform: scale(0.3); }
+                    65%  { transform: scale(1.1); }
+                    100% { transform: scale(1);   }
                 }
                 @keyframes diamondPulse {
-                    0%   { opacity: 0.58; }
-                    37%  { opacity: 0.92; }
-                    68%  { opacity: 0.72; }
-                    100% { opacity: 0.58; }
-                }
-                @keyframes orbitArcDraw {
-                    to { stroke-dashoffset: 0; }
-                }
-                @keyframes orbitFadeIn {
-                    to { opacity: 1; }
+                    0%, 100% { opacity: 0.4; }
+                    50%      { opacity: 0.9; }
                 }
                 @keyframes orbitSpin {
                     to { transform: rotate(360deg); }
                 }
                 @keyframes labelReveal {
-                    0%   { opacity: 0; transform: translateY(4px); }
-                    100% { opacity: 1; transform: translateY(0); }
+                    0%   { opacity: 0; transform: translateY(5px); }
+                    100% { opacity: 1; transform: translateY(0);   }
                 }
             `}</style>
         </section>

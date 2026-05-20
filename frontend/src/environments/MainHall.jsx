@@ -281,8 +281,7 @@ export default function MainHall({ onEnter }) {
                     style={{
                         transformOrigin: `${INT_X}px ${INT_Y}px`,
                         opacity: 0,
-                        animation: "orbitFadeIn 0.8s ease forwards 5.6s, orbitSpin 22s linear infinite 6.4s",
-                    }}
+                        animation: "orbitFadeIn 0.8s ease forwards 5.6s, orbitSpin 34s linear infinite 6.4s",                    }}
                 />
 
                 {/* ── Degree labels ── */}
@@ -303,7 +302,7 @@ export default function MainHall({ onEnter }) {
                                 {lb.deg}
                             </text>
                             <text x={lx} y={ly + 10} textAnchor={lb.anchor}
-                                fill="rgba(225,215,190,0.85)" fontSize="9.5"
+                                fill="rgba(225,215,190,0.72)" fontSize="9.5"
                                 fontFamily="'Courier New', monospace" letterSpacing="0.18em">
                                 {lb.word}
                             </text>
@@ -349,6 +348,14 @@ export default function MainHall({ onEnter }) {
                         <span className="italic text-sand">Defending and Scaling Enterprises</span>{" "}
                         Across The Bahamas, Cayman, Bermuda, Barbados, and Belize.
                     </motion.h1>
+                    <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1.15, delay: 1.02 }}
+                    className="mt-8 max-w-2xl text-sand/90 font-body text-sm md:text-base leading-relaxed tracking-wide"
+                    >
+                    Institutions are under pressure to modernize without compromising stability.
+                    </motion.p>
                     <motion.p
                         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.2, delay: 1.1 }}
@@ -405,8 +412,10 @@ export default function MainHall({ onEnter }) {
                     100% { opacity: 1; transform: scale(1); }
                 }
                 @keyframes diamondPulse {
-                    0%, 100% { opacity: 0.6; }
-                    50%      { opacity: 1; }
+                    0%   { opacity: 0.58; }
+                    37%  { opacity: 0.92; }
+                    68%  { opacity: 0.72; }
+                    100% { opacity: 0.58; }
                 }
                 @keyframes orbitArcDraw {
                     to { stroke-dashoffset: 0; }

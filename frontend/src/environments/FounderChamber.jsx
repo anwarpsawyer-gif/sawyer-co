@@ -11,11 +11,11 @@ const FOUNDERS = [
         name: "Anwar Sawyer, LL.M.",
         role: "Founding Principal · Regulatory Architecture",
         portrait: ANWAR_PORTRAIT,
-        bio: "A former Financial Regulatory Expert at the Securities Commission of The Bahamas and Deloitte alumnus, Anwar Sawyer brings over a decade of financial crime, regulatory strategy, and M&A due diligence experience across European and Caribbean markets. He holds a Master of Law in Mergers and Acquisitions from Frankfurt School of Finance and Management. Anwar has designed AML/CFT frameworks for European Tier 1 banks under the German \"Geldwäschegesetz\" and the 5th Anti Money Laundering Directive (AMLD5), led M&A compliance and transaction due diligence engagements in Frankfurt. He is the only DORA-certified practitioner based in Nassau.",
+        bio: "Anwar Sawyer is a sovereign level regulatory architect with over a decade of command across financial crime intelligence, institutional compliance, and cross border M&A strategy in European and Caribbean markets. A Deloitte alumnus and former regulatory authority at the Securities Commission of The Bahamas, he has built and deployed AML/CFT frameworks inside European Tier 1 banks, engineering compliance infrastructure under the German Geldwäschegesetz and the 5th Anti Money Laundering Directive (AMLD5). He has led M&A compliance and transaction due diligence engagements in Frankfurt at the highest institutional levels. The only DORA certified practitioner domiciled in Nassau, Anwar holds a Master of Law in Mergers & Acquisitions, a Master of International Business, and a Bachelor of Science in Economics and History, a trifecta that places regulatory precision, market fluency, and historical pattern recognition at the core of every mandate he leads.",
         stats: [
             { k: "EXPERIENCE", v: "18+ YRS" },
             { k: "JURISDICTIONS", v: "BS · EU · CARIBBEAN" },
-            { k: "FORMATION", v: "DELOITTE · SECURITIES COMMISSION OF THE BAHAMAS" },
+            { k: "FORMATION", v: "DELOITTE · SECURITIES COMMISSION OF THE BAHAMAS · DORA CERTIFIED" },
         ],
     },
     {
@@ -23,11 +23,11 @@ const FOUNDERS = [
         name: "Sarah Sawyer",
         role: "Founding Principal · Institutional Strategy & Technology",
         portrait: SARAH_PORTRAIT,
-        bio: "Sarah Sawyer spent a decade at Deutsche Bank, ultimately as Assistant Vice President managing a €500B+ institutional platform across 198 funds and 42 asset managers. She led AI-supported automation for investment fund reporting, delivered a €20M contract across 8 global hubs, and built an AI-driven Identity and Access Governance platform commended by Deutsche Bank's Head of AI. As CEO of TreasureCorp, she architected multi-chain treasury infrastructure managing over $1.2M in digital assets. CESGA® certified. Trilingual: English, Arabic, German.",
+        bio: "Sarah Sawyer is an institutional investment platform operator and technology strategist with over 15 years of experience directing infrastructure at the highest levels of global finance. At Deutsche Bank, she served as Vice President overseeing a €500B+ institutional platform spanning 198 funds and 42 asset managers, driving the intelligence, automation, and governance architecture that kept one of the world's most complex fund ecosystems in motion. She engineered AI supported automation for investment fund reporting, secured and delivered a €20M contract across 8 global hubs, and built an AI driven Identity and Access Governance platform recognized by Deutsche Bank's Head of Innovation. As CEO of TreasureCorp, Sarah founded and scaled multi chain treasury infrastructure managing over $1.2M in digital assets. CESGA® certified. Trilingual: English, Arabic, German.",
         stats: [
             { k: "EXPERIENCE", v: "15+ YRS" },
             { k: "PLATFORM MANAGED", v: "€500B+" },
-            { k: "FORMATION", v: "DEUTSCHE BANK · TREASURECORP" },
+            { k: "FORMATION", v: "DEUTSCHE BANK · TREASURECORP · CESGA® CERTIFIED" },
         ],
     },
 ];

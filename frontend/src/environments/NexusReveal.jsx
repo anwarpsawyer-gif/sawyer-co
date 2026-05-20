@@ -19,10 +19,6 @@ const NODES = [
     },
 ];
 
-/**
- * Lightweight Canvas2D particle drift — restrained, sovereign atmosphere.
- * No WebGL, no spring physics, no aggressive motion.
- */
 function ParticleCanvas() {
     const canvasRef = useRef(null);
 
@@ -59,7 +55,6 @@ function ParticleCanvas() {
             t += 0.005;
             ctx.clearRect(0, 0, w, h);
 
-            // Subtle vignette of connection lines between close particles
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
                 p.x += p.vx;
@@ -78,7 +73,6 @@ function ParticleCanvas() {
                 ctx.fill();
             }
 
-            // Faint constellation lines
             ctx.strokeStyle = "rgba(122, 139, 148, 0.06)";
             ctx.lineWidth = 0.5;
             for (let i = 0; i < particles.length; i++) {
@@ -101,10 +95,7 @@ function ParticleCanvas() {
         resize();
         init();
         tick();
-        const onResize = () => {
-            resize();
-            init();
-        };
+        const onResize = () => { resize(); init(); };
         window.addEventListener("resize", onResize);
         return () => {
             cancelAnimationFrame(raf);
@@ -174,7 +165,7 @@ export default function NexusReveal({ onNodeClick }) {
                 </motion.p>
             </div>
 
-            {/* Nodes */}
+            {/* Nodes — labels enlarged, dot kept, ENTER more prominent */}
             {NODES.map((n, i) => (
                 <motion.button
                     key={n.id}
@@ -187,15 +178,15 @@ export default function NexusReveal({ onNodeClick }) {
                     className={`absolute z-20 ${n.position} group text-left`}
                 >
                     <div className="flex items-center gap-4">
-                        <span className="relative inline-flex">
+                        <span className="relative inline-flex flex-shrink-0">
                             <span className="absolute inline-flex h-3 w-3 rounded-full bg-sand opacity-40 ambient-drift" />
                             <span className="relative inline-flex h-2 w-2 rounded-full bg-sand mt-[2px] ml-[2px]" />
                         </span>
-                        <span className="inst-label text-ivory group-hover:text-sand transition-colors duration-500">
+                        <span className="font-body text-lg md:text-xl text-ivory group-hover:text-sand transition-colors duration-500 tracking-[0.18em] uppercase">
                             {n.label}
                         </span>
                     </div>
-                    <span className="block mt-2 ml-7 inst-label text-silver opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <span className="block mt-3 ml-7 font-body text-sm tracking-widest text-sand uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         ENTER →
                     </span>
                 </motion.button>

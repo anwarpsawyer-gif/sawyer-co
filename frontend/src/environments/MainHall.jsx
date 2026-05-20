@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 
 const ATRIUM =
     "https://images.unsplash.com/photo-1622396481322-3b83d186701b?crop=entropy&cs=srgb&fm=jpg&q=85&w=2400";
@@ -110,9 +110,8 @@ const DH = 40;  // half-height
 const DW = 24;  // half-width
 
 export default function MainHall({ onEnter }) {
-    // Compass reveals on slight scroll — fades in between 3% and 9% scroll progress
+    // scrollYProgress drives compass opacity via ref callback below
     const { scrollYProgress } = useScroll();
-    const compassOpacity = useTransform(scrollYProgress, [0.02, 0.12], [0, 1]);
     return (
         <section
             id="main-hall"
@@ -153,11 +152,20 @@ export default function MainHall({ onEnter }) {
                 ))}
 
                 {/* ════ COMPASS SYSTEM ════
-                    Entire right-side system reveals on slight scroll.
-                    Internal sequences (line draw, rose fade, labels) run
-                    once the group becomes visible — left→right reading flow preserved.
+                    Opacity controlled via CSS custom property updated by framer-motion
+                    on the parent section. motion.g is not valid SVG — using a regular
+                    g with ref-based opacity instead.
                 ════════════════════════════════════════════════════════════ */}
-                <motion.g style={{ opacity: compassOpacity }}>
+                <g ref={(el) => {
+                    if (el) {
+                        // Subscribe to scrollYProgress and update opacity directly
+                        const unsub = scrollYProgress.on("change", (v) => {
+                            const op = Math.min(1, Math.max(0, (v - 0.02) / (0.12 - 0.02)));
+                            el.style.opacity = op;
+                        });
+                        el._unsub = unsub;
+                    }
+                }} style={{ opacity: 0 }}>
 
                 {/* Harbour Island sonar dot */}
                 {[0, 1.2, 2.4].map((delay, i) => (
@@ -421,7 +429,10 @@ export default function MainHall({ onEnter }) {
                     </text>
                     <line x1={CX} y1={CY + ARM - 2} x2={CX} y2={CY + ARM + 8}
                         stroke="rgba(200,169,110,0.4)" strokeWidth="0.7"/>
-                </motion.g>
+                </g>
+
+                {/* ── Close compass system wrapper ── */}
+                </g>
 
             </svg>
 

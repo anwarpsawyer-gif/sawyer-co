@@ -9,6 +9,8 @@ const NAV_ITEMS = [
     { id: "founder-chamber", label: "THE PEDIGREE" },
 ];
 
+const PORTAL_URL = "https://zephyrtrustai.com/portal/login";
+
 export default function InstitutionalNav({ activeEnvironment, onNavigate }) {
     const [scrolled, setScrolled] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -71,7 +73,7 @@ export default function InstitutionalNav({ activeEnvironment, onNavigate }) {
                     <div className="flex items-center gap-3">
                         <a
                             data-testid="access-portal-btn"
-                            href="https://zephyrtrustai.com"
+                            href={PORTAL_URL}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hidden md:inline-flex inst-btn inst-btn--solid"
@@ -139,7 +141,7 @@ export default function InstitutionalNav({ activeEnvironment, onNavigate }) {
                     </nav>
                     <a
                         data-testid="mobile-access-portal"
-                        href="https://zephyrtrustai.com"
+                        href={PORTAL_URL}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-auto inst-btn inst-btn--solid justify-center"

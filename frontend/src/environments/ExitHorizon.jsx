@@ -101,7 +101,7 @@ export default function ExitHorizon() {
                     position: "absolute",
                     bottom: "12px",
                     right: "16px",
-                    zIndex: 1,
+                    zIndex: 50,
                     opacity: 0.35,
                     fontSize: "10px",
                     letterSpacing: "0.12em",

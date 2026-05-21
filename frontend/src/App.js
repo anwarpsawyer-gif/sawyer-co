@@ -103,7 +103,7 @@ function App() {
             />
             <Rooster />
             <main>
-                <MainHall onEnter={() => scrollTo("advisory-chamber")} />
+                <MainHall onEnter={() => scrollTo("exit-horizon")} />
                 <AdvisoryChamber />
                 <NexusReveal onNodeClick={scrollTo} />
                 <CapitalSuite />

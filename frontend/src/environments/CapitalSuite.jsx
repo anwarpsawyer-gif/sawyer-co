@@ -5,8 +5,8 @@ const VILLA =
     "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?crop=entropy&cs=srgb&fm=jpg&q=85&w=2200";
 
 const METRICS = [
-    { label: "LOMBARD LOAN TURNAROUND", value: "48 HRS" },
-    { label: "LOAN RANGE", value: "$250K – $2M" },
+    { label: "PIPELINE STAGES", value: "4 STAGES" },
+    { label: "LOMBARD TURNAROUND", value: "48 HRS" },
     { label: "INVESTOR TIER", value: "INSTITUTIONAL" },
     { label: "PLATFORM LAUNCH", value: "2026" },
 ];
@@ -46,7 +46,18 @@ export default function CapitalSuite() {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+                    {/* Left — copy */}
                     <div>
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 1, delay: 0.1 }}
+                            className="inst-label text-sand mb-6"
+                        >
+                            MANDATE :: LIQUIDITY
+                        </motion.p>
+
                         <motion.h2
                             initial={{ opacity: 0, y: 14 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -54,11 +65,12 @@ export default function CapitalSuite() {
                             transition={{ duration: 1.2 }}
                             className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-ivory tracking-tight"
                         >
-                            Capital deployed without{" "}
+                            Institutional capital.{" "}
                             <span className="italic text-sand">
-                                liquidating what you built.
+                                Deployed with precision.
                             </span>
                         </motion.h2>
+
                         <motion.p
                             initial={{ opacity: 0, y: 12 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -66,23 +78,37 @@ export default function CapitalSuite() {
                             transition={{ duration: 1.2, delay: 0.2 }}
                             className="mt-8 text-silver font-body text-base md:text-lg leading-relaxed max-w-lg"
                         >
-                            <span className="text-ivory">ZephyrWealth.ai</span> is
-                            our AI-underwritten Lombard lending platform — structured
-                            credit against Caribbean securities portfolios in 48 hours,
-                            in local currency, without a four-week bank process. The
-                            region has the assets. It has lacked the infrastructure.
-                            That changes now.
+                            Sawyer Capital operates as a Caribbean private equity
+                            firm, deploying institutional capital into regional assets
+                            across financial services, real estate, and infrastructure.
+                            Deal flow is managed from origination through IC review to
+                            close, with mandate compliance enforced at every stage.
                         </motion.p>
+
                         <motion.p
                             initial={{ opacity: 0, y: 12 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
-                            transition={{ duration: 1.2, delay: 0.35 }}
+                            transition={{ duration: 1.2, delay: 0.32 }}
                             className="mt-6 text-silver font-body text-base md:text-lg leading-relaxed max-w-lg"
                         >
-                            Beyond credit, Sawyer Capital provides acquisition due
-                            diligence on Caribbean targets to institutional standard —
-                            regulatory risk known before close.
+                            For qualifying portfolio positions, structured Lombard
+                            lending against Caribbean securities holdings is available
+                            as an ancillary facility, enabling clients to access
+                            liquidity without dismantling the positions they spent
+                            years building.
+                        </motion.p>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 12 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 1.2, delay: 0.44 }}
+                            className="mt-6 text-silver font-body text-base md:text-lg leading-relaxed max-w-lg"
+                        >
+                            Acquisition due diligence on Caribbean targets covers
+                            regulatory exposure, corporate structure, and valuation
+                            to the standard required before institutional close.
                         </motion.p>
 
                         <motion.a
@@ -93,7 +119,7 @@ export default function CapitalSuite() {
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 1, delay: 0.5 }}
+                            transition={{ duration: 1, delay: 0.58 }}
                             className="inst-btn mt-12"
                         >
                             ACCESS CAPITAL OPERATIONS
@@ -105,6 +131,7 @@ export default function CapitalSuite() {
                         </motion.a>
                     </div>
 
+                    {/* Right — metrics */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
@@ -137,7 +164,28 @@ export default function CapitalSuite() {
                                 </motion.div>
                             ))}
                         </div>
-                        <p className="inst-label text-silver mt-12 italic font-mono normal-case tracking-normal">
+
+                        {/* ZephyrWealth platform description */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1, delay: 0.6 }}
+                            className="mt-12 border-t border-sand/20 pt-10"
+                        >
+                            <p className="inst-label text-sand mb-4">
+                                PLATFORM :: ZEPHYRWEALTH.AI
+                            </p>
+                            <p className="text-silver font-body text-sm md:text-base leading-relaxed">
+                                An AI-powered fund operating system built in-house.
+                                Manages deal pipeline, investor onboarding, KYC review,
+                                capital calls, and LP portal access. Mandate compliance
+                                tracked at every stage. Lombard lending facilitated
+                                for qualifying positions.
+                            </p>
+                        </motion.div>
+
+                        <p className="inst-label text-silver mt-10 italic font-mono normal-case tracking-normal">
                             // director-led mandates only · limited to two new
                             engagements per quarter
                         </p>

@@ -2,8 +2,16 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 const CATEGORIES = ["Advisory", "Capital", "Partnership", "Media"];
+
+// ─── Drop your Formspree form ID here ────────────────────────────────────────
+// 1. Go to https://formspree.io → create free account → New Form
+// 2. Copy the form ID (e.g. "xpzvwkqb") and paste below
+// 3. Formspree emails submissions directly to you — no backend needed
+// ─────────────────────────────────────────────────────────────────────────────
+const FORMSPREE_ID = process.env.REACT_APP_FORMSPREE_ID || "";
+
+// Falls back to your existing backend if REACT_APP_BACKEND_URL is set
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
 
 export default function InquiryForm() {
     const [form, setForm] = useState({
@@ -21,26 +29,48 @@ export default function InquiryForm() {
     const submit = async (e) => {
         e.preventDefault();
         if (submitting) return;
-        if (
-            !form.name ||
-            !form.email ||
-            !form.message ||
-            form.message.length < 10
-        ) {
-            toast.error("Please complete all required fields.");
+        if (!form.name || !form.email || !form.message || form.message.trim().length < 5) {
+            if (!form.name) { toast.error("Please enter your name."); return; }
+            if (!form.email) { toast.error("Please enter your email."); return; }
+            if (!form.message || form.message.trim().length < 5) { toast.error("Please enter a brief message (at least 5 characters)."); return; }
             return;
         }
         setSubmitting(true);
         try {
-            const res = await fetch(`${API}/inquiry`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form),
-            });
+            let res;
+
+            if (BACKEND_URL) {
+                // Use existing backend if configured
+                res = await fetch(`${BACKEND_URL}/api/inquiry`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(form),
+                });
+            } else if (FORMSPREE_ID) {
+                // Formspree fallback
+                res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: form.name,
+                        email: form.email,
+                        organization: form.organization,
+                        category: form.category,
+                        message: form.message,
+                    }),
+                });
+            } else {
+                throw new Error("No submission endpoint configured.");
+            }
+
             if (!res.ok) {
                 const err = await res.json().catch(() => ({}));
-                throw new Error(err.detail || "Submission failed.");
+                throw new Error(err.detail || err.error || "Submission failed.");
             }
+
             setDone(true);
             toast.success("Inquiry received. The institution will respond privately.");
         } catch (err) {

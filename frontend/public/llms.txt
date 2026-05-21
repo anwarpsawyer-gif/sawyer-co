@@ -1,0 +1,36 @@
+# Sawyer & Co.
+
+Sawyer & Co. is a sovereign institutional advisory and digital infrastructure firm operating across The Bahamas, Cayman Islands, Bermuda, Barbados, and Belize.
+
+Core mandates:
+- Regulatory & Compliance Advisory
+- Institutional Capital & Structured Lending
+- Digital Infrastructure & RegTech
+
+Services include:
+- AML/CFT compliance programmes
+- MLRO governance
+- FATF & DORA advisory
+- Examination readiness
+- KYC/CDD frameworks
+- Institutional due diligence
+- Private equity advisory
+- Structured Lombard lending
+- Digital asset compliance
+- Treasury analytics
+- Regulatory intelligence systems
+
+Internal platforms:
+- RegWatch
+- TreasureCorp
+- ZephyrWealth.ai
+
+Founding Principals:
+- Anwar Sawyer, LL.M.
+- Sarah Sawyer
+
+Website:
+https://sawyer-co.vercel.app/
+
+Primary crawlable page:
+https://sawyer-co.vercel.app/sawyer-co-institutional-advisory.html

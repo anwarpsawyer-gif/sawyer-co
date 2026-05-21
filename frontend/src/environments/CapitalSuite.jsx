@@ -113,7 +113,7 @@ export default function CapitalSuite() {
 
                         <motion.a
                             data-testid="capital-gateway-btn"
-                            href="https://zephyrwealth.ai"
+                            href="https://zephyrtrustai.com/login"
                             target="_blank"
                             rel="noopener noreferrer"
                             initial={{ opacity: 0 }}

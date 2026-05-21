@@ -96,6 +96,28 @@ export default function ExitHorizon() {
                     <InquiryForm />
                 </motion.div>
             </div>
+              <div
+                  style={{
+                    position: "absolute",
+                    bottom: "12px",
+                    right: "16px",
+                    zIndex: 1,
+                    opacity: 0.35,
+                    fontSize: "10px",
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  <a
+                    href="/sawyer-co-institutional-advisory.html"
+                    style={{
+                      color: "inherit",
+                      textDecoration: "none",
+                    }}
+                  >
+                    Institutional Profile
+                  </a>
+              </div>         
         </section>
     );
 }

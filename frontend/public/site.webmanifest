@@ -1,0 +1,19 @@
+{
+  "name": "Sawyer & Co.",
+  "short_name": "Sawyer",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0D1B2A",
+  "background_color": "#0D1B2A",
+  "display": "standalone"
+}

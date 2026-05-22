@@ -30,6 +30,18 @@ const FOUNDERS = [
             { k: "FORMATION", v: "DEUTSCHE BANK · TREASURECORP · CESGA® CERTIFIED" },
         ],
     },
+    {
+    id: "burkhard",
+    name: "Dr. Burkhard Eisele",
+    role: "International Advisor · Strategic Transformation & Financial Infrastructure",
+    portrait: "https://placehold.co/560x700/0D1B2A/C9B99A?text=B.E.",
+    bio: "Dr. Burkhard Eisele is a sovereign-level strategic advisor with over two decades of command across corporate strategy, governance, risk and compliance, and AI-enabled transformation inside the world's most complex financial institutions. At McKinsey & Company, Strategy&, KPMG, and EY, he advised boards and executive committees of G-SIBs and international banking groups on business model redesign, regulatory positioning, and enterprise-wide transformation roadmaps spanning Europe, the US, Asia, and the Middle East. As Equity Partner at both KPMG and EY, he built and scaled practices from inception to full institutional standing, leading cross-functional programs that translated regulatory complexity into scalable, technology-enabled operating models with direct board exposure. He drove the regulatory-driven market entry of a digital bank in Saudi Arabia, led post-M&A operating model integrations, and delivered BCBS 239 and group-wide risk architecture programs for Swiss G-SIBs. As Founder and Managing Director of MainChain.AI GmbH, he now sits at the precise intersection Sawyer & Co. was built for: AI-native governance, compliance automation, and financial infrastructure transformation for regulated institutions. A recognized thought leader and published author on strategy, digital transformation, and the regulatory future of banking. Holds a Doctor rerum politicarum and Diplom-Kaufmann from Goethe University Frankfurt. Trilingual: German, English, French.",
+    stats: [
+        { k: "EXPERIENCE", v: "20+ YRS" },
+        { k: "JURISDICTIONS", v: "G-SIB · EU · MENA" },
+        { k: "FORMATION", v: "McKINSEY & COMPANY · KPMG · EY · MAINCHAIN.AI · DR. RER.POL. GOETHE UNIVERSITY FRANKFURT" },
+    ],
+},
 ];
 
 export default function FounderChamber() {
@@ -39,7 +51,7 @@ export default function FounderChamber() {
             data-testid="env-founder-chamber"
             className="relative w-full bg-ivory text-navy overflow-hidden"
         >
-            <div className="px-[var(--sawyer-edge-pad)] py-[var(--sawyer-section-pad)]">
+            <div className="px-4 md:px-[var(--sawyer-edge-pad)] py-20 md:py-[var(--sawyer-section-pad)]">
                 <div className="flex items-center justify-between mb-16">
                     <div className="inst-label text-navy/60">
                         [ ENV :: 06 ] — THE PEDIGREE
@@ -54,7 +66,7 @@ export default function FounderChamber() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 1.4 }}
-                    className="font-display italic text-3xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-navy max-w-5xl"
+                    className="font-display italic text-2xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-navy max-w-5xl"
                 >
                     &ldquo;Built for institutions navigating regulation, liquidity, and digitization without compromising stability.{" "}
                     &rdquo;
@@ -62,7 +74,7 @@ export default function FounderChamber() {
 
                 <div className="hairline my-20 opacity-50" />
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-16 lg:gap-20">
                     {FOUNDERS.map((f, i) => (
                         <motion.div
                             key={f.id}

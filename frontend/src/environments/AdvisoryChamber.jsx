@@ -44,7 +44,7 @@ export default function AdvisoryChamber() {
             className="relative w-full bg-navy overflow-hidden"
         >
             <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
-                <div className="relative px-[var(--sawyer-edge-pad)] py-[var(--sawyer-section-pad)] flex flex-col">
+                <div className="relative px-4 md:px-[var(--sawyer-edge-pad)] py-20 md:py-[var(--sawyer-section-pad)] flex flex-col">
                     <div className="flex items-center justify-between mb-16">
                         <div className="inst-label">
                             [ ENV :: 02 ] — ADVISORY CHAMBER
@@ -59,7 +59,7 @@ export default function AdvisoryChamber() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 1.2 }}
-                        className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-ivory tracking-tight max-w-xl"
+                        className="font-display text-3xl md:text-5xl lg:text-6xl leading-[1.05] text-ivory tracking-tight max-w-xl"
                     >
                         Advisory begins with{" "}
                         <span className="italic text-sand">
@@ -82,7 +82,7 @@ export default function AdvisoryChamber() {
 
                     <div className="hairline my-16" />
 
-                    <div className="flex flex-col gap-12">
+                    <div className="flex flex-col gap-16 md:gap-12">
                         {PILLARS.map((p, i) => (
                             <motion.div
                                 key={p.idx}
@@ -92,7 +92,7 @@ export default function AdvisoryChamber() {
                                 viewport={{ once: true, margin: "-80px" }}
                                 variants={reveal}
                                 data-testid={`advisory-pillar-${p.idx}`}
-                                className="grid grid-cols-[auto_1fr] gap-8 items-start"
+                                className="grid grid-cols-[auto_1fr] gap-5 md:gap-8 items-start"
                             >
                                 <div className="font-display text-3xl text-sand leading-none pt-2">
                                     {p.idx}
@@ -105,7 +105,7 @@ export default function AdvisoryChamber() {
                                             {p.sub}
                                         </span>
                                     </h3>
-                                    <p className="mt-4 text-silver font-body text-sm md:text-base leading-relaxed max-w-md">
+                                    <p className="mt-5 text-silver font-body text-sm md:text-base leading-relaxed max-w-md">
                                         {p.body}
                                     </p>
                                 </div>

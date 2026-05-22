@@ -71,16 +71,24 @@ export default function InstitutionalNav({ activeEnvironment, onNavigate }) {
                     </nav>
 
                     <div className="flex items-center gap-3">
-                        <a
-                            data-testid="access-portal-btn"
-                            href={PORTAL_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hidden md:inline-flex inst-btn inst-btn--solid"
-                            style={{ padding: "12px 22px", fontSize: "10px" }}
-                        >
-                            ACCESS PORTAL
-                        </a>
+                                                   <a
+                                data-testid="access-portal-btn"
+                                href={PORTAL_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="
+                                    hidden sm:inline-flex
+                                    inst-btn inst-btn--solid
+                                    items-center justify-center
+                                    whitespace-nowrap
+                                    px-4 py-3
+                                    md:px-6
+                                    text-[9px] md:text-[10px]
+                                "
+                            >
+                                <span className="hidden md:inline">ACCESS PORTAL</span>
+                                <span className="md:hidden">ACCESS</span>
+                            </a>
                         <button
                             data-testid="mobile-nav-toggle"
                             onClick={() => setDrawerOpen(true)}

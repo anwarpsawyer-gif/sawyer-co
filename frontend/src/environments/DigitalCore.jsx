@@ -48,6 +48,7 @@ export default function DigitalCore() {
                     <div className="inst-label">
                         [ ENV :: 05 ] — DIGITAL CORE
                     </div>
+
                     <div className="inst-label hidden md:block ambient-drift">
                         INFRA :: STREAM · 0x4F · ACTIVE
                     </div>
@@ -65,6 +66,7 @@ export default function DigitalCore() {
                         The infrastructure must follow.
                     </span>
                 </motion.h2>
+
                 <motion.p
                     initial={{ opacity: 0, y: 12 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -72,12 +74,14 @@ export default function DigitalCore() {
                     transition={{ duration: 1.2, delay: 0.2 }}
                     className="mt-8 text-silver font-body text-base md:text-lg leading-relaxed max-w-2xl"
                 >
-                    Three quiet subsystems form the digital architecture of Sawyer &amp; Co. None of them announce themselves. They merely hold the institution together.
+                    Three quiet subsystems form the digital architecture of
+                    Sawyer &amp; Co. None of them announce themselves. They
+                    merely hold the institution together.
                 </motion.p>
 
                 <div className="hairline my-14 md:my-20 max-w-3xl" />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12 lg:gap-16"">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12 lg:gap-16">
                     {NODES.map((n, i) => (
                         <motion.div
                             key={n.id}
@@ -95,18 +99,23 @@ export default function DigitalCore() {
                             <p className="inst-label text-sand mb-5 md:mb-6">
                                 [ {n.label} ]
                             </p>
+
                             <p className="font-display text-sand text-2xl">
                                 {n.idx}
                             </p>
+
                             <h3 className="mt-2 font-display text-2xl md:text-3xl text-ivory tracking-tight">
                                 {n.title}
+
                                 <span className="block text-silver text-base font-body italic mt-1">
                                     {n.sub}
                                 </span>
                             </h3>
+
                             <p className="mt-6 text-silver font-body text-sm leading-relaxed">
                                 {n.body}
                             </p>
+
                             <div className="mt-10 font-mono text-[10px] text-silver tracking-widest">
                                 NODE_{n.id.toUpperCase()} //{" "}
                                 <span className="text-sand">ONLINE</span>

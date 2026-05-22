@@ -111,24 +111,47 @@ export default function CapitalSuite() {
                             to the standard required before institutional close.
                         </motion.p>
 
+                        <div className="mt-12 flex flex-col md:flex-row gap-4 items-start">
+
                         <motion.a
-                            data-testid="capital-gateway-btn"
-                            href="https://zephyrtrustai.com/login"
+                            data-testid="investor-portal-btn"
+                            href="https://zephyrtrustai.com/portal/login"
                             target="_blank"
                             rel="noopener noreferrer"
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true }}
                             transition={{ duration: 1, delay: 0.58 }}
-                            className="inst-btn mt-12"
+                            className="inst-btn"
                         >
-                            ACCESS CAPITAL OPERATIONS
+                            INVESTOR PORTAL
                             <ArrowUpRight
                                 size={14}
                                 strokeWidth={1.5}
                                 className="text-sand"
                             />
                         </motion.a>
+                    
+                        <motion.a
+                            data-testid="manager-login-btn"
+                            href="https://zephyrtrustai.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1, delay: 0.68 }}
+                            className="inst-btn"
+                        >
+                            RISK, COMPLIANCE & MANAGER LOGIN
+                            <ArrowUpRight
+                                size={14}
+                                strokeWidth={1.5}
+                                className="text-sand"
+                            />
+                        </motion.a>
+                    
+                    </div>
                     </div>
 
                     {/* Right — metrics */}

@@ -92,7 +92,7 @@ export default function DigitalCore() {
                             }}
                             className="relative pl-5 md:pl-6 border-l border-silver/30"
                         >
-                            <p className="inst-label text-sand mb-5 md:mb-6 md:ambient-drift">
+                            <p className="inst-label text-sand mb-5 md:mb-6">
                                 [ {n.label} ]
                             </p>
                             <p className="font-display text-sand text-2xl">

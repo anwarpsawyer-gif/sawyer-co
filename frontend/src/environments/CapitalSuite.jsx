@@ -35,7 +35,11 @@ export default function CapitalSuite() {
                 />
             </div>
 
-            <div className="relative z-10 px-[var(--sawyer-edge-pad)] py-[var(--sawyer-section-pad)]">
+            <div className="
+                relative z-10
+                px-4 md:px-[var(--sawyer-edge-pad)]
+                py-20 md:py-[var(--sawyer-section-pad)]
+                ">
                 <div className="flex items-center justify-between mb-16">
                     <div className="inst-label">
                         [ ENV :: 04 ] — CAPITAL SUITE
@@ -63,7 +67,13 @@ export default function CapitalSuite() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ duration: 1.2 }}
-                            className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-ivory tracking-tight"
+                            className="
+                            font-display
+                            text-3xl md:text-5xl lg:text-6xl
+                            leading-[1.05]
+                            text-ivory
+                            tracking-tight
+                            "
                         >
                             Institutional capital.{" "}
                             <span className="italic text-sand">
@@ -111,7 +121,12 @@ export default function CapitalSuite() {
                             to the standard required before institutional close.
                         </motion.p>
 
-                        <div className="mt-12 flex flex-col md:flex-row gap-4 items-start">
+                        <div className="
+                            mt-12
+                            flex flex-col md:flex-row
+                            gap-4
+                            items-stretch md:items-start
+                            ">
 
                         <motion.a
                             data-testid="investor-portal-btn"
@@ -122,7 +137,12 @@ export default function CapitalSuite() {
                             whileInView={{ opacity: 1 }}
                             viewport={{ once: true }}
                             transition={{ duration: 1, delay: 0.58 }}
-                            className="inst-btn"
+                            className="
+                            inst-btn
+                            w-full md:w-auto
+                            justify-center
+                            text-center
+                            "
                         >
                             INVESTOR PORTAL
                             <ArrowUpRight
@@ -165,7 +185,12 @@ export default function CapitalSuite() {
                         <p className="inst-label mb-10">
                             [ ZEPHYRWEALTH.AI · PLATFORM METRICS ]
                         </p>
-                        <div className="grid grid-cols-2 gap-x-10 gap-y-12">
+                        <div className="
+                            grid
+                            grid-cols-1 sm:grid-cols-2
+                            gap-x-10
+                            gap-y-12
+                            ">
                             {METRICS.map((m, i) => (
                                 <motion.div
                                     key={m.label}

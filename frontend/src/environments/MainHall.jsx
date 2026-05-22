@@ -444,7 +444,7 @@ export default function MainHall({ onEnter }) {
             </motion.div>
 
             {/* Hero copy */}
-            <div className="relative z-10 h-full flex items-center px-[var(--sawyer-edge-pad)]">
+            <div className="relative z-10 min-h-[100svh] md:h-full flex items-center px-[var(--sawyer-edge-pad)] pt-28 pb-24">
                 <div className="max-w-4xl">
                     <motion.p
                         initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
@@ -454,7 +454,7 @@ export default function MainHall({ onEnter }) {
                     <motion.h1
                         initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.4, delay: 0.85 }}
-                        className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] text-ivory tracking-tight"
+                        className="font-display text-3xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] text-ivory tracking-tight"
                     >
                         Sovereign Risk Advisory and Institutional Capital.{" "}
                         <span className="italic text-sand">Defending and Scaling Enterprises</span>{" "}
@@ -478,7 +478,7 @@ export default function MainHall({ onEnter }) {
                     <motion.div
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                         transition={{ duration: 1, delay: 1.35 }}
-                        className="mt-14 flex items-center gap-6"
+                        className="mt-10 md:mt-14 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6"
                     >
                         <button data-testid="enter-institution-btn" onClick={onEnter} className="inst-btn">
                             ENTER THE INSTITUTION <span className="text-sand">→</span>

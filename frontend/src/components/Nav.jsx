@@ -42,11 +42,25 @@ export default function InstitutionalNav({ activeEnvironment, onNavigate }) {
                         : "1px solid transparent",
                 }}
             >
-                <div className="max-w-[1600px] mx-auto px-[var(--sawyer-edge-pad)] h-[72px] flex items-center justify-between">
+                <div className="
+                    max-w-[1600px]
+                    mx-auto
+                    px-4 md:px-[var(--sawyer-edge-pad)]
+                    h-[72px]
+                    flex items-center justify-between
+                    ">
                     <button
                         data-testid="brand-mark"
                         onClick={() => handleNav("main-hall")}
-                        className="font-display text-xl md:text-2xl tracking-wide text-ivory hover:text-sand transition-colors duration-500"
+                        className="
+                        font-display
+                        text-lg sm:text-xl md:text-2xl
+                        tracking-wide
+                        text-ivory
+                        hover:text-sand
+                        transition-colors duration-500
+                        whitespace-nowrap
+                        "
                     >
                         SAWYER <span className="text-sand">&amp;</span> CO.
                     </button>
@@ -70,7 +84,7 @@ export default function InstitutionalNav({ activeEnvironment, onNavigate }) {
                         })}
                     </nav>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
                                                    <a
                                 data-testid="access-portal-btn"
                                 href={PORTAL_URL}
@@ -141,7 +155,14 @@ export default function InstitutionalNav({ activeEnvironment, onNavigate }) {
                                 key={item.id}
                                 data-testid={`mobile-nav-${item.id}`}
                                 onClick={() => handleNav(item.id)}
-                                className="text-left font-display text-3xl text-ivory hover:text-sand transition-colors duration-500"
+                                className="
+                            text-left
+                            font-display
+                            text-2xl sm:text-3xl
+                            text-ivory
+                            hover:text-sand
+                            transition-colors duration-500
+                            "
                             >
                                 {item.label}
                             </button>

@@ -43,7 +43,7 @@ export default function DigitalCore() {
                 }}
             />
 
-            <div className="relative z-10 px-[var(--sawyer-edge-pad)] py-[var(--sawyer-section-pad)]">
+            <div className="relative z-10 px-4 md:px-[var(--sawyer-edge-pad)] py-20 md:py-[var(--sawyer-section-pad)]">
                 <div className="flex items-center justify-between mb-16">
                     <div className="inst-label">
                         [ ENV :: 05 ] — DIGITAL CORE
@@ -58,7 +58,7 @@ export default function DigitalCore() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 1.2 }}
-                    className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-ivory tracking-tight max-w-4xl"
+                    className="font-display text-3xl md:text-5xl lg:text-6xl leading-[1.05] text-ivory tracking-tight max-w-4xl"
                 >
                     The Caribbean is modernising.{" "}
                     <span className="italic text-sand">
@@ -75,9 +75,9 @@ export default function DigitalCore() {
                     Three quiet subsystems form the digital architecture of Sawyer &amp; Co. None of them announce themselves. They merely hold the institution together.
                 </motion.p>
 
-                <div className="hairline my-20 max-w-3xl" />
+                <div className="hairline my-14 md:my-20 max-w-3xl" />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12 lg:gap-16"">
                     {NODES.map((n, i) => (
                         <motion.div
                             key={n.id}
@@ -90,9 +90,9 @@ export default function DigitalCore() {
                                 delay: i * 0.2,
                                 ease: [0.16, 1, 0.3, 1],
                             }}
-                            className="relative pl-6 border-l border-silver/30"
+                            className="relative pl-5 md:pl-6 border-l border-silver/30"
                         >
-                            <p className="inst-label text-sand mb-6 ambient-drift">
+                            <p className="inst-label text-sand mb-5 md:mb-6 md:ambient-drift">
                                 [ {n.label} ]
                             </p>
                             <p className="font-display text-sand text-2xl">

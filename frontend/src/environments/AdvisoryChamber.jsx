@@ -44,7 +44,7 @@ export default function AdvisoryChamber() {
             className="relative w-full bg-navy overflow-hidden"
         >
             <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
-                <div className="relative px-4 md:px-[var(--sawyer-edge-pad)] py-20 md:py-[var(--sawyer-section-pad)] flex flex-col">
+                <div className="relative z-20 px-4 md:px-[var(--sawyer-edge-pad)] py-20 md:py-[var(--sawyer-section-pad)] flex flex-col bg-navy">
                     <div className="flex items-center justify-between mb-16">
                         <div className="inst-label">
                             [ ENV :: 02 ] — ADVISORY CHAMBER
@@ -114,20 +114,22 @@ export default function AdvisoryChamber() {
                     </div>
                 </div>
 
-                <div className="relative min-h-[60vh] lg:min-h-full">
+                <div className="relative min-h-[45vh] lg:min-h-full">
                     <img
                         src={CHAMBER}
                         alt=""
                         className="absolute inset-0 w-full h-full object-cover"
                         style={{ filter: "brightness(0.78) contrast(1.05)" }}
                     />
+
                     <div
-                        className="absolute inset-0"
+                        className="absolute inset-0 bg-navy/35 md:bg-transparent"
                         style={{
                             background:
-                                "linear-gradient(180deg, rgba(13,27,42,0.35) 0%, rgba(13,27,42,0.15) 50%, rgba(13,27,42,0.65) 100%)",
+                                "linear-gradient(180deg, rgba(13,27,42,0.72) 0%, rgba(13,27,42,0.28) 45%, rgba(13,27,42,0.82) 100%)",
                         }}
                     />
+
                     <div className="absolute top-10 left-10 inst-label text-ivory">
                         [ CHAMBER :: ACTIVE ]
                     </div>

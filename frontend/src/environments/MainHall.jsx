@@ -426,15 +426,26 @@ export default function MainHall({ onEnter }) {
             </svg>
 
             {/* Left gradient */}
-                        <div
-                aria-hidden="true"
-                className="absolute inset-0 pointer-events-none hidden md:block"
-                style={{
-                    zIndex: 3,
-                    background:
-                        "linear-gradient(90deg, rgba(13,27,42,1) 18%, rgba(13,27,42,0.72) 36%, rgba(13,27,42,0.08) 56%, transparent 100%)",
-                }}
-            />
+                {/* Left / mobile gradient */}
+<div
+    aria-hidden="true"
+    className="absolute inset-0 pointer-events-none hidden md:block"
+    style={{
+        zIndex: 3,
+        background:
+            "linear-gradient(90deg, rgba(13,27,42,1) 18%, rgba(13,27,42,0.72) 36%, rgba(13,27,42,0.08) 56%, transparent 100%)",
+    }}
+/>
+
+<div
+    aria-hidden="true"
+    className="absolute inset-0 pointer-events-none md:hidden"
+    style={{
+        zIndex: 3,
+        background:
+            "linear-gradient(180deg, rgba(13,27,42,0.72) 0%, rgba(13,27,42,0.38) 45%, rgba(13,27,42,0.88) 100%)",
+    }}
+/>
             
             <div
                 aria-hidden="true"

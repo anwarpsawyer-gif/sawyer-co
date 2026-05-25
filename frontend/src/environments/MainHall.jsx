@@ -7,7 +7,7 @@ const ATRIUM =
 const OX = 1020;
 const OY = 400;
 
-const ARCS = [
+const ARCS = [<
     { r: 300,  delay: "0.0s", dur: "13s", op: 0.07  },
     { r: 420,  delay: "0.5s", dur: "15s", op: 0.06  },
     { r: 540,  delay: "1.0s", dur: "12s", op: 0.055 },
@@ -426,12 +426,25 @@ export default function MainHall({ onEnter }) {
             </svg>
 
             {/* Left gradient */}
-            <div aria-hidden="true" className="absolute inset-0 pointer-events-none"
+                        <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none hidden md:block"
                 style={{
                     zIndex: 3,
-                    background: "linear-gradient(90deg, rgba(13,27,42,1) 18%, rgba(13,27,42,0.72) 36%, rgba(13,27,42,0.08) 56%, transparent 100%)",
-                }} />
-
+                    background:
+                        "linear-gradient(90deg, rgba(13,27,42,1) 18%, rgba(13,27,42,0.72) 36%, rgba(13,27,42,0.08) 56%, transparent 100%)",
+                }}
+            />
+            
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none md:hidden"
+                style={{
+                    zIndex: 3,
+                    background:
+                        "linear-gradient(180deg, rgba(13,27,42,0.72) 0%, rgba(13,27,42,0.38) 45%, rgba(13,27,42,0.88) 100%)",
+                }}
+            />
             {/* Top plate */}
             <motion.div
                 initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}

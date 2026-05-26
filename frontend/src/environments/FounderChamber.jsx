@@ -17,7 +17,7 @@ const ADVISOR = {
     { k: "JURISDICTIONS", v: "G-SIB · EU · MENA" },
     {
       k: "FORMATION",
-      v: "McKINSEY & COMPANY · KPMG · EY · MAINCHAIN.AI · DR. RER.POL.",
+      v: "McKINSEY & COMPANY · KPMG · EY · MAINCHAIN.AI",
     },
   ],
 };

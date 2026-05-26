@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 const CHAMBER =
-    "https://images.unsplash.com/photo-1622396481322-3b83d186701b?crop=entropy&cs=srgb&fm=jpg&q=85&w=2400";
+    "https://images.unsplash.com/photo-1716467278688-5b7fc38e3ca7?crop=entropy&cs=srgb&fm=jpg&q=85&w=1800";
 
 const PILLARS = [
     {
@@ -32,11 +32,7 @@ const reveal = {
     show: (i) => ({
         opacity: 1,
         y: 0,
-        transition: {
-            duration: 1,
-            delay: i * 0.18,
-            ease: [0.16, 1, 0.3, 1],
-        },
+        transition: { duration: 1, delay: i * 0.18, ease: [0.16, 1, 0.3, 1] },
     }),
 };
 
@@ -48,13 +44,11 @@ export default function AdvisoryChamber() {
             className="relative w-full bg-navy overflow-hidden"
         >
             <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
-                {/* LEFT CONTENT */}
                 <div className="relative z-20 px-4 md:px-[var(--sawyer-edge-pad)] py-20 md:py-[var(--sawyer-section-pad)] flex flex-col bg-navy">
                     <div className="flex items-center justify-between mb-16">
                         <div className="inst-label">
                             [ ENV :: 02 ] — ADVISORY CHAMBER
                         </div>
-
                         <div className="inst-label hidden md:block">
                             THREE PILLARS
                         </div>
@@ -103,18 +97,14 @@ export default function AdvisoryChamber() {
                                 <div className="font-display text-3xl text-sand leading-none pt-2">
                                     {p.idx}
                                 </div>
-
                                 <div>
                                     <p className="inst-label">{p.tag}</p>
-
                                     <h3 className="mt-3 font-display text-2xl md:text-3xl text-ivory tracking-tight">
                                         {p.title}
-
                                         <span className="block text-sand text-sm md:text-base font-body not-italic mt-2 tracking-widest uppercase">
                                             {p.sub}
                                         </span>
                                     </h3>
-
                                     <p className="mt-5 text-silver font-body text-sm md:text-base leading-relaxed max-w-md">
                                         {p.body}
                                     </p>
@@ -124,49 +114,34 @@ export default function AdvisoryChamber() {
                     </div>
                 </div>
 
-                {/* RIGHT IMAGE */}
-                <div className="relative min-h-[55vh] lg:min-h-full">
+                <div className="relative min-h-[45vh] lg:min-h-full">
                     <img
                         src={CHAMBER}
                         alt=""
-                        className="absolute inset-0 w-full h-full object-cover object-center"
-                        style={{
-                            filter: "brightness(0.92) contrast(1.03)",
-                        }}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        style={{ filter: "brightness(0.78) contrast(1.05)" }}
                     />
 
                     <div
-                        className="absolute inset-0"
+                        className="absolute inset-0 bg-navy/35 md:bg-transparent"
                         style={{
                             background:
-                                "linear-gradient(180deg, rgba(13,27,42,0.28) 0%, rgba(13,27,42,0.10) 45%, rgba(13,27,42,0.42) 100%)",
+                                "linear-gradient(180deg, rgba(13,27,42,0.72) 0%, rgba(13,27,42,0.28) 45%, rgba(13,27,42,0.82) 100%)",
                         }}
                     />
 
                     <div className="absolute top-10 left-10 inst-label text-ivory">
                         [ CHAMBER :: ACTIVE ]
                     </div>
-
                     <div className="absolute top-10 right-10 inst-label text-ivory">
                         STATUS :: STEWARDSHIP
                     </div>
-
                     <div className="absolute bottom-10 left-10 inst-label text-ivory">
                         ROOM 02 / VII
                     </div>
-
                     <div className="absolute bottom-10 right-10 inst-label text-ivory hidden md:block">
                         [ LATITUDE 25.5° · LIMESTONE :: BAHAMIAN ]
                     </div>
-
-                    <a
-                        href="https://unsplash.com/@anwaltzzz"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hidden md:block absolute bottom-4 right-4 text-[10px] tracking-[0.3em] uppercase text-ivory/35 hover:text-ivory/60 transition-all duration-300"
-                    >
-                        Photography · Aleksandr Zaitsev / Unsplash
-                    </a>
                 </div>
             </div>
         </section>

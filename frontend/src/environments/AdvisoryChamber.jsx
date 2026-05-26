@@ -129,10 +129,9 @@ export default function AdvisoryChamber() {
                     <img
                         src={CHAMBER}
                         alt=""
-                        className="absolute inset-0 w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover object-[58%_50%] md:object-center"
                         style={{
-                            filter:
-                                "brightness(0.95) contrast(1.04)",
+                            filter: "brightness(0.98) contrast(1.03)",
                         }}
                     />
 
@@ -140,7 +139,7 @@ export default function AdvisoryChamber() {
                         className="absolute inset-0"
                         style={{
                             background:
-                                "linear-gradient(180deg, rgba(13,27,42,0.32) 0%, rgba(13,27,42,0.12) 45%, rgba(13,27,42,0.48) 100%)",
+                                "linear-gradient(180deg, rgba(13,27,42,0.22) 0%, rgba(13,27,42,0.06) 45%, rgba(13,27,42,0.38) 100%)",
                         }}
                     />
 

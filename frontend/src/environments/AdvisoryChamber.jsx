@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 const CHAMBER =
-    "https://images.unsplash.com/photo-1716467278688-5b7fc38e3ca7?crop=entropy&cs=srgb&fm=jpg&q=85&w=1800";
+    "https://images.unsplash.com/photo-1622396481322-3b83d186701b?crop=entropy&cs=srgb&fm=jpg&q=85&w=2400";
 
 const PILLARS = [
     {
@@ -129,9 +129,9 @@ export default function AdvisoryChamber() {
                     <img
                         src={CHAMBER}
                         alt=""
-                        className="absolute inset-0 w-full h-full object-cover object-[58%_50%] md:object-center"
+                        className="absolute inset-0 w-full h-full object-cover object-center"
                         style={{
-                            filter: "brightness(0.98) contrast(1.03)",
+                            filter: "brightness(0.92) contrast(1.03)",
                         }}
                     />
 
@@ -139,7 +139,7 @@ export default function AdvisoryChamber() {
                         className="absolute inset-0"
                         style={{
                             background:
-                                "linear-gradient(180deg, rgba(13,27,42,0.22) 0%, rgba(13,27,42,0.06) 45%, rgba(13,27,42,0.38) 100%)",
+                                "linear-gradient(180deg, rgba(13,27,42,0.28) 0%, rgba(13,27,42,0.10) 45%, rgba(13,27,42,0.42) 100%)",
                         }}
                     />
 

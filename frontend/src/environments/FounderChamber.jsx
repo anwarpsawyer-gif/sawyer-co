@@ -1,10 +1,8 @@
 import { motion } from "framer-motion";
 
-const ANWAR_PORTRAIT =
-  "https://placehold.co/560x700/0D1B2A/C9B99A?text=A.S.";
-const SARAH_PORTRAIT =
-  "https://placehold.co/560x700/0D1B2A/C9B99A?text=S.S.";
-const EISELE_PORTRAIT = "/Eisele.jpg";
+const ANWAR_PORTRAIT = "/Anwar.jpeg";
+const SARAH_PORTRAIT = "/Sarah.jpeg";
+const EISELE_PORTRAIT = "/Burkhard.jpeg";
 
 const ADVISOR = {
   id: "burkhard",

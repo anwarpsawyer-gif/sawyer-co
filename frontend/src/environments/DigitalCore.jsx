@@ -14,7 +14,7 @@ const NODES = [
         idx: "II",
         title: "Treasury Analytics",
         sub: "institutional-grade treasury",
-        body: "TreasureCorp, built by Sarah Sawyer, is institutional-grade treasury analytics for digital asset operations — multi-chain, real-time, governance-ready. The same discipline applied to €500B in Deutsche Bank assets is applied here to digital treasury infrastructure. Tracking, simulation, and stakeholder reporting for organisations operating in the new financial environment.",
+        body: "TreasureCorp, is institutional-grade treasury analytics for digital asset operations — multi-chain, real-time, governance-ready. The same discipline applied to €500B in Deutsche Bank assets is applied here to digital treasury infrastructure. Tracking, simulation, and stakeholder reporting for organisations operating in the new financial environment.",
         label: "TREASURECORP :: NOMINAL",
     },
     {

@@ -30,12 +30,12 @@ const CONTENT = {
 
   // ---- variable every week ----------------------------------------------
   NEEDLE_BEARING: 0,                       // degrees; 0 = points N toward REGULATION
-  PLOT_BEARING: 195,                       // degrees; keep 160-215 (clear lower field)
+  PLOT_BEARING: 190,                       // degrees; keep 160-215 (clear lower field)
   PLOT_DISTANCE: 125,                      // distance from the needle (compass units; ~2 px each)
   PLOT_LABEL_LINE_1: "SCB SUPERVISORY EXAMS",
   PLOT_LABEL_LINE_2: "31 → 76  ·  2021–2025",
   PLOT_LABEL_LINE_3: "",                   // optional; one metric per cover works best (+45 · +145% · ~25%/yr belongs on slide 2)
-  HEADLINE: "SCRUTINY UP 2.5×",           // large, heavy (auto-fits to one line)
+  HEADLINE: "SCRUTINY|UP 2.5×",           // large, heavy (auto-fits to one line)
   SUBHEAD: "Findings per exam fell. Total findings didn't.",   // one line, smaller, lighter
   FOOTER_SOURCE: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025",
   FOOTER_URL: "sawyer-co.com",
@@ -45,11 +45,12 @@ const CONTENT = {
 /* layout knobs (not content) */
 const LAYOUT = {
   W: 1080, H: 1350,
-  compassCx: 540, compassCy: 438, compassScale: 2.5,
-  headlineY: 1000, headlineMaxW: 940, headlineSize: 150,
-  subheadY: 1064, subheadMaxW: 900, subheadSize: 36,
-  rooster: { x: 76, y: 1085, width: 400 },             // still frame, screen-blended
-  groundY: 1290,                                       // hairline the rooster stands on
+  compassCx: 790, compassCy: 300, compassScale: 1.5,    // instrument tucked into the upper right
+  axisName: 22, axisDeg: 16, plot1: 24, plot2: 22,      // label sizes (px) that go with that scale
+  headlineX: 64, headlineY: 800, headlineMaxW: 952, headlineSize: 190, headlineLead: 0.95,   // left-aligned, "|" breaks lines
+  subheadGap: 78, subheadMaxW: 952, subheadSize: 38,   // subhead sits subheadGap px under the last headline line
+  rooster: { x: 76, y: 1085, width: 400 },              // still frame, screen-blended
+  groundY: 1290,                                        // hairline the rooster stands on
   footerY: 1322, edgePad: 64,
 };
 /* ========================================================================== */
@@ -138,26 +139,33 @@ function render(C, L) {
     const [dx0, dy0] = P((ARM + 30) * S, deg), cx = ox + dx0, cy = oy + dy0, top = deg === 0;
     el("circle", { cx, cy, r: 9, fill: "none", stroke: GOLD(.55), "stroke-width": 1.4 });
     el("circle", { cx, cy, r: 4, fill: GOLD(.8) });
-    txt(name, { x: cx, y: cy + (top ? -26 : 48), "text-anchor": "middle", fill: "rgba(232,222,198,.97)", "font-size": 26, "font-weight": 500, "letter-spacing": 3 });
-    txt(deg + "\u00B0", { x: cx, y: cy + (top ? -58 : 76), "text-anchor": "middle", fill: GOLD(.65), "font-size": 18, "letter-spacing": 2 });
+    txt(name, { x: cx, y: cy + (top ? -22 : L.axisName + 22), "text-anchor": "middle", fill: "rgba(232,222,198,.97)", "font-size": L.axisName, "font-weight": 500, "letter-spacing": 3 });
+    txt(deg + "\u00B0", { x: cx, y: cy + (top ? -(L.axisName + 26) : L.axisName + 50), "text-anchor": "middle", fill: GOLD(.65), "font-size": L.axisDeg, "letter-spacing": 2 });
   });
 
   // plotted-reading label (pixel space, below the point)
   const ppx = L.compassCx + px * L.compassScale, ppy = L.compassCy + py * L.compassScale;
-  txt(C.PLOT_LABEL_LINE_1, { x: ppx, y: ppy + 62, "text-anchor": "middle", fill: "rgba(222,198,150,.98)", "font-size": 28, "font-weight": 500, "letter-spacing": 3 });
-  txt(C.PLOT_LABEL_LINE_2, { x: ppx, y: ppy + 100, "text-anchor": "middle", fill: GOLD(.95), "font-size": 26, "letter-spacing": 2.5 });
+  txt(C.PLOT_LABEL_LINE_1, { x: ppx, y: ppy + 50, "text-anchor": "middle", fill: "rgba(222,198,150,.98)", "font-size": L.plot1, "font-weight": 500, "letter-spacing": 3 });
+  txt(C.PLOT_LABEL_LINE_2, { x: ppx, y: ppy + 84, "text-anchor": "middle", fill: GOLD(.95), "font-size": L.plot2, "letter-spacing": 2.5 });
   if (C.PLOT_LABEL_LINE_3) txt(C.PLOT_LABEL_LINE_3, { x: ppx, y: ppy + 132, "text-anchor": "middle", fill: GOLD(.7), "font-size": 20, "letter-spacing": 3 });
 
   // series tag, top-left
   txt(C.SERIES_TAG_LINE_1, { x: L.edgePad, y: 82, fill: "rgba(232,222,198,.97)", "font-size": 24, "font-weight": 500, "letter-spacing": 4.5 });
   txt(C.SERIES_TAG_LINE_2, { x: L.edgePad, y: 114, fill: GOLD(.8), "font-size": 17, "letter-spacing": 3 });
 
-  // headline block, centred, auto-fit to one line each
-  const fit = (t, maxW, size) => { let s = size; t.setAttribute("font-size", s); while (t.getComputedTextLength() > maxW && s > 20) { s -= 1; t.setAttribute("font-size", s); } };
-  const h = el("text", { x: W / 2, y: L.headlineY, "text-anchor": "middle", fill: "#F5F0E8", "font-family": "IN", "font-weight": 800, "letter-spacing": 1 });
-  h.textContent = C.HEADLINE; h.style.fontFamily = '"IN", sans-serif'; fit(h, L.headlineMaxW, L.headlineSize);
-  const s = el("text", { x: W / 2, y: L.subheadY, "text-anchor": "middle", fill: "#C9B99A", "font-weight": 300, "letter-spacing": .3 });
-  s.textContent = C.SUBHEAD; s.style.fontFamily = '"IN", sans-serif'; fit(s, L.subheadMaxW, L.subheadSize);
+  // headline block: left-aligned, "|" breaks lines, auto-fit so the widest line fits the column
+  const fit = (t, maxW, size) => { let z = size; t.setAttribute("font-size", z); while (t.getComputedTextLength() > maxW && z > 20) { z -= 1; t.setAttribute("font-size", z); } return z; };
+  const lines = C.HEADLINE.split("|");
+  const widest = lines.reduce((m, l) => (l.length > m.length ? l : m), "");
+  const probe = el("text", { x: -9999, y: -9999, "font-weight": 800, "letter-spacing": 1 }); probe.textContent = widest; probe.style.fontFamily = '"IN", sans-serif';
+  const hs = fit(probe, L.headlineMaxW, L.headlineSize); probe.remove();
+  lines.forEach((ln, i) => {
+    const h = el("text", { x: L.headlineX, y: L.headlineY + i * hs * L.headlineLead, "text-anchor": "start", fill: "#F5F0E8", "font-weight": 800, "font-size": hs, "letter-spacing": 1 });
+    h.textContent = ln; h.style.fontFamily = '"IN", sans-serif';
+  });
+  const sy = L.headlineY + (lines.length - 1) * hs * L.headlineLead + L.subheadGap;
+  const sub = el("text", { x: L.headlineX, y: sy, "text-anchor": "start", fill: "#C9B99A", "font-weight": 300, "letter-spacing": .3 });
+  sub.textContent = C.SUBHEAD; sub.style.fontFamily = '"IN", sans-serif'; fit(sub, L.subheadMaxW, L.subheadSize);
 
   // ground line with instrument ticks
   el("line", { x1: L.edgePad, y1: L.groundY, x2: W - L.edgePad, y2: L.groundY, stroke: GOLD(.45), "stroke-width": 1 });

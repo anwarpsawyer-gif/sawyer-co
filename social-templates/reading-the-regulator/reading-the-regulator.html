@@ -34,19 +34,20 @@ const CONTENT = {
   PLOT_DISTANCE: 125,                      // distance from the needle (compass units; ~2 px each)
   PLOT_LABEL_LINE_1: "SCB SUPERVISORY EXAMS",
   PLOT_LABEL_LINE_2: "31 → 76  ·  2021–2025",
-  PLOT_LABEL_LINE_3: "+45 EXAMS  ·  +145%  ·  ~25% A YEAR",   // derived from 31 → 76 over four years
+  PLOT_LABEL_LINE_3: "",                   // optional; one metric per cover works best (+45 · +145% · ~25%/yr belongs on slide 2)
   HEADLINE: "SCRUTINY UP 2.5×",           // large, heavy (auto-fits to one line)
   SUBHEAD: "Findings per exam fell. Total findings didn't.",   // one line, smaller, lighter
   FOOTER_SOURCE: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025",
   FOOTER_URL: "sawyer-co.com",
+  SWIPE_CUE: "SWIPE →",                    // cover-of-carousel cue; set "" for a stand-alone image
 };
 
 /* layout knobs (not content) */
 const LAYOUT = {
   W: 1080, H: 1350,
-  compassCx: 540, compassCy: 412, compassScale: 2.5,
+  compassCx: 540, compassCy: 438, compassScale: 2.5,
   headlineY: 1000, headlineMaxW: 940, headlineSize: 150,
-  subheadY: 1064, subheadMaxW: 900, subheadSize: 30,
+  subheadY: 1064, subheadMaxW: 900, subheadSize: 36,
   rooster: { x: 76, y: 1085, width: 400 },             // still frame, screen-blended
   groundY: 1290,                                       // hairline the rooster stands on
   footerY: 1322, edgePad: 64,
@@ -104,10 +105,6 @@ function render(C, L) {
     const [x1, y1] = P(inner, deg), [x2, y2] = P(R1, deg);
     el("line", { x1, y1, x2, y2, stroke: GOLD(card ? .8 : major ? .55 : .3), "stroke-width": card ? 1.2 : major ? .8 : .5 }, g);
   }
-  [30, 60, 120, 150, 210, 240, 300, 330].forEach((deg) => {
-    const [x, y] = P(R1 + 14, deg);
-    txt(String(deg), { x, y: y + 3.5, "text-anchor": "middle", fill: GOLD(.4), "font-size": 7 }, g);
-  });
   [["N", 0], ["E", 90], ["S", 180], ["W", 270]].forEach(([l, deg]) => {
     const [x, y] = P(R2 - 14, deg);
     txt(l, { x, y: y + 4, "text-anchor": "middle", fill: GOLD(.75), "font-size": 13, "font-weight": 500 }, g);
@@ -133,28 +130,27 @@ function render(C, L) {
   el("polygon", { points: `0,${-DH} ${DW},0 0,${DH} ${-DW},0`, fill: "none", stroke: "rgba(218,185,115,.85)", "stroke-width": .9 }, n);
   el("circle", { cx: 0, cy: 0, r: 2.2, fill: "rgba(255,250,225,.95)" }, n);
 
-  // three axis labels, placed by bearing in pixel space so type size stays fixed
+  // three axis labels, placed by bearing in pixel space; type sized to read on a phone
   const S = L.compassScale, ox = L.compassCx, oy = L.compassCy;
-  [[C.AXIS_N_LABEL, C.AXIS_N_BEARING, "middle"], [C.AXIS_E_LABEL, C.AXIS_E_BEARING, "start"], [C.AXIS_W_LABEL, C.AXIS_W_BEARING, "end"]].forEach(([name, deg, anchor]) => {
+  [[C.AXIS_N_LABEL, C.AXIS_N_BEARING], [C.AXIS_E_LABEL, C.AXIS_E_BEARING], [C.AXIS_W_LABEL, C.AXIS_W_BEARING]].forEach(([name, deg]) => {
     const [x1, y1] = P((ARM + 2) * S, deg), [x2, y2] = P((ARM + 22) * S, deg);
     el("line", { x1: ox + x1, y1: oy + y1, x2: ox + x2, y2: oy + y2, stroke: GOLD(.45), "stroke-width": 1.2 });
-    const [dx0, dy0] = P((ARM + 30) * S, deg), cx = ox + dx0, cy = oy + dy0;
+    const [dx0, dy0] = P((ARM + 30) * S, deg), cx = ox + dx0, cy = oy + dy0, top = deg === 0;
     el("circle", { cx, cy, r: 9, fill: "none", stroke: GOLD(.55), "stroke-width": 1.4 });
     el("circle", { cx, cy, r: 4, fill: GOLD(.8) });
-    const dx = anchor === "start" ? 22 : anchor === "end" ? -22 : 0, top = deg === 0;
-    txt(deg + "\u00B0", { x: cx + dx, y: cy + (top ? -46 : -8), "text-anchor": anchor, fill: GOLD(.6), "font-size": 15, "letter-spacing": 2 });
-    txt(name, { x: cx + dx, y: cy + (top ? -22 : 16), "text-anchor": anchor, fill: "rgba(232,222,198,.95)", "font-size": 21, "font-weight": 500, "letter-spacing": 3.5 });
+    txt(name, { x: cx, y: cy + (top ? -26 : 48), "text-anchor": "middle", fill: "rgba(232,222,198,.97)", "font-size": 26, "font-weight": 500, "letter-spacing": 3 });
+    txt(deg + "\u00B0", { x: cx, y: cy + (top ? -58 : 76), "text-anchor": "middle", fill: GOLD(.65), "font-size": 18, "letter-spacing": 2 });
   });
 
   // plotted-reading label (pixel space, below the point)
   const ppx = L.compassCx + px * L.compassScale, ppy = L.compassCy + py * L.compassScale;
-  txt(C.PLOT_LABEL_LINE_1, { x: ppx, y: ppy + 58, "text-anchor": "middle", fill: "rgba(210,185,135,.95)", "font-size": 21, "font-weight": 500, "letter-spacing": 3 });
-  txt(C.PLOT_LABEL_LINE_2, { x: ppx, y: ppy + 90, "text-anchor": "middle", fill: GOLD(.85), "font-size": 21, "letter-spacing": 2.5 });
-  txt(C.PLOT_LABEL_LINE_3, { x: ppx, y: ppy + 120, "text-anchor": "middle", fill: GOLD(.6), "font-size": 15, "letter-spacing": 3 });
+  txt(C.PLOT_LABEL_LINE_1, { x: ppx, y: ppy + 62, "text-anchor": "middle", fill: "rgba(222,198,150,.98)", "font-size": 28, "font-weight": 500, "letter-spacing": 3 });
+  txt(C.PLOT_LABEL_LINE_2, { x: ppx, y: ppy + 100, "text-anchor": "middle", fill: GOLD(.95), "font-size": 26, "letter-spacing": 2.5 });
+  if (C.PLOT_LABEL_LINE_3) txt(C.PLOT_LABEL_LINE_3, { x: ppx, y: ppy + 132, "text-anchor": "middle", fill: GOLD(.7), "font-size": 20, "letter-spacing": 3 });
 
   // series tag, top-left
-  txt(C.SERIES_TAG_LINE_1, { x: L.edgePad, y: 78, fill: "rgba(225,215,190,.9)", "font-size": 17, "font-weight": 500, "letter-spacing": 4.5 });
-  txt(C.SERIES_TAG_LINE_2, { x: L.edgePad, y: 106, fill: GOLD(.7), "font-size": 14, "letter-spacing": 4 });
+  txt(C.SERIES_TAG_LINE_1, { x: L.edgePad, y: 82, fill: "rgba(232,222,198,.97)", "font-size": 24, "font-weight": 500, "letter-spacing": 4.5 });
+  txt(C.SERIES_TAG_LINE_2, { x: L.edgePad, y: 114, fill: GOLD(.8), "font-size": 17, "letter-spacing": 3 });
 
   // headline block, centred, auto-fit to one line each
   const fit = (t, maxW, size) => { let s = size; t.setAttribute("font-size", s); while (t.getComputedTextLength() > maxW && s > 20) { s -= 1; t.setAttribute("font-size", s); } };
@@ -172,9 +168,11 @@ function render(C, L) {
   const img = el("image", { href: "rooster.png", x: r.x, y: r.y, width: r.width, height: r.width * 400 / 736 });
   img.style.mixBlendMode = "screen";
 
+  if (C.SWIPE_CUE) txt(C.SWIPE_CUE, { x: W - L.edgePad, y: L.groundY - 22, "text-anchor": "end", fill: "rgba(232,222,198,.95)", "font-size": 26, "font-weight": 500, "letter-spacing": 5 });
+
   // footer, pinned to the bottom edge
-  txt(C.FOOTER_SOURCE, { x: L.edgePad, y: L.footerY, fill: GOLD(.6), "font-size": 13, "letter-spacing": 2.6 });
-  txt(C.FOOTER_URL, { x: W - L.edgePad, y: L.footerY, "text-anchor": "end", fill: GOLD(.6), "font-size": 13, "letter-spacing": 2.6 });
+  txt(C.FOOTER_SOURCE, { x: L.edgePad, y: L.footerY, fill: GOLD(.75), "font-size": 17, "letter-spacing": 2.4 });
+  txt(C.FOOTER_URL, { x: W - L.edgePad, y: L.footerY, "text-anchor": "end", fill: GOLD(.75), "font-size": 17, "letter-spacing": 2.4 });
 }
 
 document.fonts.load('800 20px "IN"').then(() => document.fonts.load('300 20px "IN"')).then(() => document.fonts.ready).then(() => {

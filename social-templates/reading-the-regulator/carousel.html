@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Reading the Regulator — carousel</title>
+<style>
+@font-face { font-family: "JB"; font-weight: 400; src: url(fonts/jb400.ttf); }
+@font-face { font-family: "JB"; font-weight: 500; src: url(fonts/jb500.ttf); }
+@font-face { font-family: "IN"; font-weight: 300; src: url(fonts/inter300.ttf); }
+@font-face { font-family: "IN"; font-weight: 800; src: url(fonts/inter800.ttf); }
+@page { size: 1080px 1350px; margin: 0; }
+html, body { margin: 0; background: #0D1B2A; }
+.slide { width: 1080px; height: 1350px; overflow: hidden; page-break-after: always; break-after: page; }
+svg { display: block; }
+text { font-family: "JB", monospace; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+/* ==========================================================================
+   READING THE REGULATOR — carousel content. Change ONLY this block each week.
+   Slide 2 is the only slide with the full compass. Every slide keeps the
+   gold needle and the radar rings that radiate from it.
+   ========================================================================== */
+const CONTENT = {
+  // ---- shared across slides ------------------------------------------------
+  SERIES_TAG_LINE_1: "SAWYER & CO.",
+  SERIES_TAG_LINE_2: "READING THE REGULATOR — 01",      // bump the issue number weekly
+  FOOTER_SOURCE: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025",
+  FOOTER_URL: "sawyer-co.com",
+  SWIPE_CUE: "SWIPE →",
+
+  // ---- slide 1: cover (message slide, no compass) ----------------------------
+  S1_HEADLINE: "SCRUTINY|UP 2.5×",                       // "|" forces a line break
+  S1_SUBHEAD: "Findings per exam fell. Total findings didn't.",
+
+  // ---- slide 2: the reading (the ONLY full-compass slide) --------------------
+  S2_EYEBROW: "THE READING",
+  AXIS_N_LABEL: "REGULATION",   AXIS_N_BEARING: 0,
+  AXIS_E_LABEL: "LIQUIDITY",    AXIS_E_BEARING: 120,
+  AXIS_W_LABEL: "DIGITIZATION", AXIS_W_BEARING: 240,
+  NEEDLE_BEARING: 0,                                     // 0 = points N toward REGULATION
+  PLOT_BEARING: 190,                                     // keep 160-215 (clear lower field)
+  PLOT_DISTANCE: 125,
+  PLOT_LABEL_LINE_1: "SCB SUPERVISORY EXAMS",
+  PLOT_LABEL_LINE_2: "31 → 76  ·  2021–2025",
+  S2_STATEMENT: "45 MORE EXAMS|IN FOUR YEARS.",
+  S2_STAT_LINE: "+45 EXAMS  ·  +145%  ·  ~25% A YEAR",
+
+  // ---- slide 3: the tension (message slide, no compass) ----------------------
+  S3_EYEBROW: "THE TENSION",
+  S3_HEADLINE: "FINDINGS PER EXAM FELL.|TOTAL FINDINGS DIDN'T.",
+  S3_DATA_1_LABEL: "FINDINGS PER EXAM",
+  S3_DATA_1_VALUE: "[X.X → Y.Y]",                        // [brackets] render as a visible placeholder
+  S3_DATA_2_LABEL: "TOTAL FINDINGS",
+  S3_DATA_2_VALUE: "[N → M]",
+
+  // ---- slide 4: the one question (message slide, no compass) -----------------
+  S4_EYEBROW: "ONE QUESTION",
+  S4_HEADLINE: "Has the pace of supervisory exams changed your team's workload since 2021?",
+};
+
+const SLIDE_ORDER = ["cover", "reading", "tension", "question"];   // reorder / add types here
+
+const LAYOUT = {
+  W: 1080, H: 1350, pad: 64, groundY: 1290, footerY: 1322,
+  needleMark: { x: 900, y: 190, scale: 1.3 },            // the persistent mark (message slides)
+  compass: { cx: 540, cy: 470, scale: 2.0, axisName: 24, axisDeg: 17, plot1: 26, plot2: 24 },
+  rooster: { x: 76, y: 1085, width: 400 },
+};
+/* ========================================================================== */
+
+const NS = "http://www.w3.org/2000/svg";
+let cur = null;
+const GOLD = (a) => `rgba(200,169,110,${a})`;
+const NB = " ";
+const el = (name, attrs = {}, parent = cur) => { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+const txt = (str, attrs, parent) => { const t = el("text", attrs, parent); t.textContent = str.replace(/ /g, NB); return t; };
+const toRad = (deg) => (deg - 90) * Math.PI / 180;
+const P = (r, deg) => [r * Math.cos(toRad(deg)), r * Math.sin(toRad(deg))];
+const sans = (t) => { t.style.fontFamily = '"IN", sans-serif'; return t; };
+
+/* ---- shared pieces ------------------------------------------------------ */
+function ground(L, nx, ny) {
+  const defs = el("defs");
+  const rg = el("radialGradient", { id: "bg", cx: nx / L.W, cy: ny / L.H, r: 0.8 }, defs);
+  el("stop", { offset: 0, "stop-color": "#172b40" }, rg);
+  el("stop", { offset: 1, "stop-color": "#0D1B2A" }, rg);
+  el("rect", { width: L.W, height: L.H, fill: "url(#bg)" });
+  // radar rings radiate from the needle on every slide
+  [[210, .08], [330, .068], [450, .058], [570, .048], [690, .04], [810, .032], [930, .026], [1050, .02], [1170, .016]].forEach(([r, o]) =>
+    el("circle", { cx: nx, cy: ny, r, fill: "none", stroke: `rgba(210,190,150,${o})`, "stroke-width": 1.2 }));
+}
+
+function needle(cx, cy, s, rot = 0) {
+  const DH = 40, DW = 24;
+  const g = el("g", { transform: `translate(${cx} ${cy}) scale(${s}) rotate(${rot})` });
+  el("circle", { cx: 0, cy: 0, r: 30, fill: "rgba(200,169,110,.08)" }, g);
+  const poly = (pts, fill) => el("polygon", { points: pts.map((p) => p.join(",")).join(" "), fill }, g);
+  poly([[0, -DH], [-DW, 0], [0, DH]], "rgba(120,90,35,.6)");
+  poly([[0, -DH], [DW, 0], [0, DH]], "rgba(215,178,100,.75)");
+  poly([[0, -DH], [-DW, 0], [-DW * .35, -DH * .3]], "rgba(175,140,72,.55)");
+  poly([[0, -DH], [DW, 0], [DW * .35, -DH * .3]], "rgba(245,215,148,.65)");
+  poly([[0, DH], [-DW, 0], [-DW * .3, DH * .35]], "rgba(100,78,30,.5)");
+  poly([[0, DH], [DW, 0], [DW * .3, DH * .35]], "rgba(165,132,65,.55)");
+  poly([[0, -DH], [DW * .55, -DH * .3], [DW * .18, -DH * .52]], "rgba(255,252,235,.72)");
+  poly([[DW * .08, -DH], [DW * .2, -DH * .62], [DW * .06, -DH * .72]], "rgba(255,255,248,.5)");
+  el("polygon", { points: `0,${-DH} ${DW},0 0,${DH} ${-DW},0`, fill: "none", stroke: "rgba(218,185,115,.85)", "stroke-width": .9 }, g);
+  el("circle", { cx: 0, cy: 0, r: 2.2, fill: "rgba(255,250,225,.95)" }, g);
+}
+
+function chrome(L, C, idx, total, opts = {}) {
+  txt(C.SERIES_TAG_LINE_1, { x: L.pad, y: 82, fill: "rgba(232,222,198,.97)", "font-size": 24, "font-weight": 500, "letter-spacing": 4.5 });
+  txt(C.SERIES_TAG_LINE_2, { x: L.pad, y: 114, fill: GOLD(.8), "font-size": 17, "letter-spacing": 3 });
+  // ground line with instrument ticks
+  el("line", { x1: L.pad, y1: L.groundY, x2: L.W - L.pad, y2: L.groundY, stroke: GOLD(.45), "stroke-width": 1 });
+  for (let x = L.pad; x <= L.W - L.pad; x += 24) el("line", { x1: x, y1: L.groundY, x2: x, y2: L.groundY + ((x - L.pad) % 120 === 0 ? 9 : 5), stroke: GOLD(.35), "stroke-width": 1 });
+  // footer
+  txt(C.FOOTER_SOURCE, { x: L.pad, y: L.footerY, fill: GOLD(.75), "font-size": 17, "letter-spacing": 2.4 });
+  const right = idx === total - 1 ? C.FOOTER_URL : String(idx + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0");
+  txt(right, { x: L.W - L.pad, y: L.footerY, "text-anchor": "end", fill: GOLD(.75), "font-size": 17, "letter-spacing": 2.4 });
+  if (opts.swipe && C.SWIPE_CUE) txt(C.SWIPE_CUE, { x: L.W - L.pad, y: L.groundY - 22, "text-anchor": "end", fill: "rgba(232,222,198,.95)", "font-size": 26, "font-weight": 500, "letter-spacing": 5 });
+  if (opts.rooster) {
+    const r = L.rooster;
+    el("image", { href: "rooster_alpha.png", x: r.x, y: r.y, width: r.width, height: r.width * 400 / 736 });
+  }
+}
+
+const eyebrow = (L, str, y = 230) => {
+  txt(str, { x: L.pad, y, fill: GOLD(.95), "font-size": 24, "font-weight": 500, "letter-spacing": 6 });
+  el("line", { x1: L.pad, y1: y + 20, x2: L.pad + 64, y2: y + 20, stroke: GOLD(.7), "stroke-width": 1 });
+};
+
+/* wrap + auto-fit a sans headline. "|" forces breaks. Returns {lines, size}. */
+function layoutText(str, maxW, startSize, maxLines, weight = 800, minSize = 30) {
+  const probe = sans(el("text", { x: -9999, y: -9999, "font-weight": weight, "letter-spacing": 1 }));
+  const widthOf = (s, size) => { probe.setAttribute("font-size", size); probe.textContent = s.replace(/ /g, NB); return probe.getComputedTextLength(); };
+  for (let size = startSize; size >= minSize; size -= 2) {
+    const lines = [];
+    str.split("|").forEach((seg) => {
+      let line = "";
+      seg.split(" ").forEach((w) => {
+        const t = line ? line + " " + w : w;
+        if (line && widthOf(t, size) > maxW) { lines.push(line); line = w; } else line = t;
+      });
+      lines.push(line);
+    });
+    if (lines.length <= maxLines && lines.every((l) => widthOf(l, size) <= maxW)) { probe.remove(); return { lines, size }; }
+  }
+  probe.remove();
+  return { lines: str.split("|"), size: minSize };
+}
+function headline(L, str, x, y, maxW, startSize, maxLines, fill = "#F5F0E8", lead = 0.98) {
+  const { lines, size } = layoutText(str, maxW, startSize, maxLines);
+  lines.forEach((ln, i) => sans(el("text", { x, y: y + i * size * lead, fill, "font-weight": 800, "font-size": size, "letter-spacing": 1 })).textContent = ln.replace(/ /g, NB));
+  return { size, bottom: y + (lines.length - 1) * size * lead };
+}
+function subhead(str, x, y, maxW, size) {
+  const t = sans(el("text", { x, y, fill: "#C9B99A", "font-weight": 300, "letter-spacing": .3, "font-size": size }));
+  t.textContent = str.replace(/ /g, NB);
+  let z = size; while (t.getComputedTextLength() > maxW && z > 20) { z -= 1; t.setAttribute("font-size", z); }
+}
+
+/* ---- the full compass (slide 2 only) ------------------------------------ */
+function fullCompass(L, C) {
+  const K = L.compass, S = K.scale, ox = K.cx, oy = K.cy;
+  const R1 = 76, R2 = 65, R3 = 56, ARM = 90;
+  const g = el("g", { transform: `translate(${ox} ${oy}) scale(${S})` });
+  const [px, py] = (() => { const b = Math.min(215, Math.max(160, C.PLOT_BEARING)); return P(C.PLOT_DISTANCE, b); })();
+  el("line", { x1: px, y1: py, x2: 0, y2: 0, stroke: GOLD(.55), "stroke-width": .9, "stroke-linecap": "round" }, g);
+  [10, 17].forEach((r, i) => el("circle", { cx: px, cy: py, r, fill: "none", stroke: GOLD(i ? .16 : .38), "stroke-width": .7 }, g));
+  el("circle", { cx: px, cy: py, r: 3.2, fill: "#c8a96e" }, g);
+  [[R1, .35, .8], [R2, .2, .6], [R3, .15, .5]].forEach(([r, o, w]) => el("circle", { cx: 0, cy: 0, r, fill: "none", stroke: GOLD(o), "stroke-width": w }, g));
+  for (let deg = 0; deg < 360; deg += 10) {
+    const major = deg % 30 === 0, card = deg % 90 === 0;
+    const [x1, y1] = P(card ? R2 - 4 : major ? R1 - 10 : R1 - 5, deg), [x2, y2] = P(R1, deg);
+    el("line", { x1, y1, x2, y2, stroke: GOLD(card ? .8 : major ? .55 : .3), "stroke-width": card ? 1.2 : major ? .8 : .5 }, g);
+  }
+  [["N", 0], ["E", 90], ["S", 180], ["W", 270]].forEach(([l, deg]) => { const [x, y] = P(R2 - 14, deg); txt(l, { x, y: y + 4, "text-anchor": "middle", fill: GOLD(.75), "font-size": 13, "font-weight": 500 }, g); });
+  [0, 90, 180, 270].forEach((deg) => { const [x1, y1] = P(R3, deg), [x2, y2] = P(ARM, deg); el("line", { x1, y1, x2, y2, stroke: GOLD(.5), "stroke-width": .8 }, g); });
+  el("circle", { cx: 0, cy: 0, r: R1 + 8, fill: "none", stroke: GOLD(.18), "stroke-width": .6, "stroke-dasharray": "2 9" }, g);
+  needle(ox, oy, S, C.NEEDLE_BEARING);
+
+  // axis labels in pixel space so type size is fixed
+  [[C.AXIS_N_LABEL, C.AXIS_N_BEARING], [C.AXIS_E_LABEL, C.AXIS_E_BEARING], [C.AXIS_W_LABEL, C.AXIS_W_BEARING]].forEach(([name, deg]) => {
+    const [x1, y1] = P((ARM + 2) * S, deg), [x2, y2] = P((ARM + 22) * S, deg);
+    el("line", { x1: ox + x1, y1: oy + y1, x2: ox + x2, y2: oy + y2, stroke: GOLD(.45), "stroke-width": 1.2 });
+    const [dx, dy] = P((ARM + 30) * S, deg), cx = ox + dx, cy = oy + dy, top = deg === 0;
+    el("circle", { cx, cy, r: 9, fill: "none", stroke: GOLD(.55), "stroke-width": 1.4 });
+    el("circle", { cx, cy, r: 4, fill: GOLD(.8) });
+    txt(name, { x: cx, y: cy + (top ? -22 : K.axisName + 22), "text-anchor": "middle", fill: "rgba(232,222,198,.97)", "font-size": K.axisName, "font-weight": 500, "letter-spacing": 3 });
+    txt(deg + "°", { x: cx, y: cy + (top ? -(K.axisName + 26) : K.axisName + 50), "text-anchor": "middle", fill: GOLD(.65), "font-size": K.axisDeg, "letter-spacing": 2 });
+  });
+  const ppx = ox + px * S, ppy = oy + py * S;
+  txt(C.PLOT_LABEL_LINE_1, { x: ppx, y: ppy + 58, "text-anchor": "middle", fill: "rgba(222,198,150,.98)", "font-size": K.plot1, "font-weight": 500, "letter-spacing": 3 });
+  txt(C.PLOT_LABEL_LINE_2, { x: ppx, y: ppy + 94, "text-anchor": "middle", fill: GOLD(.95), "font-size": K.plot2, "letter-spacing": 2.5 });
+}
+
+/* ---- slide builders ----------------------------------------------------- */
+const BUILDERS = {
+  cover(L, C, i, n) {
+    const m = L.needleMark;
+    ground(L, m.x, m.y); needle(m.x, m.y, m.scale);
+    chrome(L, C, i, n, { swipe: true, rooster: true });
+    const h = headline(L, C.S1_HEADLINE, L.pad, 800, 952, 190, 2);
+    subhead(C.S1_SUBHEAD, L.pad, h.bottom + 78, 952, 38);
+  },
+  reading(L, C, i, n) {
+    ground(L, L.compass.cx, L.compass.cy);
+    eyebrow(L, C.S2_EYEBROW, 200);
+    fullCompass(L, C);
+    chrome(L, C, i, n, { swipe: true });
+    const h = headline(L, C.S2_STATEMENT, L.pad, 1060, 952, 96, 2);
+    txt(C.S2_STAT_LINE, { x: L.pad, y: h.bottom + 56, fill: GOLD(.95), "font-size": 24, "font-weight": 500, "letter-spacing": 3 });
+  },
+  tension(L, C, i, n) {
+    const m = L.needleMark;
+    ground(L, m.x, m.y); needle(m.x, m.y, m.scale);
+    eyebrow(L, C.S3_EYEBROW, 300);
+    chrome(L, C, i, n, { swipe: true });
+    headline(L, C.S3_HEADLINE, L.pad, 450, 952, 120, 4);
+    [[C.S3_DATA_1_LABEL, C.S3_DATA_1_VALUE, 1010], [C.S3_DATA_2_LABEL, C.S3_DATA_2_VALUE, 1160]].forEach(([lab, val, y]) => {
+      txt(lab, { x: L.pad, y, fill: GOLD(.85), "font-size": 22, "letter-spacing": 4 });
+      const ph = /^\[.*\]$/.test(val), size = 64;
+      const t = sans(el("text", { x: L.pad, y: y + 70, fill: ph ? "rgba(245,240,232,.55)" : "#F5F0E8", "font-weight": 800, "font-size": size, "letter-spacing": 1 }));
+      t.textContent = val.replace(/ /g, NB);
+      if (ph) { const w = t.getComputedTextLength(); el("rect", { x: L.pad - 16, y: y + 70 - size + 4, width: w + 32, height: size + 24, fill: "none", stroke: GOLD(.6), "stroke-width": 1.5, "stroke-dasharray": "8 7", rx: 4 }); }
+    });
+  },
+  question(L, C, i, n) {
+    const m = L.needleMark;
+    ground(L, m.x, m.y); needle(m.x, m.y, m.scale);
+    eyebrow(L, C.S4_EYEBROW, 300);
+    chrome(L, C, i, n, { rooster: true });
+    headline(L, C.S4_HEADLINE, L.pad, 450, 952, 100, 6, "#F5F0E8", 1.04);
+  },
+};
+
+function buildAll(C, L, only) {
+  const root = document.getElementById("root"); root.innerHTML = "";
+  const n = SLIDE_ORDER.length;
+  SLIDE_ORDER.forEach((type, i) => {
+    if (only !== undefined && only !== i) return;
+    const wrap = document.createElement("div"); wrap.className = "slide"; root.appendChild(wrap);
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("width", L.W); svg.setAttribute("height", L.H); svg.setAttribute("viewBox", `0 0 ${L.W} ${L.H}`);
+    wrap.appendChild(svg); cur = svg;
+    BUILDERS[type](L, C, i, n);
+  });
+}
+
+window.renderSlides = (only) => buildAll(Object.assign({}, CONTENT, window.__OVERRIDE__ || {}), LAYOUT, only);
+window.SLIDE_COUNT = SLIDE_ORDER.length;
+document.fonts.load('800 20px "IN"').then(() => document.fonts.load('300 20px "IN"')).then(() => document.fonts.ready).then(() => { window.__READY__ = true; });
+</script>
+</body>
+</html>

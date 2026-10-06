@@ -31,10 +31,11 @@ const CONTENT = {
   // ---- variable every week ----------------------------------------------
   NEEDLE_BEARING: 0,                       // degrees; 0 = points N toward REGULATION
   PLOT_BEARING: 195,                       // degrees; keep 160-215 (clear lower field)
-  PLOT_DISTANCE: 150,                      // distance from the needle (compass units; ~2 px each)
+  PLOT_DISTANCE: 125,                      // distance from the needle (compass units; ~2 px each)
   PLOT_LABEL_LINE_1: "SCB SUPERVISORY EXAMS",
   PLOT_LABEL_LINE_2: "31 → 76  ·  2021–2025",
-  HEADLINE: "SCRUTINY DOUBLED.",           // large, heavy (auto-fits to one line)
+  PLOT_LABEL_LINE_3: "+45 EXAMS  ·  +145%  ·  ~25% A YEAR",   // derived from 31 → 76 over four years
+  HEADLINE: "SCRUTINY UP 2.5×",           // large, heavy (auto-fits to one line)
   SUBHEAD: "Findings per exam fell. Total findings didn't.",   // one line, smaller, lighter
   FOOTER_SOURCE: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025",
   FOOTER_URL: "sawyer-co.com",
@@ -43,11 +44,12 @@ const CONTENT = {
 /* layout knobs (not content) */
 const LAYOUT = {
   W: 1080, H: 1350,
-  compassCx: 540, compassCy: 345, compassScale: 2.0,   // compass sits inside the top 55% (y < 742)
-  headlineY: 925, headlineMaxW: 900, headlineSize: 112,
-  subheadY: 1000, subheadMaxW: 900, subheadSize: 30,
-  rooster: { x: 120, y: 1088, width: 340 },            // still frame, screen-blended
-  footerY: 1316, edgePad: 64,
+  compassCx: 540, compassCy: 412, compassScale: 2.5,
+  headlineY: 1000, headlineMaxW: 940, headlineSize: 150,
+  subheadY: 1064, subheadMaxW: 900, subheadSize: 30,
+  rooster: { x: 76, y: 1085, width: 400 },             // still frame, screen-blended
+  groundY: 1290,                                       // hairline the rooster stands on
+  footerY: 1322, edgePad: 64,
 };
 /* ========================================================================== */
 
@@ -131,23 +133,24 @@ function render(C, L) {
   el("polygon", { points: `0,${-DH} ${DW},0 0,${DH} ${-DW},0`, fill: "none", stroke: "rgba(218,185,115,.85)", "stroke-width": .9 }, n);
   el("circle", { cx: 0, cy: 0, r: 2.2, fill: "rgba(255,250,225,.95)" }, n);
 
-  // three axis labels (bearing-placed, text kept clear of the rose)
+  // three axis labels, placed by bearing in pixel space so type size stays fixed
+  const S = L.compassScale, ox = L.compassCx, oy = L.compassCy;
   [[C.AXIS_N_LABEL, C.AXIS_N_BEARING, "middle"], [C.AXIS_E_LABEL, C.AXIS_E_BEARING, "start"], [C.AXIS_W_LABEL, C.AXIS_W_BEARING, "end"]].forEach(([name, deg, anchor]) => {
-    const [x1, y1] = P(ARM + 2, deg), [x2, y2] = P(ARM + 22, deg);
-    el("line", { x1, y1, x2, y2, stroke: GOLD(.4), "stroke-width": .7 }, g);
-    const [cx, cy] = P(ARM + 30, deg);
-    el("circle", { cx, cy, r: 4, fill: "none", stroke: GOLD(.5), "stroke-width": .8 }, g);
-    el("circle", { cx, cy, r: 2, fill: GOLD(.7) }, g);
-    const dx = anchor === "start" ? 12 : anchor === "end" ? -12 : 0;
-    const top = deg === 0;
-    txt(deg + "°", { x: cx + dx, y: cy + (top ? -26 : -4), "text-anchor": anchor, fill: GOLD(.55), "font-size": 8, "letter-spacing": 1 }, g);
-    txt(name, { x: cx + dx, y: cy + (top ? -14 : 8), "text-anchor": anchor, fill: "rgba(225,215,190,.9)", "font-size": 10.5, "letter-spacing": 2.2 }, g);
+    const [x1, y1] = P((ARM + 2) * S, deg), [x2, y2] = P((ARM + 22) * S, deg);
+    el("line", { x1: ox + x1, y1: oy + y1, x2: ox + x2, y2: oy + y2, stroke: GOLD(.45), "stroke-width": 1.2 });
+    const [dx0, dy0] = P((ARM + 30) * S, deg), cx = ox + dx0, cy = oy + dy0;
+    el("circle", { cx, cy, r: 9, fill: "none", stroke: GOLD(.55), "stroke-width": 1.4 });
+    el("circle", { cx, cy, r: 4, fill: GOLD(.8) });
+    const dx = anchor === "start" ? 22 : anchor === "end" ? -22 : 0, top = deg === 0;
+    txt(deg + "\u00B0", { x: cx + dx, y: cy + (top ? -46 : -8), "text-anchor": anchor, fill: GOLD(.6), "font-size": 15, "letter-spacing": 2 });
+    txt(name, { x: cx + dx, y: cy + (top ? -22 : 16), "text-anchor": anchor, fill: "rgba(232,222,198,.95)", "font-size": 21, "font-weight": 500, "letter-spacing": 3.5 });
   });
 
   // plotted-reading label (pixel space, below the point)
   const ppx = L.compassCx + px * L.compassScale, ppy = L.compassCy + py * L.compassScale;
-  txt(C.PLOT_LABEL_LINE_1, { x: ppx, y: ppy + 62, "text-anchor": "middle", fill: "rgba(210,185,135,.95)", "font-size": 21, "font-weight": 500, "letter-spacing": 3 });
-  txt(C.PLOT_LABEL_LINE_2, { x: ppx, y: ppy + 92, "text-anchor": "middle", fill: GOLD(.8), "font-size": 19, "letter-spacing": 2.5 });
+  txt(C.PLOT_LABEL_LINE_1, { x: ppx, y: ppy + 58, "text-anchor": "middle", fill: "rgba(210,185,135,.95)", "font-size": 21, "font-weight": 500, "letter-spacing": 3 });
+  txt(C.PLOT_LABEL_LINE_2, { x: ppx, y: ppy + 90, "text-anchor": "middle", fill: GOLD(.85), "font-size": 21, "letter-spacing": 2.5 });
+  txt(C.PLOT_LABEL_LINE_3, { x: ppx, y: ppy + 120, "text-anchor": "middle", fill: GOLD(.6), "font-size": 15, "letter-spacing": 3 });
 
   // series tag, top-left
   txt(C.SERIES_TAG_LINE_1, { x: L.edgePad, y: 78, fill: "rgba(225,215,190,.9)", "font-size": 17, "font-weight": 500, "letter-spacing": 4.5 });
@@ -159,6 +162,10 @@ function render(C, L) {
   h.textContent = C.HEADLINE; h.style.fontFamily = '"IN", sans-serif'; fit(h, L.headlineMaxW, L.headlineSize);
   const s = el("text", { x: W / 2, y: L.subheadY, "text-anchor": "middle", fill: "#C9B99A", "font-weight": 300, "letter-spacing": .3 });
   s.textContent = C.SUBHEAD; s.style.fontFamily = '"IN", sans-serif'; fit(s, L.subheadMaxW, L.subheadSize);
+
+  // ground line with instrument ticks
+  el("line", { x1: L.edgePad, y1: L.groundY, x2: W - L.edgePad, y2: L.groundY, stroke: GOLD(.45), "stroke-width": 1 });
+  for (let x = L.edgePad; x <= W - L.edgePad; x += 24) el("line", { x1: x, y1: L.groundY, x2: x, y2: L.groundY + ((x - L.edgePad) % 120 === 0 ? 9 : 5), stroke: GOLD(.35), "stroke-width": 1 });
 
   // rooster, walking along the bottom (still frame; black drops out under screen)
   const r = L.rooster;

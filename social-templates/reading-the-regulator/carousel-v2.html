@@ -53,10 +53,10 @@ const CONTENT = {
 };
 
 const L = {
-  W: 1080, H: 1350, pad: 64,
-  needle: { x: 905, y: 262, scale: 0.9 },
+  W: 1080, H: 1350, pad: 96, M: 96, R: 984,
+  needle: { x: 950, y: 262, scale: 0.9 },
   pill: { x: 745, y: 95, w: 271, h: 56 },
-  url: { x: 120, y: 1134, h: 52 },
+  url: { x: 96, y: 1134, h: 52 },
   numeral: { x: 130, base: 650, size: 363 },
   head: { lastBase: 630, startSize: 100, pitch: 0.96, right: 1016 },
   sub: { gap: 100, size: 64, pitch: 1.12, indent: 18 },
@@ -104,10 +104,10 @@ function needle(cx, cy, s, rot = 0) {
 
 /* ---- chrome: handle, author pill, URL pill, arrow, source ---- */
 function chrome(C, opts = {}) {
-  if (curNarrow && !curHero) needle(104, 123, 0.5);          // portrait slides: the series needle sits beside the handle
-  txt(C.HANDLE, { x: 150, y: 132, fill: "#F5F0E8", "font-size": 26, "font-weight": 300, "letter-spacing": 1.5 });
+  if (curNarrow && !curHero) needle(58, 123, 0.5);          // portrait slides: the series needle sits beside the handle
+  txt(C.HANDLE, { x: L.M, y: 132, fill: "#F5F0E8", "font-size": 26, "font-weight": 300, "letter-spacing": 1.5 });
   const p = L.pill, pt = txt(C.AUTHOR_PILL, { x: 0, y: p.y + 38, fill: "#F5F0E8", "font-size": 26, "font-weight": 500, "letter-spacing": 2 });
-  const pw = Math.max(p.w, pt.getComputedTextLength() + 60), px0 = 1016 - pw;
+  const pw = Math.max(p.w, pt.getComputedTextLength() + 60), px0 = L.R - pw;
   pt.setAttribute("x", px0 + 30);
   const pr = el("rect", { x: px0, y: p.y, width: pw, height: p.h, rx: 14, fill: "rgba(200,169,110,.10)", stroke: GOLD(.85), "stroke-width": 3 });
   cur.insertBefore(pr, pt);
@@ -118,7 +118,7 @@ function chrome(C, opts = {}) {
     cur.appendChild(t);
   }
   if (opts.arrow !== false) {
-    const ax = curNarrow ? 1016 : 958;     // on portrait slides the arrow sits out at the right edge, clear of the tie
+    const ax = L.R;                          // arrow ends on the right margin
     el("line", { x1: ax - 158, y1: 1160, x2: ax, y2: 1160, stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round" });
     el("polyline", { points: `${ax - 26},1142 ${ax},1160 ${ax - 26},1178`, fill: "none", stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round" });
   }
@@ -223,36 +223,28 @@ const BUILDERS = {
     if (S.portrait) portrait(); else { heroRooster(); }
     if (!S.portrait) needle(L.needle.x, L.needle.y, L.needle.scale);
     chrome(C, { arrow: true });
-    const P2 = !!S.portrait;
+    const P2 = !!S.portrait, last = P2 ? 560 : 640;
     let nSize = P2 ? 270 : 330; const nw = measure(S.numeral, nSize, 800); if (nw > (P2 ? 600 : 700)) nSize = Math.floor(nSize * (P2 ? 600 : 700) / nw);
-    txt(S.numeral, { x: 110, y: P2 ? 420 : 450, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });
-    const last = P2 ? 560 : 640;
-    headBlock(S, 150, P2 ? 560 : 880, last, P2 ? 100 : 104, 2);
-    subBlock(S.sub, 170, last + (P2 ? 84 : 96), P2 ? 400 : 700, P2 ? 50 : 60, 2);
+    txt(S.numeral, { x: L.M - 12, y: last - 132, fill: "rgba(205,172,108,.82)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });   // numeral sits behind the headline
+    headBlock(S, L.M, P2 ? 560 : L.R - L.M, last, P2 ? 100 : 104, 2);
+    subBlock(S.sub, L.M, last + (P2 ? 84 : 96), P2 ? 400 : 700, P2 ? 50 : 60, 2);
   },
   point(C, S) {
     background(L.needle.x, L.needle.y);
     if (S.portrait) portrait(); else { if (S.heroRooster) heroRooster(830, 760); needle(L.needle.x, L.needle.y, L.needle.scale); }
     chrome(C);
-    const n = L.numeral, P2 = !!S.portrait;
-    if (P2) {                       // closing-with-portrait layout: no numeral, type in the left column
-      headBlock(S, 150, 560, 560, 100, Math.max(2, S.headline.split('|').length));
-      subBlock(S.sub, 170, 560 + 84, 400, 48, 4);
-      return;
-    }
-    const base = n.base, last = L.head.lastBase;
-    txt(S.numeral, { x: n.x, y: base, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": n.size, "letter-spacing": -4 });
-    const nw = measure(S.numeral, n.size, 800);
-    const hx = Math.max(250, n.x + nw * 0.66);
-    headBlock(S, hx, L.head.right - hx, last, L.head.startSize, Math.max(2, S.headline.split('|').length));
-    subBlock(S.sub, hx + L.sub.indent, last + L.sub.gap, (S.heroRooster ? 800 : L.head.right) - hx - L.sub.indent, S.heroRooster ? 56 : L.sub.size, 3);
+    const P2 = !!S.portrait, last = P2 ? 560 : 620, nSize = P2 ? 400 : 470;
+    txt(S.numeral, { x: L.M - 16, y: last + 26, fill: "rgba(205,172,108,.82)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });   // big number behind the headline
+    headBlock(S, L.M, P2 ? 560 : L.R - L.M, last, P2 ? 100 : 100, Math.max(2, S.headline.split('|').length));
+    if (P2) subBlock(S.sub, L.M, last + 84, 400, 48, 4);
+    else subBlock(S.sub, L.M, last + 100, (S.heroRooster ? 800 : L.R) - L.M, S.heroRooster ? 56 : 64, 3);
   },
   reading(C, S) {
     const cx = 540, cy = 800, sc = 1.9;
     background(cx, cy);
     chrome(C);
-    const hs = headBlock(S, 150, 840, 330, 96, 2);
-    subBlock(S.sub, 168, 330 + 64, 760, 36, 2);
+    const hs = headBlock(S, L.M, 840, 330, 96, 2);
+    subBlock(S.sub, L.M, 330 + 64, 760, 36, 2);
     fullCompass(S, cx, cy, sc);
   },
 };

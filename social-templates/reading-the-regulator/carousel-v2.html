@@ -64,7 +64,7 @@ const L = {
 /* ========================================================================== */
 
 const NS = "http://www.w3.org/2000/svg";
-let cur = null, curSource = '';
+let cur = null, curSource = '', curNarrow = false;
 const SAND = "#E9DFC6", GOLD = (a) => `rgba(200,169,110,${a})`, NB = " ";
 const el = (name, attrs = {}, parent = cur) => { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
 const txt = (str, attrs, parent, mono) => { const t = el("text", attrs, parent); if (mono) t.setAttribute("class", "mono"); t.textContent = str.replace(/ /g, NB); return t; };
@@ -126,7 +126,12 @@ function chrome(C, opts = {}) {
     el("line", { x1: 800, y1: 1160, x2: 958, y2: 1160, stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round" });
     el("polyline", { points: "932,1142 958,1160 932,1178", fill: "none", stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round" });
   }
-  txt(curSource, { x: L.url.x, y: 1236, fill: GOLD(.8), "font-size": 17, "letter-spacing": 2.2 }, cur, true);
+  if (curNarrow) {            // two short lines in the clear left column (keeps the source off the photo / rooster)
+    const words = curSource.split(" "), lines = []; let line = "";
+    words.forEach((w) => { const t = line ? line + " " + w : w; if (t.length > 32) { lines.push(line); line = w; } else line = t; });
+    lines.push(line);
+    lines.forEach((ln, i) => txt(ln, { x: L.url.x, y: 1230 + i * 24, fill: GOLD(.85), "font-size": 16, "letter-spacing": 2 }, cur, true));
+  } else txt(curSource, { x: L.url.x, y: 1236, fill: GOLD(.8), "font-size": 17, "letter-spacing": 2.2 }, cur, true);
 }
 
 /* ---- text layout: "|" forced breaks, wrap, auto-fit ---- */
@@ -192,30 +197,64 @@ function fullCompass(S, cx0, cy0, scale) {
   txt(S.PLOT_LABEL_LINE_2, { x: ppx, y: ppy + 92, "text-anchor": "middle", fill: GOLD(1), "font-size": 24, "letter-spacing": 2.5 }, cur, true);
 }
 
+
+/* ---- portrait (Anwar), faded into the navy; rooster variants ---- */
+function portrait() {
+  const defs = el("defs"), W0 = 900, X0 = 250, Y0 = 460;
+  const rg = el("radialGradient", { id: "pm", gradientUnits: "userSpaceOnUse", cx: X0 + W0 * 0.50, cy: Y0 + W0 * 0.50, r: W0 * 0.56,
+    gradientTransform: `translate(${X0 + W0 * 0.50} ${Y0 + W0 * 0.50}) scale(0.92 1.40) translate(${-(X0 + W0 * 0.50)} ${-(Y0 + W0 * 0.50)})` }, defs);
+  el("stop", { offset: 0, "stop-color": "#fff", "stop-opacity": 1 }, rg);
+  el("stop", { offset: 0.58, "stop-color": "#fff", "stop-opacity": 1 }, rg);
+  el("stop", { offset: 1, "stop-color": "#fff", "stop-opacity": 0 }, rg);
+  const m = el("mask", { id: "pmask", maskUnits: "userSpaceOnUse", x: 0, y: 0, width: L.W, height: L.H }, defs);
+  el("rect", { width: L.W, height: L.H, fill: "url(#pm)" }, m);
+  // soft gold glow behind the shoulders, then the photo
+  const gl = el("radialGradient", { id: "pg", gradientUnits: "userSpaceOnUse", cx: 760, cy: 1000, r: 460 }, defs);
+  el("stop", { offset: 0, "stop-color": "#C8A96E", "stop-opacity": .30 }, gl); el("stop", { offset: 1, "stop-color": "#C8A96E", "stop-opacity": 0 }, gl);
+  el("rect", { width: L.W, height: L.H, fill: "url(#pg)" });
+  const lg = el("linearGradient", { id: "pt", gradientUnits: "userSpaceOnUse", x1: 0, y1: Y0, x2: 0, y2: Y0 + 120 }, defs);
+  el("stop", { offset: 0, "stop-color": "#fff", "stop-opacity": 0 }, lg); el("stop", { offset: 1, "stop-color": "#fff", "stop-opacity": 1 }, lg);
+  const m2 = el("mask", { id: "pmask2", maskUnits: "userSpaceOnUse", x: 0, y: 0, width: L.W, height: L.H }, defs);
+  el("rect", { width: L.W, height: L.H, fill: "url(#pt)" }, m2);
+  el("rect", { x: 0, y: Y0 + 120, width: L.W, height: L.H, fill: "#fff" }, m2);
+  const outer = el("g", { mask: "url(#pmask2)" });
+  const g = el("g", { mask: "url(#pmask)" }, outer);
+  const im = el("image", { href: "anwar.jpg", x: X0, y: Y0, width: W0, height: W0 }, g);
+  im.setAttribute("style", "filter: brightness(.86) contrast(1.06) saturate(.88)");
+  el("rect", { x: X0, y: Y0, width: W0, height: W0, fill: "#0B1724", "fill-opacity": .26 }, g);
+}
+function heroRooster(y = 790, w = 800) {
+  const defs = el("defs"), g = el("radialGradient", { id: "rg", gradientUnits: "userSpaceOnUse", cx: 640, cy: 1010, r: 440 }, defs);
+  el("stop", { offset: 0, "stop-color": "#C8A96E", "stop-opacity": .30 }, g); el("stop", { offset: 1, "stop-color": "#C8A96E", "stop-opacity": 0 }, g);
+  el("rect", { width: L.W, height: L.H, fill: "url(#rg)" });
+  el("image", { href: "rooster_alpha.png", x: 1080 - w - 30, y, width: w, height: w * 400 / 736 });
+}
+function smallRooster() { el("image", { href: "rooster_alpha.png", x: 70, y: 840, width: 380, height: 380 * 400 / 736 }); }
+
 /* ---- builders ---- */
 const BUILDERS = {
   cover(C, S) {
     background(L.needle.x, L.needle.y); needle(L.needle.x, L.needle.y, L.needle.scale);
-    const defs = el("defs"), g = el("radialGradient", { id: "rg", gradientUnits: "userSpaceOnUse", cx: 640, cy: 1010, r: 440 }, defs);
-    el("stop", { offset: 0, "stop-color": "#C8A96E", "stop-opacity": .30 }, g); el("stop", { offset: 1, "stop-color": "#C8A96E", "stop-opacity": 0 }, g);
-    el("rect", { width: L.W, height: L.H, fill: "url(#rg)" });
-    el("image", { href: "rooster_alpha.png", x: 250, y: 790, width: 800, height: 800 * 400 / 736 });   // hero, stands in for the reference's portrait
+    if (S.portrait) portrait(); else heroRooster();
+    if (S.rooster) smallRooster();
     chrome(C, { arrow: true });
-    let nSize = 330; const nw = measure(S.numeral, nSize, 800); if (nw > 700) nSize = Math.floor(nSize * 700 / nw);
-    txt(S.numeral, { x: 110, y: 450, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });
-    headBlock(S, 150, 880, 640, 104, 2);
-    subBlock(S.sub, 170, 640 + 96, 700, 60, 2);
+    const P2 = !!S.portrait;
+    let nSize = P2 ? 280 : 330; const nw = measure(S.numeral, nSize, 800); if (nw > 700) nSize = Math.floor(nSize * 700 / nw);
+    txt(S.numeral, { x: 110, y: P2 ? 390 : 450, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });
+    const last = P2 ? 530 : 640;
+    headBlock(S, 150, 880, last, P2 ? 96 : 104, 2);
+    subBlock(S.sub, 170, last + (P2 ? 84 : 96), P2 ? 380 : 700, P2 ? 48 : 60, 2);
   },
   point(C, S) {
     background(L.needle.x, L.needle.y); needle(L.needle.x, L.needle.y, L.needle.scale);
+    if (S.portrait) portrait(); else if (S.heroRooster) heroRooster(830, 760);
     chrome(C);
-    const n = L.numeral;
-    txt(S.numeral, { x: n.x, y: n.base, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": n.size, "letter-spacing": -4 });
+    const n = L.numeral, P2 = !!S.portrait, base = P2 ? 545 : n.base, last = P2 ? 520 : L.head.lastBase;
+    txt(S.numeral, { x: n.x, y: base, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": n.size, "letter-spacing": -4 });
     const nw = measure(S.numeral, n.size, 800);
-    const hx = Math.max(250, n.x + nw * 0.66);   // headline overlaps the numeral's right edge, as in the reference
-    const hb = headBlock(S, hx, L.head.right - hx, L.head.lastBase, L.head.startSize, Math.max(2, S.headline.split('|').length));
-    const lastBase = L.head.lastBase;
-    subBlock(S.sub, hx + L.sub.indent, lastBase + L.sub.gap, L.head.right - hx - L.sub.indent, L.sub.size, 3);
+    const hx = Math.max(250, n.x + nw * 0.66);
+    headBlock(S, hx, L.head.right - hx, last, L.head.startSize, Math.max(2, S.headline.split('|').length));
+    if (P2) subBlock(S.sub, 150, last + 80, 400, 46, 4); else subBlock(S.sub, hx + L.sub.indent, last + L.sub.gap, (S.heroRooster ? 800 : L.head.right) - hx - L.sub.indent, S.heroRooster ? 56 : L.sub.size, 3);
   },
   reading(C, S) {
     const cx = 540, cy = 800, sc = 1.9;
@@ -235,7 +274,7 @@ function buildAll(C, only) {
     const svg = document.createElementNS(NS, "svg");
     svg.setAttribute("width", L.W); svg.setAttribute("height", L.H); svg.setAttribute("viewBox", `0 0 ${L.W} ${L.H}`);
     wrap.appendChild(svg); cur = svg;
-    curSource = S.source || C.SOURCE;
+    curSource = S.source || C.SOURCE; curNarrow = !!(S.portrait || S.heroRooster);
     BUILDERS[S.type](C, S);
   });
 }

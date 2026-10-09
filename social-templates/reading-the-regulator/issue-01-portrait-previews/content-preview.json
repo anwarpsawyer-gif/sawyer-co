@@ -1,0 +1,26 @@
+{
+ "SLIDES": [
+  {
+   "type": "cover",
+   "numeral": "2.5×",
+   "headline": "SUPERVISORY|SCRUTINY",
+   "sub": "SCB examinations, 2021–2025",
+   "portrait": true,
+   "rooster": true
+  },
+  {
+   "type": "point",
+   "numeral": "?",
+   "headline": "HAS YOUR|EXAM CYCLE|CHANGED?",
+   "sub": "Exams up 2.5× since 2021. What have you seen?",
+   "portrait": true
+  },
+  {
+   "type": "point",
+   "numeral": "?",
+   "headline": "HAS YOUR|EXAM CYCLE|CHANGED?",
+   "sub": "Exams up 2.5× since 2021. What have you seen?",
+   "heroRooster": true
+  }
+ ]
+}

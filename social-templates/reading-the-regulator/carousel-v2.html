@@ -6,9 +6,11 @@
 <style>
 @font-face { font-family: "JB"; font-weight: 400; src: url(fonts/jb400.ttf); }
 @font-face { font-family: "JB"; font-weight: 500; src: url(fonts/jb500.ttf); }
-@font-face { font-family: "IN"; font-weight: 300; src: url(fonts/inter300.ttf); }
-@font-face { font-family: "IN"; font-weight: 500; src: url(fonts/inter500.ttf); }
-@font-face { font-family: "IN"; font-weight: 800; src: url(fonts/inter800.ttf); }
+@font-face { font-family: "IN"; font-weight: 300; src: url(fonts/roboto300.ttf); }
+@font-face { font-family: "IN"; font-weight: 400; src: url(fonts/roboto400.ttf); }
+@font-face { font-family: "IN"; font-weight: 500; src: url(fonts/roboto500.ttf); }
+@font-face { font-family: "IN"; font-weight: 800; src: url(fonts/roboto700.ttf); }
+@font-face { font-family: "IN"; font-weight: 900; src: url(fonts/roboto900.ttf); }
 @page { size: 1080px 1350px; margin: 0; }
 html, body { margin: 0; background: #0B1724; }
 .slide { width: 1080px; height: 1350px; overflow: hidden; page-break-after: always; break-after: page; }
@@ -34,15 +36,15 @@ const CONTENT = {
 
   SLIDES: [
     { type: "cover", numeral: "2.5×", headline: "SUPERVISORY|SCRUTINY", sub: "SCB examinations, 2021–2025", portrait: true },
-    { type: "point", numeral: "1", headline: "EXAMS|31 → 76", sub: "Concluded in 2021 vs 2025. Up 145% in four years.",
+    { type: "point", numeral: "1", headline: "EXAMS|31 → 76", sub: "Concluded, 2021 vs 2025.|Up 145% in four years.",
       source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 4.1" },
-    { type: "point", numeral: "2", headline: "FINDINGS PER|EXAM FELL", sub: "AML/CFT/CPF: 7.7 in 2022 → 3.3 in 2025.",
+    { type: "point", numeral: "2", headline: "FINDINGS PER|EXAM FELL", sub: "AML/CFT/CPF per exam:|7.7 in 2022, 3.3 in 2025.",
       source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, FIG. 5.2" },
-    { type: "point", numeral: "3", headline: "AML FINDINGS|DIDN'T FALL", sub: "248 in 2022. 248 in 2025.",
+    { type: "point", numeral: "3", headline: "AML FINDINGS|DIDN'T FALL", sub: "248 in 2022.|248 in 2025.",
       source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 5.1" },
-    { type: "point", numeral: "4", headline: "64 OF 76 EXAMS|WERE THEMATIC", sub: "In 2025. Routine years 2022–24: 7.7 → 4.4.",
+    { type: "point", numeral: "4", headline: "MOSTLY|THEMATIC IN 2025", sub: "64 of 76 exams. Routine|years 2022–24: 7.7 → 4.4.",
       source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLES 4.1, 5.2" },
-    { type: "point", numeral: "5", headline: "SANCTIONS|SCREENING LEADS", sub: "Top AML/CFT/CPF finding in 2025: 105.",
+    { type: "point", numeral: "5", headline: "SANCTIONS|TOP THE LIST", sub: "Sanctions screening|and filings: 105 in 2025.",
       source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 5.2" },
     { type: "closing", headline: "HAS YOUR EXAM|CYCLE CHANGED?", sub: "Exams up 2.5× since 2021. What have you seen?" },
   ],
@@ -235,21 +237,19 @@ const BUILDERS = {
     if (S.portrait) portrait(); else { heroRooster(); }
     if (!S.portrait) needle(L.needle.x, L.needle.y, L.needle.scale);
     chrome(C, { arrow: true });
-    const P2 = !!S.portrait, last = P2 ? 560 : 640;
-    let nSize = P2 ? 270 : 330; const nw = measure(S.numeral, nSize, 800); if (nw > (P2 ? 600 : 700)) nSize = Math.floor(nSize * (P2 ? 600 : 700) / nw);
-    txt(S.numeral, { x: L.M - 12, y: last - 132, fill: "rgba(205,172,108,.82)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });   // numeral sits behind the headline
-    headBlock(S, L.M, P2 ? 560 : L.R - L.M, last, P2 ? 100 : 104, 2);
-    subBlock(S.sub, L.M, last + (P2 ? 84 : 96), P2 ? 400 : 700, P2 ? 50 : 60, 2);
+    let nSize = 250; const nw = measure(S.numeral, nSize, 900);
+    txt(S.numeral, { x: L.M - 8, y: 440, fill: "rgba(205,172,108,.88)", "font-weight": 900, "font-size": nSize, "letter-spacing": -3 });
+    headBlock(S, L.M, 560, 632, 96, 2);
+    subBlock(S.sub, L.M, 632 + 78, 420, 50, 2);
   },
   point(C, S) {
-    background(L.needle.x, L.needle.y);
-    if (S.portrait) portrait(); else { if (S.heroRooster) heroRooster(830, 760); needle(L.needle.x, L.needle.y, L.needle.scale); }
+    background(L.needle.x, L.needle.y); needle(L.needle.x, L.needle.y, L.needle.scale);
     chrome(C);
-    const P2 = !!S.portrait, last = P2 ? 560 : 620, nSize = P2 ? 400 : 470;
-    txt(S.numeral, { x: L.M - 16, y: last + 26, fill: "rgba(205,172,108,.82)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });   // big number behind the headline
-    headBlock(S, L.M, P2 ? 560 : L.R - L.M, last, P2 ? 100 : 100, Math.max(2, S.headline.split('|').length));
-    if (P2) subBlock(S.sub, L.M, last + 84, 400, 48, 4);
-    else subBlock(S.sub, L.M, last + 100, (S.heroRooster ? 800 : L.R) - L.M, S.heroRooster ? 56 : 64, 3);
+    const hx = 300, last = 640, nSize = 366;                       // text block edge, last headline baseline, numeral size
+    const nw = measure(S.numeral, nSize, 900);
+    txt(S.numeral, { x: hx + 22 - nw, y: last + 8, fill: "rgba(205,172,108,.88)", "font-weight": 900, "font-size": nSize, "letter-spacing": -4 });   // numeral sits beside the text, overlapping only its leading edge
+    headBlock(S, hx, L.R - hx, last, 94, Math.max(2, S.headline.split('|').length));
+    subBlock(S.sub, hx, last + 86, L.R - hx, 56, Math.max(2, S.sub.split('|').length));   // each forced line stays on one line; type shrinks to fit
   },
   closing(C, S) {
     background(540, 430);
@@ -282,7 +282,7 @@ function buildAll(C, only) {
 }
 window.renderSlides = (only) => buildAll(Object.assign({}, CONTENT, window.__OVERRIDE__ || {}), only);
 window.SLIDE_COUNT = CONTENT.SLIDES.length;
-Promise.all([300, 500, 800].map((w) => document.fonts.load(`${w} 20px "IN"`))).then(() => document.fonts.load('400 20px "JB"')).then(() => document.fonts.ready).then(() => { window.__READY__ = true; });
+Promise.all([300, 400, 500, 800, 900].map((w) => document.fonts.load(`${w} 20px "IN"`))).then(() => document.fonts.load('400 20px "JB"')).then(() => document.fonts.ready).then(() => { window.__READY__ = true; });
 </script>
 </body>
 </html>

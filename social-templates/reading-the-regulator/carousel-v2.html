@@ -30,19 +30,25 @@ const CONTENT = {
   HANDLE: "READING THE REGULATOR — 01",          // top-left
   AUTHOR_PILL: "ANWAR SAWYER",                    // top-right pill
   URL_PILL: "sawyer-co.com",                      // bottom-left pill
-  SOURCE: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025",
+  SOURCE: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025 (28 AUG 2026)",
 
   SLIDES: [
-    { type: "cover", numeral: "2.5×", headline: "SUPERVISORY|SCRUTINY", sub: "SCB exams, 2021–2025" },
-    { type: "point", numeral: "1", headline: "EXAMS|31 → 76", sub: "Four years. 45 more supervisory exams, up 145%." },
-    { type: "point", numeral: "2", headline: "FINDINGS PER|EXAM FELL", sub: "[X.X → Y.Y]" },
-    { type: "point", numeral: "3", headline: "TOTAL FINDINGS|DIDN'T FALL", sub: "[N → M]" },
-    { type: "reading", headline: "WHERE IT SITS", sub: "Four years of SCB supervisory exams, plotted on the three axes.",
+    { type: "cover", numeral: "2.5×", headline: "SUPERVISORY|SCRUTINY", sub: "SCB examinations, 2021–2025" },
+    { type: "point", numeral: "1", headline: "EXAMS|31 → 76", sub: "Concluded in 2021 vs 2025. Up 145% in four years.",
+      source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 4.1" },
+    { type: "point", numeral: "2", headline: "FINDINGS PER|EXAM FELL", sub: "AML/CFT/CPF: 7.7 in 2022 → 3.3 in 2025.",
+      source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, FIG. 5.2" },
+    { type: "point", numeral: "3", headline: "AML FINDINGS|DIDN'T FALL", sub: "248 in 2022. 248 in 2025.",
+      source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 5.1" },
+    { type: "point", numeral: "4", headline: "64 OF 76 EXAMS|WERE THEMATIC", sub: "In 2025. Routine years 2022–24: 7.7 → 4.4.",
+      source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLES 4.1, 5.2" },
+    { type: "reading", headline: "WHERE IT SITS", sub: "Four years of SCB examinations, plotted on the three axes.",
       AXIS_N_LABEL: "REGULATION", AXIS_N_BEARING: 0, AXIS_E_LABEL: "LIQUIDITY", AXIS_E_BEARING: 120,
       AXIS_W_LABEL: "DIGITIZATION", AXIS_W_BEARING: 240, NEEDLE_BEARING: 0,
       PLOT_BEARING: 190, PLOT_DISTANCE: 115,                    // keep bearing 160-215
-      PLOT_LABEL_LINE_1: "SCB SUPERVISORY EXAMS", PLOT_LABEL_LINE_2: "31 → 76  ·  2021–2025" },
-    { type: "point", numeral: "?", headline: "HAS YOUR|WORKLOAD|CHANGED?", sub: "Exams are up 2.5× since 2021. Tell me what you've seen." },
+      PLOT_LABEL_LINE_1: "SCB EXAMINATIONS CONCLUDED", PLOT_LABEL_LINE_2: "31 → 76  ·  2021–2025",
+      source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 4.1" },
+    { type: "point", numeral: "?", headline: "HAS YOUR|EXAM CYCLE|CHANGED?", sub: "Exams are up 2.5× since 2021. Tell me what you've seen." },
   ],
 };
 
@@ -58,7 +64,7 @@ const L = {
 /* ========================================================================== */
 
 const NS = "http://www.w3.org/2000/svg";
-let cur = null;
+let cur = null, curSource = '';
 const SAND = "#E9DFC6", GOLD = (a) => `rgba(200,169,110,${a})`, NB = " ";
 const el = (name, attrs = {}, parent = cur) => { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
 const txt = (str, attrs, parent, mono) => { const t = el("text", attrs, parent); if (mono) t.setAttribute("class", "mono"); t.textContent = str.replace(/ /g, NB); return t; };
@@ -120,7 +126,7 @@ function chrome(C, opts = {}) {
     el("line", { x1: 800, y1: 1160, x2: 958, y2: 1160, stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round" });
     el("polyline", { points: "932,1142 958,1160 932,1178", fill: "none", stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round" });
   }
-  txt(C.SOURCE, { x: L.url.x, y: 1236, fill: GOLD(.8), "font-size": 17, "letter-spacing": 2.2 }, cur, true);
+  txt(curSource, { x: L.url.x, y: 1236, fill: GOLD(.8), "font-size": 17, "letter-spacing": 2.2 }, cur, true);
 }
 
 /* ---- text layout: "|" forced breaks, wrap, auto-fit ---- */
@@ -229,6 +235,7 @@ function buildAll(C, only) {
     const svg = document.createElementNS(NS, "svg");
     svg.setAttribute("width", L.W); svg.setAttribute("height", L.H); svg.setAttribute("viewBox", `0 0 ${L.W} ${L.H}`);
     wrap.appendChild(svg); cur = svg;
+    curSource = S.source || C.SOURCE;
     BUILDERS[S.type](C, S);
   });
 }

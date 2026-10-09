@@ -33,7 +33,7 @@ const CONTENT = {
   SOURCE: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025 (28 AUG 2026)",
 
   SLIDES: [
-    { type: "cover", numeral: "2.5×", headline: "SUPERVISORY|SCRUTINY", sub: "SCB examinations, 2021–2025" },
+    { type: "cover", numeral: "2.5×", headline: "SUPERVISORY|SCRUTINY", sub: "SCB examinations, 2021–2025", portrait: true },
     { type: "point", numeral: "1", headline: "EXAMS|31 → 76", sub: "Concluded in 2021 vs 2025. Up 145% in four years.",
       source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 4.1" },
     { type: "point", numeral: "2", headline: "FINDINGS PER|EXAM FELL", sub: "AML/CFT/CPF: 7.7 in 2022 → 3.3 in 2025.",
@@ -48,7 +48,7 @@ const CONTENT = {
       PLOT_BEARING: 190, PLOT_DISTANCE: 115,                    // keep bearing 160-215
       PLOT_LABEL_LINE_1: "SCB EXAMINATIONS CONCLUDED", PLOT_LABEL_LINE_2: "31 → 76  ·  2021–2025",
       source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 4.1" },
-    { type: "point", numeral: "?", headline: "HAS YOUR|EXAM CYCLE|CHANGED?", sub: "Exams are up 2.5× since 2021. Tell me what you've seen." },
+    { type: "point", numeral: "?", headline: "HAS YOUR|EXAM CYCLE|CHANGED?", sub: "Exams up 2.5× since 2021. What have you seen?", portrait: true },
   ],
 };
 
@@ -64,7 +64,7 @@ const L = {
 /* ========================================================================== */
 
 const NS = "http://www.w3.org/2000/svg";
-let cur = null, curSource = '', curNarrow = false;
+let cur = null, curSource = '', curNarrow = false, curHero = false;
 const SAND = "#E9DFC6", GOLD = (a) => `rgba(200,169,110,${a})`, NB = " ";
 const el = (name, attrs = {}, parent = cur) => { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
 const txt = (str, attrs, parent, mono) => { const t = el("text", attrs, parent); if (mono) t.setAttribute("class", "mono"); t.textContent = str.replace(/ /g, NB); return t; };
@@ -110,6 +110,7 @@ function needle(cx, cy, s, rot = 0) {
 
 /* ---- chrome: handle, author pill, URL pill, arrow, source ---- */
 function chrome(C, opts = {}) {
+  if (curNarrow && !curHero) needle(104, 123, 0.5);          // portrait slides: the series needle sits beside the handle
   txt(C.HANDLE, { x: 150, y: 132, fill: "#F5F0E8", "font-size": 26, "font-weight": 300, "letter-spacing": 1.5 });
   const p = L.pill, pt = txt(C.AUTHOR_PILL, { x: 0, y: p.y + 38, fill: "#F5F0E8", "font-size": 26, "font-weight": 500, "letter-spacing": 2 });
   const pw = Math.max(p.w, pt.getComputedTextLength() + 60), px0 = 1016 - pw;
@@ -270,7 +271,7 @@ function buildAll(C, only) {
     const svg = document.createElementNS(NS, "svg");
     svg.setAttribute("width", L.W); svg.setAttribute("height", L.H); svg.setAttribute("viewBox", `0 0 ${L.W} ${L.H}`);
     wrap.appendChild(svg); cur = svg;
-    curSource = S.source || C.SOURCE; curNarrow = !!(S.portrait || S.heroRooster);
+    curSource = S.source || C.SOURCE; curNarrow = !!(S.portrait || S.heroRooster); curHero = !!S.heroRooster;
     BUILDERS[S.type](C, S);
   });
 }

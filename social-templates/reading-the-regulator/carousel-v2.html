@@ -28,7 +28,7 @@ text.mono { font-family: "JB", monospace; }
    ========================================================================== */
 const CONTENT = {
   HANDLE: "READING THE REGULATOR — 01",          // top-left
-  AUTHOR_PILL: "SAWYER & CO.",                    // top-right pill
+  AUTHOR_PILL: "ANWAR SAWYER",                    // top-right pill
   URL_PILL: "sawyer-co.com",                      // bottom-left pill
   SOURCE: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025",
 
@@ -105,9 +105,11 @@ function needle(cx, cy, s, rot = 0) {
 /* ---- chrome: handle, author pill, URL pill, arrow, source ---- */
 function chrome(C, opts = {}) {
   txt(C.HANDLE, { x: 150, y: 132, fill: "#F5F0E8", "font-size": 26, "font-weight": 300, "letter-spacing": 1.5 });
-  const p = L.pill;
-  el("rect", { x: p.x, y: p.y, width: p.w, height: p.h, rx: 14, fill: "rgba(200,169,110,.10)", stroke: GOLD(.85), "stroke-width": 3 });
-  txt(C.AUTHOR_PILL, { x: p.x + p.w / 2, y: p.y + 38, "text-anchor": "middle", fill: "#F5F0E8", "font-size": 26, "font-weight": 500, "letter-spacing": 2 });
+  const p = L.pill, pt = txt(C.AUTHOR_PILL, { x: 0, y: p.y + 38, fill: "#F5F0E8", "font-size": 26, "font-weight": 500, "letter-spacing": 2 });
+  const pw = Math.max(p.w, pt.getComputedTextLength() + 60), px0 = 1016 - pw;
+  pt.setAttribute("x", px0 + 30);
+  const pr = el("rect", { x: px0, y: p.y, width: pw, height: p.h, rx: 14, fill: "rgba(200,169,110,.10)", stroke: GOLD(.85), "stroke-width": 3 });
+  cur.insertBefore(pr, pt);
   if (opts.url !== false) {
     const t = txt(C.URL_PILL, { x: L.url.x + 28, y: L.url.y + 36, fill: "#0D1B2A", "font-size": 30, "font-weight": 500 });
     const w = t.getComputedTextLength() + 56;

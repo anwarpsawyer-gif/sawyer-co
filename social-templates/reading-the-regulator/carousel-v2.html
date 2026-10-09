@@ -123,8 +123,9 @@ function chrome(C, opts = {}) {
     cur.appendChild(t);
   }
   if (opts.arrow !== false) {
-    el("line", { x1: 800, y1: 1160, x2: 958, y2: 1160, stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round" });
-    el("polyline", { points: "932,1142 958,1160 932,1178", fill: "none", stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round" });
+    const ax = curNarrow ? 1016 : 958;     // on portrait slides the arrow sits out at the right edge, clear of the tie
+    el("line", { x1: ax - 158, y1: 1160, x2: ax, y2: 1160, stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round" });
+    el("polyline", { points: `${ax - 26},1142 ${ax},1160 ${ax - 26},1178`, fill: "none", stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round" });
   }
   if (curNarrow) {            // two short lines in the clear left column (keeps the source off the photo / rooster)
     const words = curSource.split(" "), lines = []; let line = "";
@@ -200,28 +201,17 @@ function fullCompass(S, cx0, cy0, scale) {
 
 /* ---- portrait (Anwar), faded into the navy; rooster variants ---- */
 function portrait() {
-  const defs = el("defs"), W0 = 900, X0 = 250, Y0 = 460;
-  const rg = el("radialGradient", { id: "pm", gradientUnits: "userSpaceOnUse", cx: X0 + W0 * 0.50, cy: Y0 + W0 * 0.50, r: W0 * 0.56,
-    gradientTransform: `translate(${X0 + W0 * 0.50} ${Y0 + W0 * 0.50}) scale(0.92 1.40) translate(${-(X0 + W0 * 0.50)} ${-(Y0 + W0 * 0.50)})` }, defs);
-  el("stop", { offset: 0, "stop-color": "#fff", "stop-opacity": 1 }, rg);
-  el("stop", { offset: 0.58, "stop-color": "#fff", "stop-opacity": 1 }, rg);
-  el("stop", { offset: 1, "stop-color": "#fff", "stop-opacity": 0 }, rg);
-  const m = el("mask", { id: "pmask", maskUnits: "userSpaceOnUse", x: 0, y: 0, width: L.W, height: L.H }, defs);
-  el("rect", { width: L.W, height: L.H, fill: "url(#pm)" }, m);
-  // soft gold glow behind the shoulders, then the photo
-  const gl = el("radialGradient", { id: "pg", gradientUnits: "userSpaceOnUse", cx: 760, cy: 1000, r: 460 }, defs);
-  el("stop", { offset: 0, "stop-color": "#C8A96E", "stop-opacity": .30 }, gl); el("stop", { offset: 1, "stop-color": "#C8A96E", "stop-opacity": 0 }, gl);
+  const defs = el("defs"), SC = 1.12, W0 = 1024 * SC, X0 = 346, Y0 = 205;
+  const gl = el("radialGradient", { id: "pg", gradientUnits: "userSpaceOnUse", cx: 890, cy: 590, r: 600 }, defs);
+  el("stop", { offset: 0, "stop-color": "#6f9ac4", "stop-opacity": .62 }, gl);
+  el("stop", { offset: 0.55, "stop-color": "#3f6a94", "stop-opacity": .28 }, gl);
+  el("stop", { offset: 1, "stop-color": "#3f6a94", "stop-opacity": 0 }, gl);
   el("rect", { width: L.W, height: L.H, fill: "url(#pg)" });
-  const lg = el("linearGradient", { id: "pt", gradientUnits: "userSpaceOnUse", x1: 0, y1: Y0, x2: 0, y2: Y0 + 120 }, defs);
-  el("stop", { offset: 0, "stop-color": "#fff", "stop-opacity": 0 }, lg); el("stop", { offset: 1, "stop-color": "#fff", "stop-opacity": 1 }, lg);
-  const m2 = el("mask", { id: "pmask2", maskUnits: "userSpaceOnUse", x: 0, y: 0, width: L.W, height: L.H }, defs);
-  el("rect", { width: L.W, height: L.H, fill: "url(#pt)" }, m2);
-  el("rect", { x: 0, y: Y0 + 120, width: L.W, height: L.H, fill: "#fff" }, m2);
-  const outer = el("g", { mask: "url(#pmask2)" });
-  const g = el("g", { mask: "url(#pmask)" }, outer);
-  const im = el("image", { href: "anwar.jpg", x: X0, y: Y0, width: W0, height: W0 }, g);
-  im.setAttribute("style", "filter: brightness(.86) contrast(1.06) saturate(.88)");
-  el("rect", { x: X0, y: Y0, width: W0, height: W0, fill: "#0B1724", "fill-opacity": .26 }, g);
+  const gg = el("radialGradient", { id: "pg2", gradientUnits: "userSpaceOnUse", cx: 1000, cy: 1300, r: 520 }, defs);
+  el("stop", { offset: 0, "stop-color": "#C8A96E", "stop-opacity": .34 }, gg); el("stop", { offset: 1, "stop-color": "#C8A96E", "stop-opacity": 0 }, gg);
+  el("rect", { width: L.W, height: L.H, fill: "url(#pg2)" });
+  const im = el("image", { href: "anwar_cutout.png", x: X0, y: Y0, width: W0, height: W0 });
+  im.setAttribute("style", "filter: brightness(1.06) contrast(1.05) saturate(.95)");
 }
 function heroRooster(y = 790, w = 800) {
   const defs = el("defs"), g = el("radialGradient", { id: "rg", gradientUnits: "userSpaceOnUse", cx: 640, cy: 1010, r: 440 }, defs);
@@ -234,27 +224,33 @@ function smallRooster() { el("image", { href: "rooster_alpha.png", x: 70, y: 840
 /* ---- builders ---- */
 const BUILDERS = {
   cover(C, S) {
-    background(L.needle.x, L.needle.y); needle(L.needle.x, L.needle.y, L.needle.scale);
-    if (S.portrait) portrait(); else heroRooster();
-    if (S.rooster) smallRooster();
+    background(L.needle.x, L.needle.y);
+    if (S.portrait) portrait(); else { heroRooster(); }
+    if (!S.portrait) needle(L.needle.x, L.needle.y, L.needle.scale);
     chrome(C, { arrow: true });
     const P2 = !!S.portrait;
-    let nSize = P2 ? 280 : 330; const nw = measure(S.numeral, nSize, 800); if (nw > 700) nSize = Math.floor(nSize * 700 / nw);
-    txt(S.numeral, { x: 110, y: P2 ? 390 : 450, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });
-    const last = P2 ? 530 : 640;
-    headBlock(S, 150, 880, last, P2 ? 96 : 104, 2);
-    subBlock(S.sub, 170, last + (P2 ? 84 : 96), P2 ? 380 : 700, P2 ? 48 : 60, 2);
+    let nSize = P2 ? 270 : 330; const nw = measure(S.numeral, nSize, 800); if (nw > (P2 ? 600 : 700)) nSize = Math.floor(nSize * (P2 ? 600 : 700) / nw);
+    txt(S.numeral, { x: 110, y: P2 ? 420 : 450, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });
+    const last = P2 ? 560 : 640;
+    headBlock(S, 150, P2 ? 560 : 880, last, P2 ? 100 : 104, 2);
+    subBlock(S.sub, 170, last + (P2 ? 84 : 96), P2 ? 400 : 700, P2 ? 50 : 60, 2);
   },
   point(C, S) {
-    background(L.needle.x, L.needle.y); needle(L.needle.x, L.needle.y, L.needle.scale);
-    if (S.portrait) portrait(); else if (S.heroRooster) heroRooster(830, 760);
+    background(L.needle.x, L.needle.y);
+    if (S.portrait) portrait(); else { if (S.heroRooster) heroRooster(830, 760); needle(L.needle.x, L.needle.y, L.needle.scale); }
     chrome(C);
-    const n = L.numeral, P2 = !!S.portrait, base = P2 ? 545 : n.base, last = P2 ? 520 : L.head.lastBase;
+    const n = L.numeral, P2 = !!S.portrait;
+    if (P2) {                       // closing-with-portrait layout: no numeral, type in the left column
+      headBlock(S, 150, 560, 560, 100, Math.max(2, S.headline.split('|').length));
+      subBlock(S.sub, 170, 560 + 84, 400, 48, 4);
+      return;
+    }
+    const base = n.base, last = L.head.lastBase;
     txt(S.numeral, { x: n.x, y: base, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": n.size, "letter-spacing": -4 });
     const nw = measure(S.numeral, n.size, 800);
     const hx = Math.max(250, n.x + nw * 0.66);
     headBlock(S, hx, L.head.right - hx, last, L.head.startSize, Math.max(2, S.headline.split('|').length));
-    if (P2) subBlock(S.sub, 150, last + 80, 400, 46, 4); else subBlock(S.sub, hx + L.sub.indent, last + L.sub.gap, (S.heroRooster ? 800 : L.head.right) - hx - L.sub.indent, S.heroRooster ? 56 : L.sub.size, 3);
+    subBlock(S.sub, hx + L.sub.indent, last + L.sub.gap, (S.heroRooster ? 800 : L.head.right) - hx - L.sub.indent, S.heroRooster ? 56 : L.sub.size, 3);
   },
   reading(C, S) {
     const cx = 540, cy = 800, sc = 1.9;

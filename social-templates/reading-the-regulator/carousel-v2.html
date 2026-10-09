@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Reading the Regulator — carousel v2</title>
+<style>
+@font-face { font-family: "JB"; font-weight: 400; src: url(fonts/jb400.ttf); }
+@font-face { font-family: "JB"; font-weight: 500; src: url(fonts/jb500.ttf); }
+@font-face { font-family: "IN"; font-weight: 300; src: url(fonts/inter300.ttf); }
+@font-face { font-family: "IN"; font-weight: 500; src: url(fonts/inter500.ttf); }
+@font-face { font-family: "IN"; font-weight: 800; src: url(fonts/inter800.ttf); }
+@page { size: 1080px 1350px; margin: 0; }
+html, body { margin: 0; background: #0B1724; }
+.slide { width: 1080px; height: 1350px; overflow: hidden; page-break-after: always; break-after: page; }
+svg { display: block; }
+text { font-family: "IN", sans-serif; }
+text.mono { font-family: "JB", monospace; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+/* ==========================================================================
+   READING THE REGULATOR — carousel v2 content. Change ONLY this block each week.
+   Slide types:  cover | point | reading (the ONLY full-compass slide)
+   Every slide keeps the gold needle mark and the radar rings from it.
+   "|" forces a line break. Text in [brackets] renders as a visible placeholder.
+   ========================================================================== */
+const CONTENT = {
+  HANDLE: "READING THE REGULATOR — 01",          // top-left
+  AUTHOR_PILL: "SAWYER & CO.",                    // top-right pill
+  URL_PILL: "sawyer-co.com",                      // bottom-left pill
+  SOURCE: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025",
+
+  SLIDES: [
+    { type: "cover", numeral: "2.5×", headline: "SUPERVISORY|SCRUTINY", sub: "SCB exams, 2021–2025" },
+    { type: "point", numeral: "1", headline: "EXAMS|31 → 76", sub: "Four years. 45 more supervisory exams, up 145%." },
+    { type: "point", numeral: "2", headline: "FINDINGS PER|EXAM FELL", sub: "[X.X → Y.Y]" },
+    { type: "point", numeral: "3", headline: "TOTAL FINDINGS|DIDN'T FALL", sub: "[N → M]" },
+    { type: "reading", headline: "WHERE IT SITS", sub: "Four years of SCB supervisory exams, plotted on the three axes.",
+      AXIS_N_LABEL: "REGULATION", AXIS_N_BEARING: 0, AXIS_E_LABEL: "LIQUIDITY", AXIS_E_BEARING: 120,
+      AXIS_W_LABEL: "DIGITIZATION", AXIS_W_BEARING: 240, NEEDLE_BEARING: 0,
+      PLOT_BEARING: 190, PLOT_DISTANCE: 115,                    // keep bearing 160-215
+      PLOT_LABEL_LINE_1: "SCB SUPERVISORY EXAMS", PLOT_LABEL_LINE_2: "31 → 76  ·  2021–2025" },
+    { type: "point", numeral: "?", headline: "HAS YOUR|WORKLOAD|CHANGED?", sub: "Exams are up 2.5× since 2021. Tell me what you've seen." },
+  ],
+};
+
+const L = {
+  W: 1080, H: 1350, pad: 64,
+  needle: { x: 905, y: 262, scale: 0.9 },
+  pill: { x: 745, y: 95, w: 271, h: 56 },
+  url: { x: 120, y: 1134, h: 52 },
+  numeral: { x: 130, base: 650, size: 363 },
+  head: { lastBase: 630, startSize: 100, pitch: 0.96, right: 1016 },
+  sub: { gap: 100, size: 64, pitch: 1.12, indent: 18 },
+};
+/* ========================================================================== */
+
+const NS = "http://www.w3.org/2000/svg";
+let cur = null;
+const SAND = "#E9DFC6", GOLD = (a) => `rgba(200,169,110,${a})`, NB = " ";
+const el = (name, attrs = {}, parent = cur) => { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+const txt = (str, attrs, parent, mono) => { const t = el("text", attrs, parent); if (mono) t.setAttribute("class", "mono"); t.textContent = str.replace(/ /g, NB); return t; };
+const toRad = (deg) => (deg - 90) * Math.PI / 180;
+const P = (r, deg) => [r * Math.cos(toRad(deg)), r * Math.sin(toRad(deg))];
+const isPH = (s) => /^\[.*\]$/.test(s.trim());
+
+/* ---- background: navy, glow blobs, diagonal grid, radar rings from the needle ---- */
+function background(nx, ny) {
+  const defs = el("defs");
+  const blob = (id, cx, cy, r, c, a) => { const g = el("radialGradient", { id, gradientUnits: "userSpaceOnUse", cx, cy, r }, defs); el("stop", { offset: 0, "stop-color": c, "stop-opacity": a }, g); el("stop", { offset: 1, "stop-color": c, "stop-opacity": 0 }, g); };
+  blob("b1", 120, 90, 560, "#4f7aa3", 0.55);
+  blob("b2", 1040, 240, 760, "#3b6a93", 0.50);
+  blob("b3", 1020, 1330, 560, "#C8A96E", 0.34);
+  blob("b4", 540, 760, 640, "#1c3550", 0.60);
+  el("rect", { width: L.W, height: L.H, fill: "#0B1724" });
+  ["b4", "b1", "b2", "b3"].forEach((id) => el("rect", { width: L.W, height: L.H, fill: `url(#${id})` }));
+  // diagonal grid (two families), soft, slightly uneven like the reference
+  for (let k = -1400, i = 0; k <= 1400; k += 210, i++) {
+    const o = [.16, .26, .19, .32, .18][i % 5];
+    el("line", { x1: k, y1: 0, x2: k + L.H, y2: L.H, stroke: `rgba(233,223,198,${o})`, "stroke-width": i % 4 === 0 ? 2 : 1.2 });
+    el("line", { x1: k + 300, y1: L.H, x2: k + 300 + L.H, y2: 0, stroke: `rgba(233,223,198,${[.22, .14, .29, .18, .24][i % 5]})`, "stroke-width": i % 3 === 0 ? 2 : 1.2 });
+  }
+  [[240, .08], [380, .065], [520, .052], [660, .042], [800, .034], [940, .026]].forEach(([r, o]) =>
+    el("circle", { cx: nx, cy: ny, r, fill: "none", stroke: `rgba(210,190,150,${o})`, "stroke-width": 1.4 }));
+}
+
+function needle(cx, cy, s, rot = 0) {
+  const DH = 40, DW = 24;
+  const g = el("g", { transform: `translate(${cx} ${cy}) scale(${s}) rotate(${rot})` });
+  el("circle", { cx: 0, cy: 0, r: 34, fill: "rgba(200,169,110,.10)" }, g);
+  const poly = (pts, fill) => el("polygon", { points: pts.map((p) => p.join(",")).join(" "), fill }, g);
+  poly([[0, -DH], [-DW, 0], [0, DH]], "rgba(120,90,35,.7)");
+  poly([[0, -DH], [DW, 0], [0, DH]], "rgba(215,178,100,.85)");
+  poly([[0, -DH], [-DW, 0], [-DW * .35, -DH * .3]], "rgba(175,140,72,.6)");
+  poly([[0, -DH], [DW, 0], [DW * .35, -DH * .3]], "rgba(245,215,148,.75)");
+  poly([[0, DH], [-DW, 0], [-DW * .3, DH * .35]], "rgba(100,78,30,.55)");
+  poly([[0, DH], [DW, 0], [DW * .3, DH * .35]], "rgba(165,132,65,.6)");
+  poly([[0, -DH], [DW * .55, -DH * .3], [DW * .18, -DH * .52]], "rgba(255,252,235,.8)");
+  el("polygon", { points: `0,${-DH} ${DW},0 0,${DH} ${-DW},0`, fill: "none", stroke: "rgba(218,185,115,.9)", "stroke-width": .9 }, g);
+  el("circle", { cx: 0, cy: 0, r: 2.2, fill: "rgba(255,250,225,.95)" }, g);
+}
+
+/* ---- chrome: handle, author pill, URL pill, arrow, source ---- */
+function chrome(C, opts = {}) {
+  txt(C.HANDLE, { x: 150, y: 132, fill: "#F5F0E8", "font-size": 26, "font-weight": 300, "letter-spacing": 1.5 });
+  const p = L.pill;
+  el("rect", { x: p.x, y: p.y, width: p.w, height: p.h, rx: 14, fill: "rgba(200,169,110,.10)", stroke: GOLD(.85), "stroke-width": 3 });
+  txt(C.AUTHOR_PILL, { x: p.x + p.w / 2, y: p.y + 38, "text-anchor": "middle", fill: "#F5F0E8", "font-size": 26, "font-weight": 500, "letter-spacing": 2 });
+  if (opts.url !== false) {
+    const t = txt(C.URL_PILL, { x: L.url.x + 28, y: L.url.y + 36, fill: "#0D1B2A", "font-size": 30, "font-weight": 500 });
+    const w = t.getComputedTextLength() + 56;
+    el("rect", { x: L.url.x, y: L.url.y, width: w, height: L.url.h, rx: 10, fill: "#F0E5CB", stroke: GOLD(1), "stroke-width": 3 }, cur);
+    cur.appendChild(t);
+  }
+  if (opts.arrow !== false) {
+    el("line", { x1: 800, y1: 1160, x2: 958, y2: 1160, stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round" });
+    el("polyline", { points: "932,1142 958,1160 932,1178", fill: "none", stroke: "#F5F0E8", "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round" });
+  }
+  txt(C.SOURCE, { x: L.url.x, y: 1236, fill: GOLD(.8), "font-size": 17, "letter-spacing": 2.2 }, cur, true);
+}
+
+/* ---- text layout: "|" forced breaks, wrap, auto-fit ---- */
+function layoutText(str, maxW, startSize, maxLines, weight, minSize = 28) {
+  const probe = el("text", { x: -9999, y: -9999, "font-weight": weight, "letter-spacing": 1 });
+  const widthOf = (s, size) => { probe.setAttribute("font-size", size); probe.textContent = s.replace(/ /g, NB); return probe.getComputedTextLength(); };
+  for (let size = startSize; size >= minSize; size -= 2) {
+    const lines = [];
+    str.split("|").forEach((seg) => {
+      let line = "";
+      seg.split(" ").forEach((w) => { const t = line ? line + " " + w : w; if (line && widthOf(t, size) > maxW) { lines.push(line); line = w; } else line = t; });
+      lines.push(line);
+    });
+    if (lines.length <= maxLines && lines.every((l) => widthOf(l, size) <= maxW)) { probe.remove(); return { lines, size }; }
+  }
+  probe.remove(); return { lines: str.split("|"), size: minSize };
+}
+const measure = (str, size, weight) => { const t = el("text", { x: -9999, y: -9999, "font-size": size, "font-weight": weight, "letter-spacing": 1 }); t.textContent = str.replace(/ /g, NB); const w = t.getComputedTextLength(); t.remove(); return w; };
+
+function headBlock(S, x, maxW, lastBase, startSize, maxLines) {
+  const { lines, size } = layoutText(S.headline, maxW, startSize, maxLines, 800);
+  const pitch = size * L.head.pitch, y0 = lastBase - (lines.length - 1) * pitch;
+  lines.forEach((ln, i) => txt(ln, { x, y: y0 + i * pitch, fill: "#FFFFFF", "font-weight": 800, "font-size": size, "letter-spacing": 1 }));
+  return { size, pitch, top: y0 - size * 0.74 };
+}
+function subBlock(str, x, y, maxW, size, maxLines = 3) {
+  const ph = isPH(str);
+  const { lines, size: z } = layoutText(str, maxW, size, maxLines, 300, 30);
+  lines.forEach((ln, i) => {
+    const t = txt(ln, { x, y: y + i * z * L.sub.pitch, fill: ph ? "rgba(233,223,198,.6)" : SAND, "font-weight": 300, "font-size": z, "letter-spacing": 0 });
+    if (ph) { const w = t.getComputedTextLength(); el("rect", { x: x - 14, y: y + i * z * L.sub.pitch - z + 6, width: w + 28, height: z + 22, rx: 6, fill: "none", stroke: GOLD(.7), "stroke-width": 2, "stroke-dasharray": "9 8" }); }
+  });
+}
+
+/* ---- the full compass (reading slide only) ---- */
+function fullCompass(S, cx0, cy0, scale) {
+  const ox = cx0, oy = cy0, Sc = scale, R1 = 76, R2 = 65, R3 = 56, ARM = 90;
+  const g = el("g", { transform: `translate(${ox} ${oy}) scale(${Sc})` });
+  const pb = Math.min(215, Math.max(160, S.PLOT_BEARING)); const [px, py] = P(S.PLOT_DISTANCE, pb);
+  el("line", { x1: px, y1: py, x2: 0, y2: 0, stroke: GOLD(.65), "stroke-width": .9, "stroke-linecap": "round" }, g);
+  [10, 17].forEach((r, i) => el("circle", { cx: px, cy: py, r, fill: "none", stroke: GOLD(i ? .2 : .45), "stroke-width": .7 }, g));
+  el("circle", { cx: px, cy: py, r: 3.2, fill: "#c8a96e" }, g);
+  [[R1, .45, .8], [R2, .28, .6], [R3, .2, .5]].forEach(([r, o, w]) => el("circle", { cx: 0, cy: 0, r, fill: "none", stroke: GOLD(o), "stroke-width": w }, g));
+  for (let d = 0; d < 360; d += 10) {
+    const major = d % 30 === 0, card = d % 90 === 0;
+    const [x1, y1] = P(card ? R2 - 4 : major ? R1 - 10 : R1 - 5, d), [x2, y2] = P(R1, d);
+    el("line", { x1, y1, x2, y2, stroke: GOLD(card ? .9 : major ? .65 : .38), "stroke-width": card ? 1.2 : major ? .8 : .5 }, g);
+  }
+  [["N", 0], ["E", 90], ["S", 180], ["W", 270]].forEach(([l, d]) => { const [x, y] = P(R2 - 14, d); txt(l, { x, y: y + 4, "text-anchor": "middle", fill: GOLD(.85), "font-size": 13, "font-weight": 500 }, g, true); });
+  [0, 90, 180, 270].forEach((d) => { const [x1, y1] = P(R3, d), [x2, y2] = P(ARM, d); el("line", { x1, y1, x2, y2, stroke: GOLD(.55), "stroke-width": .8 }, g); });
+  needle(ox, oy, Sc, S.NEEDLE_BEARING);
+  [[S.AXIS_N_LABEL, S.AXIS_N_BEARING], [S.AXIS_E_LABEL, S.AXIS_E_BEARING], [S.AXIS_W_LABEL, S.AXIS_W_BEARING]].forEach(([name, d]) => {
+    const [x1, y1] = P((ARM + 2) * Sc, d), [x2, y2] = P((ARM + 22) * Sc, d);
+    el("line", { x1: ox + x1, y1: oy + y1, x2: ox + x2, y2: oy + y2, stroke: GOLD(.5), "stroke-width": 1.2 });
+    const [dx, dy] = P((ARM + 30) * Sc, d), cx = ox + dx, cy = oy + dy, top = d === 0;
+    el("circle", { cx, cy, r: 9, fill: "none", stroke: GOLD(.6), "stroke-width": 1.4 });
+    el("circle", { cx, cy, r: 4, fill: GOLD(.9) });
+    txt(name, { x: cx, y: cy + (top ? -22 : 46), "text-anchor": "middle", fill: "#F5F0E8", "font-size": 24, "font-weight": 500, "letter-spacing": 3 }, cur, true);
+    txt(d + "°", { x: cx, y: cy + (top ? -50 : 74), "text-anchor": "middle", fill: GOLD(.75), "font-size": 17, "letter-spacing": 2 }, cur, true);
+  });
+  const ppx = ox + px * Sc, ppy = oy + py * Sc;
+  txt(S.PLOT_LABEL_LINE_1, { x: ppx, y: ppy + 56, "text-anchor": "middle", fill: "#E7CF9F", "font-size": 26, "font-weight": 500, "letter-spacing": 3 }, cur, true);
+  txt(S.PLOT_LABEL_LINE_2, { x: ppx, y: ppy + 92, "text-anchor": "middle", fill: GOLD(1), "font-size": 24, "letter-spacing": 2.5 }, cur, true);
+}
+
+/* ---- builders ---- */
+const BUILDERS = {
+  cover(C, S) {
+    background(L.needle.x, L.needle.y); needle(L.needle.x, L.needle.y, L.needle.scale);
+    const defs = el("defs"), g = el("radialGradient", { id: "rg", gradientUnits: "userSpaceOnUse", cx: 640, cy: 1010, r: 440 }, defs);
+    el("stop", { offset: 0, "stop-color": "#C8A96E", "stop-opacity": .30 }, g); el("stop", { offset: 1, "stop-color": "#C8A96E", "stop-opacity": 0 }, g);
+    el("rect", { width: L.W, height: L.H, fill: "url(#rg)" });
+    el("image", { href: "rooster_alpha.png", x: 250, y: 790, width: 800, height: 800 * 400 / 736 });   // hero, stands in for the reference's portrait
+    chrome(C, { arrow: true });
+    let nSize = 330; const nw = measure(S.numeral, nSize, 800); if (nw > 700) nSize = Math.floor(nSize * 700 / nw);
+    txt(S.numeral, { x: 110, y: 450, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": nSize, "letter-spacing": -4 });
+    headBlock(S, 150, 880, 640, 104, 2);
+    subBlock(S.sub, 170, 640 + 96, 700, 60, 2);
+  },
+  point(C, S) {
+    background(L.needle.x, L.needle.y); needle(L.needle.x, L.needle.y, L.needle.scale);
+    chrome(C);
+    const n = L.numeral;
+    txt(S.numeral, { x: n.x, y: n.base, fill: "rgba(215,185,125,.62)", "font-weight": 800, "font-size": n.size, "letter-spacing": -4 });
+    const nw = measure(S.numeral, n.size, 800);
+    const hx = Math.max(250, n.x + nw * 0.66);   // headline overlaps the numeral's right edge, as in the reference
+    const hb = headBlock(S, hx, L.head.right - hx, L.head.lastBase, L.head.startSize, Math.max(2, S.headline.split('|').length));
+    const lastBase = L.head.lastBase;
+    subBlock(S.sub, hx + L.sub.indent, lastBase + L.sub.gap, L.head.right - hx - L.sub.indent, L.sub.size, 3);
+  },
+  reading(C, S) {
+    const cx = 540, cy = 800, sc = 1.9;
+    background(cx, cy);
+    chrome(C);
+    const hs = headBlock(S, 150, 840, 330, 96, 2);
+    subBlock(S.sub, 168, 330 + 64, 760, 36, 2);
+    fullCompass(S, cx, cy, sc);
+  },
+};
+
+function buildAll(C, only) {
+  const root = document.getElementById("root"); root.innerHTML = "";
+  C.SLIDES.forEach((S, i) => {
+    if (only !== undefined && only !== i) return;
+    const wrap = document.createElement("div"); wrap.className = "slide"; root.appendChild(wrap);
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("width", L.W); svg.setAttribute("height", L.H); svg.setAttribute("viewBox", `0 0 ${L.W} ${L.H}`);
+    wrap.appendChild(svg); cur = svg;
+    BUILDERS[S.type](C, S);
+  });
+}
+window.renderSlides = (only) => buildAll(Object.assign({}, CONTENT, window.__OVERRIDE__ || {}), only);
+window.SLIDE_COUNT = CONTENT.SLIDES.length;
+Promise.all([300, 500, 800].map((w) => document.fonts.load(`${w} 20px "IN"`))).then(() => document.fonts.load('400 20px "JB"')).then(() => document.fonts.ready).then(() => { window.__READY__ = true; });
+</script>
+</body>
+</html>

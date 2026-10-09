@@ -82,12 +82,6 @@ function background(nx, ny) {
   blob("b4", 540, 760, 640, "#1c3550", 0.60);
   el("rect", { width: L.W, height: L.H, fill: "#0B1724" });
   ["b4", "b1", "b2", "b3"].forEach((id) => el("rect", { width: L.W, height: L.H, fill: `url(#${id})` }));
-  // diagonal grid (two families), soft, slightly uneven like the reference
-  for (let k = -1400, i = 0; k <= 1400; k += 210, i++) {
-    const o = [.16, .26, .19, .32, .18][i % 5];
-    el("line", { x1: k, y1: 0, x2: k + L.H, y2: L.H, stroke: `rgba(233,223,198,${o})`, "stroke-width": i % 4 === 0 ? 2 : 1.2 });
-    el("line", { x1: k + 300, y1: L.H, x2: k + 300 + L.H, y2: 0, stroke: `rgba(233,223,198,${[.22, .14, .29, .18, .24][i % 5]})`, "stroke-width": i % 3 === 0 ? 2 : 1.2 });
-  }
   [[240, .08], [380, .065], [520, .052], [660, .042], [800, .034], [940, .026]].forEach(([r, o]) =>
     el("circle", { cx: nx, cy: ny, r, fill: "none", stroke: `rgba(210,190,150,${o})`, "stroke-width": 1.4 }));
 }

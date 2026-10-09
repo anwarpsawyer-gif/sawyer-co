@@ -42,13 +42,9 @@ const CONTENT = {
       source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 5.1" },
     { type: "point", numeral: "4", headline: "64 OF 76 EXAMS|WERE THEMATIC", sub: "In 2025. Routine years 2022–24: 7.7 → 4.4.",
       source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLES 4.1, 5.2" },
-    { type: "reading", headline: "WHERE IT SITS", sub: "Four years of SCB examinations, plotted on the three axes.",
-      AXIS_N_LABEL: "REGULATION", AXIS_N_BEARING: 0, AXIS_E_LABEL: "LIQUIDITY", AXIS_E_BEARING: 120,
-      AXIS_W_LABEL: "DIGITIZATION", AXIS_W_BEARING: 240, NEEDLE_BEARING: 0,
-      PLOT_BEARING: 190, PLOT_DISTANCE: 115,                    // keep bearing 160-215
-      PLOT_LABEL_LINE_1: "SCB EXAMINATIONS CONCLUDED", PLOT_LABEL_LINE_2: "31 → 76  ·  2021–2025",
-      source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 4.1" },
-    { type: "point", numeral: "?", headline: "HAS YOUR|EXAM CYCLE|CHANGED?", sub: "Exams up 2.5× since 2021. What have you seen?", portrait: true },
+    { type: "point", numeral: "5", headline: "SANCTIONS|SCREENING LEADS", sub: "Top AML/CFT/CPF finding in 2025: 105.",
+      source: "SOURCE · SCB EXAMINATIONS REPORT 2021–2025, TABLE 5.2" },
+    { type: "closing", headline: "HAS YOUR EXAM|CYCLE CHANGED?", sub: "Exams up 2.5× since 2021. What have you seen?" },
   ],
 };
 
@@ -147,17 +143,17 @@ function layoutText(str, maxW, startSize, maxLines, weight, minSize = 28) {
 }
 const measure = (str, size, weight) => { const t = el("text", { x: -9999, y: -9999, "font-size": size, "font-weight": weight, "letter-spacing": 1 }); t.textContent = str.replace(/ /g, NB); const w = t.getComputedTextLength(); t.remove(); return w; };
 
-function headBlock(S, x, maxW, lastBase, startSize, maxLines) {
+function headBlock(S, x, maxW, lastBase, startSize, maxLines, anchor = "start") {
   const { lines, size } = layoutText(S.headline, maxW, startSize, maxLines, 800);
   const pitch = size * L.head.pitch, y0 = lastBase - (lines.length - 1) * pitch;
-  lines.forEach((ln, i) => txt(ln, { x, y: y0 + i * pitch, fill: "#FFFFFF", "font-weight": 800, "font-size": size, "letter-spacing": 1 }));
+  lines.forEach((ln, i) => txt(ln, { x, y: y0 + i * pitch, "text-anchor": anchor, fill: "#FFFFFF", "font-weight": 800, "font-size": size, "letter-spacing": 1 }));
   return { size, pitch, top: y0 - size * 0.74 };
 }
-function subBlock(str, x, y, maxW, size, maxLines = 3) {
+function subBlock(str, x, y, maxW, size, maxLines = 3, anchor = "start") {
   const ph = isPH(str);
   const { lines, size: z } = layoutText(str, maxW, size, maxLines, 300, 30);
   lines.forEach((ln, i) => {
-    const t = txt(ln, { x, y: y + i * z * L.sub.pitch, fill: ph ? "rgba(233,223,198,.6)" : SAND, "font-weight": 300, "font-size": z, "letter-spacing": 0 });
+    const t = txt(ln, { x, y: y + i * z * L.sub.pitch, "text-anchor": anchor, fill: ph ? "rgba(233,223,198,.6)" : SAND, "font-weight": 300, "font-size": z, "letter-spacing": 0 });
     if (ph) { const w = t.getComputedTextLength(); el("rect", { x: x - 14, y: y + i * z * L.sub.pitch - z + 6, width: w + 28, height: z + 22, rx: 6, fill: "none", stroke: GOLD(.7), "stroke-width": 2, "stroke-dasharray": "9 8" }); }
   });
 }
@@ -208,6 +204,22 @@ function portrait() {
   const im = el("image", { href: "anwar_cutout.png", x: X0, y: Y0, width: W0, height: W0 });
   im.setAttribute("style", "filter: brightness(1.06) contrast(1.05) saturate(.95)");
 }
+function portraitCentered() {
+  const defs = el("defs"), SC = 1.2, W0 = 1024 * SC, X0 = 540 - 490 * SC, Y0 = 70;
+  const gl = el("radialGradient", { id: "cg", gradientUnits: "userSpaceOnUse", cx: 540, cy: 430, r: 600 }, defs);
+  el("stop", { offset: 0, "stop-color": "#6f9ac4", "stop-opacity": .60 }, gl);
+  el("stop", { offset: 0.55, "stop-color": "#3f6a94", "stop-opacity": .26 }, gl);
+  el("stop", { offset: 1, "stop-color": "#3f6a94", "stop-opacity": 0 }, gl);
+  el("rect", { width: L.W, height: L.H, fill: "url(#cg)" });
+  const lg = el("linearGradient", { id: "cf", gradientUnits: "userSpaceOnUse", x1: 0, y1: 700, x2: 0, y2: 930 }, defs);
+  el("stop", { offset: 0, "stop-color": "#fff", "stop-opacity": 1 }, lg); el("stop", { offset: 1, "stop-color": "#fff", "stop-opacity": 0 }, lg);
+  const m = el("mask", { id: "cmask", maskUnits: "userSpaceOnUse", x: 0, y: 0, width: L.W, height: L.H }, defs);
+  el("rect", { width: L.W, height: 700, fill: "#fff" }, m);
+  el("rect", { y: 700, width: L.W, height: 230, fill: "url(#cf)" }, m);
+  const g = el("g", { mask: "url(#cmask)" });
+  const im = el("image", { href: "anwar_cutout.png", x: X0, y: Y0, width: W0, height: W0 }, g);
+  im.setAttribute("style", "filter: brightness(1.06) contrast(1.05) saturate(.95)");
+}
 function heroRooster(y = 790, w = 800) {
   const defs = el("defs"), g = el("radialGradient", { id: "rg", gradientUnits: "userSpaceOnUse", cx: 640, cy: 1010, r: 440 }, defs);
   el("stop", { offset: 0, "stop-color": "#C8A96E", "stop-opacity": .30 }, g); el("stop", { offset: 1, "stop-color": "#C8A96E", "stop-opacity": 0 }, g);
@@ -239,6 +251,13 @@ const BUILDERS = {
     if (P2) subBlock(S.sub, L.M, last + 84, 400, 48, 4);
     else subBlock(S.sub, L.M, last + 100, (S.heroRooster ? 800 : L.R) - L.M, S.heroRooster ? 56 : 64, 3);
   },
+  closing(C, S) {
+    background(540, 430);
+    portraitCentered();
+    chrome(C, { arrow: false });
+    const h = headBlock(S, 540, 900, 950, 88, Math.max(2, S.headline.split('|').length), "middle");
+    subBlock(S.sub, 540, 950 + 80, 760, 46, 2, "middle");
+  },
   reading(C, S) {
     const cx = 540, cy = 800, sc = 1.9;
     background(cx, cy);
@@ -257,7 +276,7 @@ function buildAll(C, only) {
     const svg = document.createElementNS(NS, "svg");
     svg.setAttribute("width", L.W); svg.setAttribute("height", L.H); svg.setAttribute("viewBox", `0 0 ${L.W} ${L.H}`);
     wrap.appendChild(svg); cur = svg;
-    curSource = S.source || C.SOURCE; curNarrow = !!(S.portrait || S.heroRooster); curHero = !!S.heroRooster;
+    curSource = S.source || C.SOURCE; curNarrow = !!(S.portrait || S.heroRooster || S.type === 'closing'); curHero = !!S.heroRooster;
     BUILDERS[S.type](C, S);
   });
 }

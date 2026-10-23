@@ -1,10 +1,14 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Depends
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import asyncio
+import hmac
+import html
 import logging
+import time
+from collections import defaultdict, deque
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Literal
@@ -32,6 +36,14 @@ resend.api_key = os.environ.get('RESEND_API_KEY', '')
 SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
 INQUIRY_DESTINATION = os.environ.get('INQUIRY_DESTINATION', 'inquiries@sawyerandco.com')
 
+ADMIN_API_KEY = os.environ.get('ADMIN_API_KEY', '')
+
+# Inquiry rate limit: INQUIRY_LIMIT submissions per INQUIRY_WINDOW seconds, per client IP.
+# In-memory, so it is per process; put a shared limiter in front if you scale out.
+INQUIRY_LIMIT = int(os.environ.get('INQUIRY_LIMIT', '5'))
+INQUIRY_WINDOW = int(os.environ.get('INQUIRY_WINDOW', '3600'))
+_inquiry_hits: dict[str, deque] = defaultdict(deque)
+
 # Create the main app without a prefix
 app = FastAPI(title="Sawyer & Co. Institutional API")
 
@@ -40,17 +52,6 @@ api_router = APIRouter(prefix="/api")
 
 
 # ---------- Models ----------
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-
-class StatusCheckCreate(BaseModel):
-    client_name: str
-
-
 InquiryCategory = Literal["Advisory", "Capital", "Partnership", "Media"]
 
 
@@ -73,31 +74,42 @@ class Inquiry(BaseModel):
     received_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+# ---------- Security helpers ----------
+def require_admin(request: Request) -> None:
+    """Bearer-token gate for admin-only routes. Disabled until ADMIN_API_KEY is set."""
+    if not ADMIN_API_KEY:
+        raise HTTPException(status_code=404, detail="Not found")
+    supplied = request.headers.get("authorization", "").removeprefix("Bearer ").strip()
+    if not hmac.compare_digest(supplied.encode(), ADMIN_API_KEY.encode()):
+        raise HTTPException(status_code=401, detail="Unauthorized", headers={"WWW-Authenticate": "Bearer"})
+
+
+def _client_ip(request: Request) -> str:
+    # The last X-Forwarded-For hop is the one our own proxy appended; earlier hops are client-controlled.
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if forwarded:
+        return forwarded.split(",")[-1].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def rate_limit_inquiry(request: Request) -> None:
+    now = time.monotonic()
+    hits = _inquiry_hits[_client_ip(request)]
+    while hits and now - hits[0] > INQUIRY_WINDOW:
+        hits.popleft()
+    if len(hits) >= INQUIRY_LIMIT:
+        raise HTTPException(status_code=429, detail="Too many inquiries. Please try again later.")
+    hits.append(now)
+
+
 # ---------- Routes ----------
 @api_router.get("/")
 async def root():
     return {"message": "Sawyer & Co. — Institutional API online."}
 
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_obj = StatusCheck(**input.model_dump())
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    await db.status_checks.insert_one(doc)
-    return status_obj
-
-
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    rows = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    for r in rows:
-        if isinstance(r.get('timestamp'), str):
-            r['timestamp'] = datetime.fromisoformat(r['timestamp'])
-    return rows
-
-
 def _build_inquiry_email_html(inquiry: Inquiry) -> str:
+    e = html.escape
     return f"""
     <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Inter, Helvetica, Arial, sans-serif; background:#0D1B2A; padding:32px;">
       <tr>
@@ -107,14 +119,14 @@ def _build_inquiry_email_html(inquiry: Inquiry) -> str:
             <tr><td style="padding-top:8px; font-family: 'Courier New', monospace; font-size:11px; color:#7A8B94; letter-spacing:2px;">[ NEW INSTITUTIONAL INQUIRY ]</td></tr>
             <tr><td style="padding-top:32px; border-top:1px solid #C9B99A;"></td></tr>
             <tr><td style="padding-top:24px; font-size:14px; color:#1C1C1C; line-height:1.7;">
-              <strong>Category:</strong> {inquiry.category}<br/>
-              <strong>Name:</strong> {inquiry.name}<br/>
-              <strong>Email:</strong> {inquiry.email}<br/>
-              <strong>Organization:</strong> {inquiry.organization or '—'}<br/>
+              <strong>Category:</strong> {e(inquiry.category)}<br/>
+              <strong>Name:</strong> {e(inquiry.name)}<br/>
+              <strong>Email:</strong> {e(inquiry.email)}<br/>
+              <strong>Organization:</strong> {e(inquiry.organization or '—')}<br/>
               <strong>Received:</strong> {inquiry.received_at.isoformat()}<br/>
             </td></tr>
             <tr><td style="padding-top:24px; font-family: 'Courier New', monospace; font-size:11px; color:#7A8B94; letter-spacing:2px;">[ MESSAGE ]</td></tr>
-            <tr><td style="padding-top:8px; font-size:14px; color:#1C1C1C; line-height:1.8; white-space:pre-wrap;">{inquiry.message}</td></tr>
+            <tr><td style="padding-top:8px; font-size:14px; color:#1C1C1C; line-height:1.8; white-space:pre-wrap;">{e(inquiry.message)}</td></tr>
             <tr><td style="padding-top:40px; font-family: 'Courier New', monospace; font-size:10px; color:#7A8B94; letter-spacing:2px;">REF :: {inquiry.id}</td></tr>
           </table>
         </td>
@@ -130,7 +142,7 @@ async def _send_inquiry_email(inquiry: Inquiry) -> str | None:
     params = {
         "from": SENDER_EMAIL,
         "to": [INQUIRY_DESTINATION],
-        "subject": f"[Sawyer & Co.] {inquiry.category} Inquiry — {inquiry.name}",
+        "subject": f"[Sawyer & Co.] {inquiry.category} Inquiry — {' '.join(inquiry.name.split())}",
         "html": _build_inquiry_email_html(inquiry),
         "reply_to": inquiry.email,
     }
@@ -142,7 +154,7 @@ async def _send_inquiry_email(inquiry: Inquiry) -> str | None:
         return None
 
 
-@api_router.post("/inquiry", response_model=Inquiry)
+@api_router.post("/inquiry", response_model=Inquiry, dependencies=[Depends(rate_limit_inquiry)])
 async def submit_inquiry(payload: InquiryCreate):
     inquiry = Inquiry(**payload.model_dump())
     doc = inquiry.model_dump()
@@ -158,7 +170,7 @@ async def submit_inquiry(payload: InquiryCreate):
     return inquiry
 
 
-@api_router.get("/inquiry", response_model=List[Inquiry])
+@api_router.get("/inquiry", response_model=List[Inquiry], dependencies=[Depends(require_admin)])
 async def list_inquiries():
     rows = await db.inquiries.find({}, {"_id": 0}).sort("received_at", -1).to_list(500)
     for r in rows:
@@ -170,12 +182,17 @@ async def list_inquiries():
 # Include router
 app.include_router(api_router)
 
+# No wildcard default: set CORS_ORIGINS (comma-separated) to add origins.
+ALLOWED_ORIGINS = [
+    o.strip() for o in os.environ.get('CORS_ORIGINS', 'https://sawyer-co.vercel.app').split(',')
+    if o.strip() and o.strip() != '*'
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_credentials=False,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 

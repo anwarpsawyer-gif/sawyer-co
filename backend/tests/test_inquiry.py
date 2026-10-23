@@ -50,8 +50,15 @@ class TestInquiryCreate:
         # store id for downstream test
         pytest.created_inquiry_id = data["id"]
 
-    def test_inquiry_persisted_in_list(self, client):
+    def test_inquiry_list_requires_admin_key(self, client):
         r = client.get(f"{API}/inquiry", timeout=15)
+        assert r.status_code in (401, 404)
+
+    def test_inquiry_persisted_in_list(self, client):
+        admin_key = os.environ.get("ADMIN_API_KEY")
+        if not admin_key:
+            pytest.skip("ADMIN_API_KEY not set")
+        r = client.get(f"{API}/inquiry", headers={"Authorization": f"Bearer {admin_key}"}, timeout=15)
         assert r.status_code == 200
         rows = r.json()
         assert isinstance(rows, list)
